@@ -15,7 +15,7 @@ Celem projektu jest stworzenie aplikacji internetowej, która będzie pozwalała
 - Automatyzacja budowania i testowania
 - Kontenryzacja
 - Podstawowe testy kodu
-- Ustawienie środowiska: linter-ruff, autoformater-black
+- Ustawienie środowiska: linter i autoformater - ruff
 
 03.11 - Rejestracja i Logowanie
 
@@ -97,7 +97,7 @@ Deadline: 15.01
  - Możliwość uruchomienia stosu za pomocą Docker Compose
  - Mechanizmy logowania: logging
  - Kolejkowanie i cache : Dramatiq, Redis
- - Standaryzacja kodu: linter-ruff, autoformater-black
+ - Ustawienie środowiska: linter i autoformater - ruff
  - Typowanie - Pydantic
  - Konteneryzacja: docker-compose
  - Automatyzacja budowania i testowania: Make
