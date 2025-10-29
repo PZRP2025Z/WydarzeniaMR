@@ -1,3 +1,10 @@
+# Starting the backend side
+Backend is based on uvicorn, a popular solution for FastAPI server, to start the app in root folder run `python -m uvicorn app.main:app --reload` then you can access the site on address `http://127.0.0.1:8000/docs`
+
+# Database
+We are using `PostgreSQL` currently via pgAdmin4 on localhost (install PosgreSQL locally to access it). This will need to be updated with docker-compose.
+Keep in mind that .env db properties may vary until we get docket-compose setup
+
 # Logger
 We are using a `logging` library to handle file ond stdstream logging.
 WARNING: Instead of using: logging.info("") firstly create an instance of a logger with `logger = logging.getLogger(__name__)` then `logger.info("")` since operating on a root logger is a bad practice (example at main.py).

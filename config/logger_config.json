@@ -3,10 +3,10 @@
   "disable_existing_loggers": false,
   "formatters": {
     "simple": {
-      "format": "%(levelname)s: %(message)s"
+      "format": "LOGGER | %(levelname)s:\t%(message)s"
     },
     "detailed": {
-      "format": "[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s: %(message)s",
+      "format": "[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s:\t%(message)s",
       "datefmt": "%Y-%m-%dT%H:%M:%S%z"
     }
   },
@@ -18,12 +18,13 @@
       "stream": "ext://sys.stderr"
     },
     "file": {
-      "class": "logging.FileHandler",
+      "class": "logging.handlers.RotatingFileHandler",
       "level": "DEBUG",
       "formatter": "detailed",
       "filename": "logs/app.log",
-      "encoding": "utf8",
-      "backupCount": 7
+      "maxBytes": 1048576,
+      "backupCount": 7,
+      "encoding": "utf8"
     }
   },
   "root": {
