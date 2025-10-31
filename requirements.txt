@@ -3,3 +3,8 @@ uvicorn
 sqlmodel
 psycopg2
 python-dotenv
+redis
+pytest
+pytest-asyncio
+httpx
+hypothesis
