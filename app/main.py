@@ -7,12 +7,11 @@ from .logger import setup_logging
 from .database.session import engine
 
 
-def main():
-    logger = logging.getLogger(__name__)
-    setup_logging()
+logger = logging.getLogger(__name__)
+setup_logging()
 
-    logger.info("Starting Application")
-    app = FastAPI(title="WydarzeniaMR_API")
+logger.info("Starting Application")
+app = FastAPI(title="WydarzeniaMR_API")
 
-    SQLModel.metadata.create_all(engine)
-    app.include_router(event_routes.router)
+SQLModel.metadata.create_all(engine)
+app.include_router(event_routes.router)

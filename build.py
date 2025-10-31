@@ -3,6 +3,8 @@ import subprocess
 import sys
 import venv
 import signal
+import socket
+import time
 from pathlib import Path
 
 
@@ -70,15 +72,23 @@ def stop_docker():
             print(f"Could not stop Docker: {e}")
 
 
+def wait_for_postgres(host="localhost", port=5432, timeout=60):
+    print("Waiting for PostgreSQL")
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=2):
+                print("PostgreSQL is up")
+                return True
+        except OSError:
+            time.sleep(1)
+    print("PostgreSQL did not become ready in time.")
+    return False
+
+
 def run_app():
     print("Starting FastAPI app")
-    app_process = subprocess.Popen(
-        [str(PYTHON), "-m", "uvicorn", APP_MODULE, "--reload"],
-        stdout=sys.stdout,
-        stderr=sys.stderr
-    )
-    running_processes.append(app_process)
-    app_process.wait()
+    run([str(PYTHON), "-m", "uvicorn", "app.main:app", "--reload"])
 
 
 def handle_exit(sig, frame):
@@ -103,6 +113,8 @@ def main():
         sys.exit(1)
 
     start_docker()
+    if not wait_for_postgres("localhost", 5432):
+        sys.exit(1)
     run_app()
 
 
