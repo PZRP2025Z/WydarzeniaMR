@@ -5,6 +5,7 @@ Router for event CRUD service
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from app.database.session import get_session
+from pydantic import BaseModel
 from app.backend.event_service import (
     create_event,
     get_events,
@@ -16,9 +17,13 @@ from app.backend.event_service import (
 router = APIRouter(prefix="/events", tags=["events"])
 
 
+class EventCreate(BaseModel):
+    name: str
+    location: str
+
 @router.post("/")
-def add_event(name: str, location: str, db: Session = Depends(get_session)):
-    return create_event(db, name, location)
+def add_event(event: EventCreate, db: Session = Depends(get_session)):
+    return create_event(db, event.name, event.location)
 
 
 @router.get("/")

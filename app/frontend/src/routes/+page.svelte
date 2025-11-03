@@ -1,29 +1,75 @@
 <script lang="ts">
   import { t, type Lang } from '$lib/i18n';
+  import { onMount } from 'svelte';
+
   let lang: Lang = 'pl';
 
-  let events = [
-    { id: 1, name: 'AAAAAAA', location: 'BBBBBBB' }
-  ];
-
+  let events: { id: number; name: string; location: string }[] = [];
   let newEvent = { name: '', location: '' };
 
-  function addEvent() {
-    if (newEvent.name.trim() && newEvent.location.trim()) {
-      const id = events.length ? Math.max(...events.map(e => e.id)) + 1 : 1;
-      events = [...events, { id, ...newEvent }];
-      newEvent = { name: '', location: '' };
+  const API_URL = 'http://127.0.0.1:8000/events'; // adres backendu
+
+
+   onMount(async () => {
+    const response = await fetch('http://127.0.0.1:8000/events/');
+    if (response.ok) {
+      events = await response.json();
+    } else {
+      console.error('Nie udało się pobrać wydarzeń', await response.json());
+    }
+  });
+  
+  // Pobieranie wydarzeń z backendu
+  async function fetchEvents() {
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('Błąd pobierania wydarzeń');
+      events = await res.json();
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  function deleteEvent(id: number) {
-    events = events.filter(e => e.id !== id);
+  // Dodawanie wydarzenia
+async function addEvent() {
+  if (newEvent.name.trim() && newEvent.location.trim()) {
+    const response = await fetch('http://127.0.0.1:8000/events/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newEvent),
+    });
+
+    if (response.ok) {
+      const createdEvent = await response.json();
+      events = [...events, createdEvent];
+      newEvent = { name: '', location: '' };
+    } else {
+      console.error('Nie udało się dodać wydarzenia', await response.json());
+    }
+  }
+}
+
+
+  // Usuwanie wydarzenia
+  async function deleteEvent(id: number) {
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Nie udało się usunąć wydarzenia');
+      events = events.filter(e => e.id !== id);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   function toggleLang() {
     lang = lang === 'pl' ? 'en' : 'pl';
   }
+
+  onMount(() => {
+    fetchEvents();
+  });
 </script>
+
 
 <div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
 
