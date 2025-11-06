@@ -33,10 +33,9 @@
   // Dodawanie wydarzenia
 async function addEvent() {
   if (newEvent.name.trim() && newEvent.location.trim()) {
-    const response = await fetch('http://127.0.0.1:8000/events/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newEvent),
+    const url = `${API_URL}/?name=${encodeURIComponent(newEvent.name)}&location=${encodeURIComponent(newEvent.location)}`;
+    const response = await fetch(url, {
+      method: 'POST'
     });
 
     if (response.ok) {
