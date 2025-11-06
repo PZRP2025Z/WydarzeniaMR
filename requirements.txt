@@ -3,3 +3,13 @@ uvicorn
 sqlmodel
 psycopg2
 python-dotenv
+redis
+pytest
+pytest-asyncio
+httpx
+hypothesis
+PyJWT
+pydantic[email]
+passlib
+python-multipart
+argon2_cffi
