@@ -9,51 +9,44 @@
 
   const API_URL = 'http://127.0.0.1:8000/events'; // adres backendu
 
-
-   onMount(async () => {
-    const response = await fetch('http://127.0.0.1:8000/events/');
-    if (response.ok) {
-      events = await response.json();
-    } else {
-      console.error('Nie udało się pobrać wydarzeń', await response.json());
-    }
-  });
-  
   // Pobieranie wydarzeń z backendu
   async function fetchEvents() {
     try {
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error('Błąd pobierania wydarzeń');
+      const res = await fetch(`${API_URL}/`);
+      if (!res.ok) throw new Error('Couldn\'t fetch events');
       events = await res.json();
     } catch (err) {
       console.error(err);
     }
   }
 
-  // Dodawanie wydarzenia
-async function addEvent() {
-  if (newEvent.name.trim() && newEvent.location.trim()) {
-    const url = `${API_URL}/?name=${encodeURIComponent(newEvent.name)}&location=${encodeURIComponent(newEvent.location)}`;
-    const response = await fetch(url, {
-      method: 'POST'
-    });
+  // Dodawanie wydarzenia (korzysta z query params, zgodnie z backendem)
+  async function addEvent() {
+    if (newEvent.name.trim() && newEvent.location.trim()) {
+      const url = `${API_URL}/?name=${encodeURIComponent(newEvent.name)}&location=${encodeURIComponent(newEvent.location)}`;
+      try {
+        const response = await fetch(url, {
+          method: 'POST'
+        });
 
-    if (response.ok) {
-      const createdEvent = await response.json();
-      events = [...events, createdEvent];
-      newEvent = { name: '', location: '' };
-    } else {
-      console.error('Nie udało się dodać wydarzenia', await response.json());
+        if (response.ok) {
+          const createdEvent = await response.json();
+          events = [...events, createdEvent];
+          newEvent = { name: '', location: '' };
+        } else {
+          console.error('Couldn\'t add event', await response.json());
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
-}
-
 
   // Usuwanie wydarzenia
   async function deleteEvent(id: number) {
     try {
       const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Nie udało się usunąć wydarzenia');
+      if (!res.ok) throw new Error('Couldn\'t delete event');
       events = events.filter(e => e.id !== id);
     } catch (err) {
       console.error(err);
@@ -64,11 +57,11 @@ async function addEvent() {
     lang = lang === 'pl' ? 'en' : 'pl';
   }
 
+  // Jedno onMount — pobierz wydarzenia raz przy załadowaniu
   onMount(() => {
     fetchEvents();
   });
 </script>
-
 
 <div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
 
