@@ -13,3 +13,4 @@ pydantic[email]
 passlib
 python-multipart
 argon2_cffi
+dramatiq
