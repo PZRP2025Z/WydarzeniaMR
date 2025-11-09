@@ -3,16 +3,22 @@ import subprocess
 import sys
 import venv
 import signal
-import socket
+import psycopg2
 import time
 from pathlib import Path
+import dotenv
 
+dotenv.load_dotenv()
 
 VENV_DIR = Path("venv")
 REQUIREMENTS_FILE = Path("requirements.txt")
 DOCKER_COMPOSE_FILE = Path("docker-compose.yaml")
 APP_MODULE = "app.main:main"
-PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
+PYTHON = (
+    VENV_DIR / "bin" / "python"
+    if os.name != "nt"
+    else VENV_DIR / "Scripts" / "python.exe"
+)
 running_processes = []
 
 
@@ -74,13 +80,25 @@ def stop_docker():
 
 def wait_for_postgres(host="localhost", port=5432, timeout=60):
     print("Waiting for PostgreSQL")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DB_HOST = os.getenv("DB_HOST")
+    DB_PORT = os.getenv("DB_PORT")
+    DB_NAME = os.getenv("DB_NAME")
     start = time.time()
     while time.time() - start < timeout:
         try:
-            with socket.create_connection((host, port), timeout=2):
-                print("PostgreSQL is up")
-                return True
-        except OSError:
+            conn = psycopg2.connect(
+                host=DB_HOST,
+                port=DB_PORT,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                dbname=DB_NAME,
+            )
+            conn.close()
+            print("✅ PostgreSQL is ready!")
+            return True
+        except psycopg2.OperationalError:
             time.sleep(1)
     print("PostgreSQL did not become ready in time.")
     return False
@@ -88,6 +106,7 @@ def wait_for_postgres(host="localhost", port=5432, timeout=60):
 
 def run_app():
     print("Starting FastAPI app")
+    run([str(PYTHON), "-m", "dramatiq", "app.dramatiq_worker"], background=True)
     run([str(PYTHON), "-m", "uvicorn", "app.main:app", "--reload"])
 
 
