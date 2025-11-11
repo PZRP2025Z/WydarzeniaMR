@@ -17,6 +17,8 @@
 <nav>
     <a href="/">{t('home_title', $lang)}</a>
     <a href="/events">{t('add_event', $lang)}</a>
+    <a href="/login">Logowanie</a>
+    <a href="/register">Rejestracja</a>
 </nav>
 
 <button onclick={toggleLang}>
