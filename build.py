@@ -12,7 +12,11 @@ VENV_DIR = Path("venv")
 REQUIREMENTS_FILE = Path("requirements.txt")
 DOCKER_COMPOSE_FILE = Path("docker-compose.yaml")
 APP_MODULE = "app.main:main"
-PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
+PYTHON = (
+    VENV_DIR / "bin" / "python"
+    if os.name != "nt"
+    else VENV_DIR / "Scripts" / "python.exe"
+)
 running_processes = []
 
 
@@ -103,19 +107,24 @@ def handle_exit(sig, frame):
 
 
 def main():
-    signal.signal(signal.SIGINT, handle_exit)
-    signal.signal(signal.SIGTERM, handle_exit)
+    try:
+        signal.signal(signal.SIGINT, handle_exit)
+        signal.signal(signal.SIGTERM, handle_exit)
 
-    ensure_venv()
-    install_requirements()
+        ensure_venv()
+        install_requirements()
 
-    if not run_tests():
+        if not run_tests():
+            raise Exception("Tests failed")
+
+        start_docker()
+        if not wait_for_postgres("localhost", 5432):
+            raise Exception("Postgres failed to initialize")
+        run_app()
+    except Exception as e:
+        input(f"Error occured: {str(e)}")
         sys.exit(1)
-
-    start_docker()
-    if not wait_for_postgres("localhost", 5432):
-        sys.exit(1)
-    run_app()
+    input("Success")
 
 
 if __name__ == "__main__":

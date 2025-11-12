@@ -4,7 +4,7 @@ from sqlmodel import Session
 from typing import List
 from app.database.session import get_session
 from app.database.models.user import UserResponse, PasswordChange
-from app.backend.user_service import get_users, get_user, change_password
+from app.backend.user_service import get_users, get_user, change_password, delete_user
 
 logger = logging.getLogger(__name__)
 
@@ -40,4 +40,14 @@ def update_password(
             detail="Password change failed: current password may be incorrect or new passwords do not match",
         )
     logger.info(f"Password successfully changed for user_id={user_id}")
+    return {"ok": True}
+
+
+@router.delete("/{user_id}")
+def remove_user(user_id: int, db: Session = Depends(get_session)):
+    success = delete_user(db, user_id)
+    if not success:
+        logger.warning(f"Failed to delete user with id={user_id}")
+        raise HTTPException(status_code=404, detail="User not found")
+    logger.info(f"Deleted user with id={user_id}")
     return {"ok": True}
