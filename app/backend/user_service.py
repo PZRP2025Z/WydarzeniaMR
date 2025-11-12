@@ -32,3 +32,12 @@ def change_password(db: Session, user_id: int, data: PasswordChange) -> bool:
     db.commit()
     db.refresh(user)
     return True
+
+
+def delete_user(db: Session, user_id: int) -> bool:
+    user = db.get(User, user_id)
+    if not user:
+        return False
+    db.delete(user)
+    db.commit()
+    return True
