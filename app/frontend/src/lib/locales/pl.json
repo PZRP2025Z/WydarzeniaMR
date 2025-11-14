@@ -1,8 +1,19 @@
 {
   "title": "Wydarzenia",
+  "no_events": "Brak wydarzeń do wyświetlenia.",
   "home_title": "Strona główna",
   "add_event": "Dodaj wydarzenie",
   "remove_event": "Usuń wydarzenie",
   "event_title": "Tytuł wydarzenia",
-  "event_location": "Lokalizacja"
+  "event_location": "Lokalizacja",
+  "username": "Nazwa użytkownika",
+  "email": "Email",
+  "password": "Hasło",
+  "confirm_password": "Potwierdź hasło",
+  "register": "Zarejestruj się",
+  "login": "Zaloguj się",
+  "login_loading": "Logowanie...",
+  "register_loading": "Rejestrowanie...",
+  "already_account": "Masz już konto?",
+  "no_account": "Nie masz konta?"
 }

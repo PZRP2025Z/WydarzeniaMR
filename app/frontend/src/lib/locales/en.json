@@ -1,8 +1,19 @@
 {
   "title": "Events",
+  "no_events": "No events to display.",
   "home_title": "Main Page",
   "add_event": "Add Event",
   "remove_event": "Delete Event",
   "event_title": "Event Title",
-  "event_location": "Location"
+  "event_location": "Location",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "confirm_password": "Confirm Password",
+  "register": "Register",
+  "login": "Login",
+  "login_loading": "Logging in...",
+  "register_loading": "Registering...",
+  "already_account": "Already have an account?",
+  "no_account": "Don't have an account?"
 }
