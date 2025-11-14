@@ -10,7 +10,7 @@
   let error = '';
   let loading = false;
 
-  const API_URL = 'http://127.0.0.1:8000/users';
+  const API_URL = 'http://127.0.0.1:8000/auth';
 
   async function handleRegister() {
     error = '';
@@ -31,7 +31,12 @@
       const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ 
+          first_name: username,
+          last_name: '',
+          email, 
+          password 
+        })
       });
 
       if (response.ok) {
