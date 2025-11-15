@@ -16,12 +16,12 @@
     error = '';
     
     if (!username.trim() || !email.trim() || !password.trim()) {
-      error = 'Wszystkie pola są wymagane';
+      error = t('username_password_required', $lang);
       return;
     }
 
     if (password !== passwordConfirm) {
-      error = 'Hasła się nie zgadzają';
+      error = t('passwords_do_not_match', $lang);
       return;
     }
 
@@ -43,10 +43,10 @@
         await goto('/login');
       } else {
         const data = await response.json();
-        error = data.detail || 'Błąd rejestracji';
+        error = data.detail || t('registration_error', $lang);
       }
     } catch (err) {
-      error = 'Nie można połączyć się z serwerem';
+      error = t('server_unreachable', $lang);
       console.error(err);
     } finally {
       loading = false;

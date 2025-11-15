@@ -14,7 +14,7 @@
     error = '';
     
     if (!username.trim() || !password.trim()) {
-      error = 'Nazwa użytkownika i hasło są wymagane';
+      error = t('username_password_required', $lang);
       return;
     }
 
@@ -38,10 +38,10 @@
         
         await goto('/events');
       } else {
-        error = 'Błędna nazwa użytkownika lub hasło';
+        error = t('invalid_credentials', $lang);
       }
     } catch (err) {
-      error = 'Nie można połączyć się z serwerem';
+      error = t('server_unreachable', $lang);
       console.error(err);
     } finally {
       loading = false;
