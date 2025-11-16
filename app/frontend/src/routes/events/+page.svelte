@@ -2,6 +2,7 @@
   import { t } from '$lib/i18n';
   import { lang } from '$lib/stores/stores';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let events: { id: number; name: string; location: string }[] = [];
   let newEvent = { name: '', location: '' };
@@ -39,14 +40,8 @@
     }
   }
 
-  async function deleteEvent(id: number) {
-    try {
-      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Couldn\'t delete event');
-      events = events.filter(e => e.id !== id);
-    } catch (err) {
-      console.error(err);
-    }
+  function viewEventDetails(id: number) {
+    goto(`/events/${id}`);
   }
 
   onMount(() => {
@@ -80,7 +75,7 @@
     </button>
   </div>
 
-  <!-- Lista gebeurteneń -->
+  <!-- Lista wydarzenia -->
   <div style="display: flex; flex-direction: column; gap: 0.75rem;">
     {#each events as event (event.id)}
       <div style="background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
@@ -89,10 +84,10 @@
           <p style="font-size: 0.875rem; color: #666;">{event.location}</p>
         </div>
         <button 
-          on:click={() => deleteEvent(event.id)}
-          style="padding: 0.25rem 0.5rem; border: 1px solid #dc3545; color: #dc3545; border-radius: 0.25rem; background: none; cursor: pointer;"
+          on:click={() => viewEventDetails(event.id)}
+          style="padding: 0.25rem 0.5rem; border: 1px solid #007BFF; color: #007BFF; border-radius: 0.25rem; background: none; cursor: pointer;"
         >
-          {t('remove_event', $lang)}
+          {t('event_details', $lang)}
         </button>
       </div>
     {/each}

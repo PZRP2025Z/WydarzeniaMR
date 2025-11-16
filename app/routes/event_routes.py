@@ -20,6 +20,10 @@ class EventCreate(BaseModel):
     name: str
     location: str
 
+class EventUpdate(BaseModel):
+    name: str | None = None
+    location: str | None = None
+
 @router.post("/")
 def add_event(name: str, location: str, db: Session = Depends(get_session)):
     event = create_event(db, name, location)
@@ -47,13 +51,8 @@ def read_event(event_id: int, db: Session = Depends(get_session)):
 
 
 @router.put("/{event_id}")
-def edit_event(
-    event_id: int,
-    name: str | None = None,
-    location: str | None = None,
-    db: Session = Depends(get_session),
-):
-    event = update_event(db, event_id, name, location)
+def edit_event(event_id: int, event_data: EventUpdate, db: Session = Depends(get_session)):
+    event = update_event(db, event_id, name=event_data.name, location=event_data.location)
     if not event:
         logger.warning(f"Failed to update event with id={event_id}")
         raise HTTPException(status_code=404, detail="Event not found")
