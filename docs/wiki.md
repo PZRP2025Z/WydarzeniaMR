@@ -19,3 +19,6 @@ To configure it, first install it from vscode extension tool, then using ctrl+sh
     }
 ```
 Ruff will format everything on save from now on.
+
+# JWT & Cookies
+Project uses two types of JWT tokens: short access token and a long refresh token. Both are saved in secure cookies, but the short one expires quickly, so it's safer to send around. When short one expires it can get refreshed thanks to safe stored long refresh token, which is deleted after a user logs out. This approach solves auto login.

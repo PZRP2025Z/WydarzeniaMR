@@ -7,7 +7,7 @@ import logging
 import jwt
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Cookie, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlmodel import Session, select
@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 
 TOKEN_KEY = os.getenv("TOKEN_KEY", "changeme-secret-key")
 TOKEN_ALGORITHM = os.getenv("TOKEN_ALGORITHM", "HS256")
-TOKEN_EXPIRE_MINUTES = int(os.getenv("TOKEN_EXPIRE_MINUTES", "60"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
 
 # JWT config & password hashing
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -46,9 +47,13 @@ def create_access_token(
     email: str, user_id: int, expires_delta: Optional[timedelta] = None
 ) -> str:
     expire = datetime.now(timezone.utc) + (
-        expires_delta or timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+        expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-    to_encode = {"sub": email, "user_id": user_id, "exp": expire}
+    to_encode = {
+        "sub": email,
+        "user_id": user_id,
+        "exp": int(expire.timestamp()),  # <-- zamieniamy datetime na timestamp
+    }
     encoded_jwt = jwt.encode(to_encode, TOKEN_KEY, algorithm=TOKEN_ALGORITHM)
     logger.debug(f"JWT created for user_id={user_id}")
     return encoded_jwt
@@ -92,30 +97,83 @@ def register_user(request: RegisterUserRequest, db: Session) -> User:
     return user
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]) -> TokenData:
-    return verify_token(token)
+def get_current_user(access_token: Optional[str] = Cookie(None)) -> TokenData:
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    return verify_token(access_token)
 
 
 CurrentUser = Annotated[TokenData, Depends(get_current_user)]
 
 
-def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: Session,
-) -> Token:
-    """Authenticate user and return a JWT token."""
+def login_for_access_token(form_data, db: Session, response: Response) -> dict:
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
-        logger.warning(f"Login failed for email: {form_data.username}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        logger.warning(f"Login attempt failed for {form_data.username}")
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
 
     access_token = create_access_token(
-        user.email, user.id, expires_delta=timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+        email=user.email,
+        user_id=user.id,
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
 
-    logger.info(f"Access token issued for user: {user.email}")
-    return Token(access_token=access_token, token_type="bearer")
+    refresh_token = create_access_token(
+        email=user.email,
+        user_id=user.id,
+        expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+    )
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,  # True in production
+        samesite="lax",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=False,  # True in production
+        samesite="lax",
+        max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
+    )
+
+    logger.info(f"Issued access + refresh token for {user.email}")
+    return {"message": "Logged in"}
+
+
+def refresh_access_token(refresh_token: str, response: Response) -> str:
+    """Verify refresh token and issue a new access token."""
+    if not refresh_token:
+        raise HTTPException(status_code=401, detail="No refresh token")
+
+    try:
+        payload = jwt.decode(refresh_token, TOKEN_KEY, algorithms=[TOKEN_ALGORITHM])
+        user_id = payload.get("user_id")
+        email = payload.get("sub")
+        if not user_id or not email:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    access_token = create_access_token(
+        email=email,
+        user_id=user_id,
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    )
+
+    return access_token

@@ -2,6 +2,7 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from unittest.mock import MagicMock
 from sqlmodel import Session
+from app.backend.auth_service import get_password_hash
 from app.database.session import get_session
 from app.database.models.user import User
 from app.main import app
@@ -21,7 +22,6 @@ async def test_register_user_success():
 
     mock_db.add.side_effect = fake_add
     mock_db.refresh.side_effect = lambda user: None
-    print("HELLO THERE 1")
 
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
@@ -75,15 +75,14 @@ async def test_register_user_duplicate_email():
 
 
 @pytest.mark.asyncio
-async def test_login_success():
+async def test_login_invalid_password():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # Simulate valid user in DB
     fake_user = User(
         id=1,
         email="user@example.com",
-        hashed_password="$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$kHb5kZC4w7oB3xAw9WQZ5Q",  # fake argon2 hash
+        hashed_password=get_password_hash("correctpwd"),
     )
 
     mock_db.exec.return_value.first.return_value = fake_user
@@ -93,37 +92,114 @@ async def test_login_success():
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "whatever"},
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data={"username": "user@example.com", "password": "wrongpwd"},
         )
 
-    assert response.status_code in (200, 401)
-    if response.status_code == 200:
-        data = response.json()
-        assert "access_token" in data
-        assert data["token_type"] == "bearer"
-    else:
-        data = response.json()
-        assert "Incorrect email or password" in data["detail"]
+    assert response.status_code == 401
 
 
 @pytest.mark.asyncio
-async def test_login_invalid_user():
+async def test_login_sets_cookie():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # No user found
-    mock_db.exec.return_value.first.return_value = None
+    # Fake user
+    fake_user = User(
+        id=1,
+        email="user@example.com",
+        hashed_password=get_password_hash("correctpwd"),
+    )
+    mock_db.exec.return_value.first.return_value = fake_user
 
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "missing@example.com", "password": "nope"},
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data={"username": "user@example.com", "password": "correctpwd"},
         )
 
-    assert response.status_code == 401
-    data = response.json()
-    assert data["detail"] == "Incorrect email or password"
+    assert response.status_code == 200
+
+    # Check that both cookies are set
+    set_cookie_header = response.headers.get("set-cookie", "")
+    assert "access_token=" in set_cookie_header
+    assert "refresh_token=" in set_cookie_header
+
+
+@pytest.mark.asyncio
+async def test_login_with_cookie_access():
+    mock_db = MagicMock(spec=Session)
+    app.dependency_overrides[get_session] = lambda: mock_db
+
+    fake_user = User(
+        id=1,
+        email="user@example.com",
+        hashed_password=get_password_hash("correctpwd"),
+    )
+    mock_db.exec.return_value.first.return_value = fake_user
+
+    # LOGIN — get cookie
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        login_response = await client.post(
+            "/auth/token",
+            data={"username": "user@example.com", "password": "correctpwd"},
+        )
+
+    assert login_response.status_code == 200
+
+    # extract cookie
+    set_cookie = login_response.headers.get("set-cookie", "")
+    assert "access_token=" in set_cookie
+    cookie_value = set_cookie.split("access_token=")[1].split(";")[0]
+
+    cookies = {"access_token": cookie_value}
+
+    # ACCESS protected /auth/me
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test", cookies=cookies
+    ) as client:
+        protected_response = await client.get("/auth/me")
+
+    assert protected_response.status_code == 200
+    assert protected_response.json()["user_id"] == 1
+
+
+@pytest.mark.asyncio
+async def test_refresh_access_token():
+    mock_db = MagicMock(spec=Session)
+    app.dependency_overrides[get_session] = lambda: mock_db
+
+    fake_user = User(
+        id=1,
+        email="user@example.com",
+        hashed_password=get_password_hash("correctpwd"),
+    )
+    mock_db.exec.return_value.first.return_value = fake_user
+
+    # LOGIN — pobierz refresh token
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        login_response = await client.post(
+            "/auth/token",
+            data={"username": "user@example.com", "password": "correctpwd"},
+        )
+
+    set_cookie = login_response.headers.get("set-cookie", "")
+    assert "refresh_token=" in set_cookie
+    refresh_cookie_value = set_cookie.split("refresh_token=")[1].split(";")[0]
+
+    # REFRESH
+    cookies = {"refresh_token": refresh_cookie_value}
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test", cookies=cookies
+    ) as client:
+        refresh_response = await client.post("/auth/refresh")
+
+    assert refresh_response.status_code == 200
+    assert refresh_response.json()["message"] == "Access token refreshed"
+    new_access_cookie = refresh_response.headers.get("set-cookie", "")
+    assert "access_token=" in new_access_cookie

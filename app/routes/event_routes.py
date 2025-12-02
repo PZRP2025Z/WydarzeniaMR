@@ -1,8 +1,8 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException
+from app.database.models.event import EventCreate, EventUpdate
 from sqlmodel import Session
 from app.database.session import get_session
-from pydantic import BaseModel
 from app.backend.event_service import (
     create_event,
     get_events,
@@ -16,17 +16,9 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-class EventCreate(BaseModel):
-    name: str
-    location: str
-
-class EventUpdate(BaseModel):
-    name: str | None = None
-    location: str | None = None
-
 @router.post("/")
-def add_event(name: str, location: str, db: Session = Depends(get_session)):
-    event = create_event(db, name, location)
+def add_event(event_data: EventCreate, db: Session = Depends(get_session)):
+    event = create_event(db, event_data.name, event_data.location)
     logger.info(
         f"Created event: id={event.id}, name={event.name}, location={event.location}"
     )
@@ -51,8 +43,12 @@ def read_event(event_id: int, db: Session = Depends(get_session)):
 
 
 @router.put("/{event_id}")
-def edit_event(event_id: int, event_data: EventUpdate, db: Session = Depends(get_session)):
-    event = update_event(db, event_id, name=event_data.name, location=event_data.location)
+def edit_event(
+    event_id: int, event_data: EventUpdate, db: Session = Depends(get_session)
+):
+    event = update_event(
+        db, event_id, name=event_data.name, location=event_data.location
+    )
     if not event:
         logger.warning(f"Failed to update event with id={event_id}")
         raise HTTPException(status_code=404, detail="Event not found")
