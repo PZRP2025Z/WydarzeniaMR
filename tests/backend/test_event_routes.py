@@ -33,7 +33,6 @@ async def test_create_event():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # Mock add/commit/refresh behavior
     def fake_add(obj):
         obj.id = 1
 
@@ -45,7 +44,7 @@ async def test_create_event():
     ) as client:
         response = await client.post(
             "/events/",
-            params={"name": "Test Event", "location": "Test Location"},
+            json={"name": "Test Event", "location": "Test Location"},
         )
 
     assert response.status_code == 200
@@ -89,7 +88,7 @@ async def test_update_event():
     ) as client:
         response = await client.put(
             "/events/1",
-            params={"name": "New Name", "location": "New Location"},
+            json={"name": "New Name", "location": "New Location"},
         )
 
     assert response.status_code == 200

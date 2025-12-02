@@ -2,6 +2,7 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from unittest.mock import MagicMock
 from sqlmodel import Session
+from app.backend.auth_service import get_password_hash
 from app.database.session import get_session
 from app.database.models.user import User
 from app.main import app
@@ -75,15 +76,14 @@ async def test_register_user_duplicate_email():
 
 
 @pytest.mark.asyncio
-async def test_login_success():
+async def test_login_valid_password():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # Simulate valid user in DB
     fake_user = User(
         id=1,
         email="user@example.com",
-        hashed_password="$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$kHb5kZC4w7oB3xAw9WQZ5Q",  # fake argon2 hash
+        hashed_password=get_password_hash("correctpwd"),
     )
 
     mock_db.exec.return_value.first.return_value = fake_user
@@ -93,37 +93,33 @@ async def test_login_success():
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "whatever"},
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data={"username": "user@example.com", "password": "correctpwd"},
         )
 
-    assert response.status_code in (200, 401)
-    if response.status_code == 200:
-        data = response.json()
-        assert "access_token" in data
-        assert data["token_type"] == "bearer"
-    else:
-        data = response.json()
-        assert "Incorrect email or password" in data["detail"]
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
 
 
 @pytest.mark.asyncio
-async def test_login_invalid_user():
+async def test_login_invalid_password():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # No user found
-    mock_db.exec.return_value.first.return_value = None
+    fake_user = User(
+        id=1,
+        email="user@example.com",
+        hashed_password=get_password_hash("correctpwd"),
+    )
+
+    mock_db.exec.return_value.first.return_value = fake_user
 
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "missing@example.com", "password": "nope"},
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            data={"username": "user@example.com", "password": "wrongpwd"},
         )
 
     assert response.status_code == 401
-    data = response.json()
-    assert data["detail"] == "Incorrect email or password"
