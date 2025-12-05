@@ -2,7 +2,8 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from unittest.mock import MagicMock
 from sqlmodel import Session
-from app.backend.auth_service import get_password_hash
+
+from app.backend.auth_service import get_password_hash, get_current_user
 from app.database.session import get_session
 from app.database.models.user import User
 from app.main import app
@@ -92,7 +93,11 @@ async def test_login_invalid_password():
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "wrongpwd"},
+            data={
+                "username": "user@example.com",
+                "password": "wrongpwd",
+                "grant_type": "password",
+            },
         )
 
     assert response.status_code == 401
@@ -116,7 +121,11 @@ async def test_login_sets_cookie():
     ) as client:
         response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "correctpwd"},
+            data={
+                "username": "user@example.com",
+                "password": "correctpwd",  # tutaj MUSI być poprawne hasło
+                "grant_type": "password",
+            },
         )
 
     assert response.status_code == 200
@@ -139,13 +148,19 @@ async def test_login_with_cookie_access():
     )
     mock_db.exec.return_value.first.return_value = fake_user
 
+    app.dependency_overrides[get_current_user] = lambda: fake_user
+
     # LOGIN — get cookie
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
     ) as client:
         login_response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "correctpwd"},
+            data={
+                "username": "user@example.com",
+                "password": "correctpwd",  # poprawne hasło
+                "grant_type": "password",
+            },
         )
 
     assert login_response.status_code == 200
@@ -185,7 +200,11 @@ async def test_refresh_access_token():
     ) as client:
         login_response = await client.post(
             "/auth/token",
-            data={"username": "user@example.com", "password": "correctpwd"},
+            data={
+                "username": "user@example.com",
+                "password": "correctpwd",  # poprawne hasło
+                "grant_type": "password",
+            },
         )
 
     set_cookie = login_response.headers.get("set-cookie", "")

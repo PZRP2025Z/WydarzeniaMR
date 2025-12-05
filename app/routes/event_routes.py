@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.database.models.event import EventCreate, EventUpdate
 from sqlmodel import Session
 from app.database.session import get_session
+from app.backend.auth_service import get_current_user
 from app.backend.event_service import (
     create_event,
     get_events,
@@ -17,10 +18,14 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 
 @router.post("/")
-def add_event(event_data: EventCreate, db: Session = Depends(get_session)):
+def add_event(
+    event_data: EventCreate,
+    db: Session = Depends(get_session),
+    user=Depends(get_current_user),
+):
     event = create_event(db, event_data.name, event_data.location)
     logger.info(
-        f"Created event: id={event.id}, name={event.name}, location={event.location}"
+        f"User {user.id} created event: id={event.id}, name={event.name}, location={event.location}"
     )
     return event
 
