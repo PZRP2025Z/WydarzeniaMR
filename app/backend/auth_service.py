@@ -26,22 +26,12 @@ REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
 argon2_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
-# =====================
-# PASSWORDS
-# =====================
-
-
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return argon2_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     return argon2_context.hash(password)
-
-
-# =====================
-# TOKENS
-# =====================
 
 
 def create_access_token(email: str, user_id: int, expires_delta=None) -> str:
@@ -91,11 +81,6 @@ def verify_token(token: str) -> TokenData:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
-# =====================
-# USER RESOLUTION
-# =====================
-
-
 def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
     user = db.exec(select(User).where(User.email == email)).first()
     if not user or not verify_password(password, user.hashed_password):
@@ -119,11 +104,6 @@ def get_current_user(
     return user
 
 
-# =====================
-# REGISTER / LOGIN / REFRESH
-# =====================
-
-
 def register_user(
     request: RegisterUserRequest, db: Session, response: Response
 ) -> User:
@@ -142,7 +122,6 @@ def register_user(
     db.commit()
     db.refresh(user)
 
-    # Ustawiamy cookies, ale ZWRACAMY USER (test tego oczekuje)
     issue_tokens_and_set_cookies(user, response)
 
     return user
@@ -157,7 +136,6 @@ def login_for_access_token(
 
     issue_tokens_and_set_cookies(user, response)
 
-    # Zwracamy ciało tokena (np. do użycia poza cookies)
     return Token(
         access_token=create_access_token(user.email, user.id),
         token_type="bearer",

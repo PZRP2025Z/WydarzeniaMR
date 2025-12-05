@@ -14,14 +14,11 @@ async def test_add_comment():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # Fake authenticated user
     fake_user = MagicMock()
     fake_user.id = 42
 
-    # OVERRIDE działa tylko jeśli kluczem jest prawdziwa funkcja zależności
     app.dependency_overrides[get_current_user] = lambda: fake_user
 
-    # simulate DB add + refresh
     def fake_add(obj):
         obj.id = 1
 
@@ -66,3 +63,22 @@ async def test_get_comments_paginated():
     data = response.json()
     assert len(data) == 1
     assert data[0]["content"] == "test"
+
+
+@pytest.mark.asyncio
+async def test_add_comment_unauthorized():
+    mock_db = MagicMock(spec=Session)
+    app.dependency_overrides[get_session] = lambda: mock_db
+
+    app.dependency_overrides.pop(get_current_user, None)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.post(
+            "/events/1/comments/",
+            json={"content": "test"},
+        )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Not authenticated"

@@ -19,7 +19,9 @@ def add_comment(
     user=Depends(get_current_user),
 ):
     """Add a comment to an event."""
-    comment = create_comment(db, event_id=event_id, user_id=user.id, content=comment_data.content)
+    comment = create_comment(
+        db, event_id=event_id, user_id=user.id, content=comment_data.content
+    )
     logger.info(f"User {user.id} added comment {comment.id} to event {event_id}")
     return comment
 

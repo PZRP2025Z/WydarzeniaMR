@@ -30,7 +30,6 @@ def login_route(
     password: str = Form(...),
     db: Session = Depends(get_session),
 ):
-    # w testach "username" to email
     return login_for_access_token(username, password, db, response)
 
 

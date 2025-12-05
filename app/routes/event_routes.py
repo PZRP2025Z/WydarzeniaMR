@@ -23,10 +23,8 @@ def add_event(
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
-    event = create_event(db, event_data.name, event_data.location)
-    logger.info(
-        f"User {user.id} created event: id={event.id}, name={event.name}, location={event.location}"
-    )
+    event = create_event(db, event_data.name, event_data.location, owner_id=user.id)
+    logger.info(f"User {user.id} created event {event.id}")
     return event
 
 
@@ -49,25 +47,38 @@ def read_event(event_id: int, db: Session = Depends(get_session)):
 
 @router.put("/{event_id}")
 def edit_event(
-    event_id: int, event_data: EventUpdate, db: Session = Depends(get_session)
+    event_id: int,
+    event_data: EventUpdate,
+    db: Session = Depends(get_session),
+    user=Depends(get_current_user),
 ):
     event = update_event(
-        db, event_id, name=event_data.name, location=event_data.location
+        db,
+        event_id,
+        user_id=user.id,
+        name=event_data.name,
+        location=event_data.location,
     )
-    if not event:
-        logger.warning(f"Failed to update event with id={event_id}")
-        raise HTTPException(status_code=404, detail="Event not found")
-    logger.info(
-        f"Updated event: id={event.id}, name={event.name}, location={event.location}"
-    )
+
+    if event is None:
+        raise HTTPException(404, "Event not found")
+    if event == "forbidden":
+        raise HTTPException(403, "You are not the owner of this event")
+
     return event
 
 
 @router.delete("/{event_id}")
-def remove_event(event_id: int, db: Session = Depends(get_session)):
-    success = delete_event(db, event_id)
-    if not success:
-        logger.warning(f"Failed to delete event with id={event_id}")
-        raise HTTPException(status_code=404, detail="Event not found")
-    logger.info(f"Deleted event with id={event_id}")
+def remove_event(
+    event_id: int,
+    db: Session = Depends(get_session),
+    user=Depends(get_current_user),
+):
+    result = delete_event(db, event_id, user_id=user.id)
+
+    if result is False:
+        raise HTTPException(404, "Event not found")
+    if result == "forbidden":
+        raise HTTPException(403, "You are not the owner of this event")
+
     return {"ok": True}
