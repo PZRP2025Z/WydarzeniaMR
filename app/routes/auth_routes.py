@@ -1,45 +1,41 @@
-"""
-User authentication and registration routes
-"""
+from fastapi import APIRouter, Depends, Response, Form, Cookie
+from sqlmodel import Session
 
-import logging
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Cookie
-from sqlmodel import Session, select
-from fastapi.security import OAuth2PasswordRequestForm
 from app.database.session import get_session
-from app.database.models.user import User
-from app.database.models.auth import RegisterUserRequest, Token
 from app.backend.auth_service import (
     register_user,
     login_for_access_token,
-    CurrentUser,
+    get_current_user,
     refresh_access_token,
 )
+from app.database.models.user import User
+from app.database.models.auth import RegisterUserRequest, Token
 
-logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/register", response_model=User)
 def register_user_route(
-    request: RegisterUserRequest, db: Session = Depends(get_session)
-):
-    return register_user(request=request, db=db)
-
-
-@router.post("/token")
-def login_route(
+    request: RegisterUserRequest,
     response: Response,
-    form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_session),
 ):
-    return login_for_access_token(form_data, db, response)
+    return register_user(request, db, response)
+
+
+@router.post("/token", response_model=Token)
+def login_route(
+    response: Response,
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_session),
+):
+    return login_for_access_token(username, password, db, response)
 
 
 @router.get("/me")
-def get_me(current_user: CurrentUser):
-    return {"user_id": current_user.user_id}
+def read_me(user: User = Depends(get_current_user)):
+    return {"user_id": user.id}
 
 
 @router.post("/refresh")
