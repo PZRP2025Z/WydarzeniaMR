@@ -21,18 +21,21 @@
 
   async function addEvent() {
     if (newEvent.name.trim() && newEvent.location.trim()) {
-      const url = `${API_URL}/?name=${encodeURIComponent(newEvent.name)}&location=${encodeURIComponent(newEvent.location)}`;
       try {
-        const response = await fetch(url, {
-          method: 'POST'
+        const response = await fetch(`${API_URL}/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(newEvent), // <-- tutaj wysyłamy JSON
         });
 
         if (response.ok) {
           const createdEvent = await response.json();
-          events = [...events, createdEvent];
-          newEvent = { name: '', location: '' };
+          events = [...events, createdEvent]; // dodajemy nowy event do listy
+          newEvent = { name: "", location: "" }; // reset inputów
         } else {
-          console.error('Couldn\'t add event', await response.json());
+          console.error("Couldn't add event", await response.json());
         }
       } catch (err) {
         console.error(err);
