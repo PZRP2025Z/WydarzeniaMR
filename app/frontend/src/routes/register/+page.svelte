@@ -2,6 +2,7 @@
   import { t } from '$lib/i18n';
   import { lang } from '$lib/stores/stores';
   import { goto } from '$app/navigation';
+  import { currentUser } from '$lib/stores/currentUser';
 
   let username = '';
   let email = '';
@@ -10,7 +11,7 @@
   let error = '';
   let loading = false;
 
-  const API_URL = 'http://127.0.0.1:8000/auth';
+  const API_URL = '/api/auth';
 
   async function handleRegister() {
     error = '';
@@ -31,16 +32,20 @@
       const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          first_name: username,
-          last_name: '',
-          email, 
-          password 
-        })
+        body: JSON.stringify({ login: username, email, password }),
+        credentials: 'include' // ⬅⬅⬅ żeby cookies się ustawiły
       });
 
       if (response.ok) {
-        await goto('/login');
+        // automatyczne ustawienie currentUser
+        const userRes = await fetch(`${API_URL}/me`, { credentials: 'include' });
+        if (userRes.ok) {
+          currentUser.set(await userRes.json());
+          await goto('/events');
+        } else {
+          currentUser.set(null);
+          await goto('/login');
+        }
       } else {
         const data = await response.json();
         error = data.detail || t('registration_error', $lang);
@@ -63,40 +68,12 @@
     </div>
   {/if}
 
-  <form onsubmit={(e) => { e.preventDefault(); handleRegister(); }} style="display: flex; flex-direction: column; gap: 1rem;">
-    <input
-      type="text"
-      placeholder={t('username', $lang)}
-      bind:value={username}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    
-    <input
-      type="email"
-      placeholder={t('email', $lang)}
-      bind:value={email}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    
-    <input
-      type="password"
-      placeholder={t('password', $lang)}
-      bind:value={password}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    
-    <input
-      type="password"
-      placeholder={t('confirm_password', $lang)}
-      bind:value={passwordConfirm}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    
-    <button
-      type="submit"
-      disabled={loading}
-      style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: {loading ? 0.6 : 1};"
-    >
+  <form on:submit|preventDefault={handleRegister} style="display: flex; flex-direction: column; gap: 1rem;">
+    <input type="text" placeholder={t('username', $lang)} bind:value={username} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
+    <input type="email" placeholder={t('email', $lang)} bind:value={email} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
+    <input type="password" placeholder={t('password', $lang)} bind:value={password} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
+    <input type="password" placeholder={t('confirm_password', $lang)} bind:value={passwordConfirm} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
+    <button type="submit" disabled={loading} style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: {loading ? 0.6 : 1};">
       {loading ? t('register_loading', $lang) : t('register', $lang)}
     </button>
   </form>

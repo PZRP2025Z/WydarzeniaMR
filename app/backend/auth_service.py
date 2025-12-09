@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 TOKEN_KEY = os.getenv("TOKEN_KEY", "changeme-secret-key")
 TOKEN_ALGORITHM = os.getenv("TOKEN_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
-REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 5))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", 7))
 
 argon2_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -48,18 +48,21 @@ def create_refresh_token(email: str, user_id: int) -> str:
 
 
 def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
-    """Creates access & refresh tokens and sets cookies."""
     access_token = create_access_token(user.email, user.id)
     refresh_token = create_refresh_token(user.email, user.id)
 
+    # Access token
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False,
-        samesite="lax",
+        secure=False,  # lokalnie HTTPS nie wymagane
+        samesite="lax",  # <-- zamiast 'none'
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/",
     )
+
+    # Refresh token
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -67,6 +70,7 @@ def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
         secure=False,
         samesite="lax",
         max_age=REFRESH_TOKEN_EXPIRE_DAYS * 86400,
+        path="/",
     )
 
     logger.info(f"Issued access + refresh token for {user.email}")
@@ -90,16 +94,29 @@ def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
 
 def get_current_user(
     access_token: Optional[str] = Cookie(None),
+    refresh_token: Optional[str] = Cookie(None),
     db: Session = Depends(get_session),
+    response: Response = None,
 ) -> User:
     if not access_token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+        if refresh_token:
+            # próbujemy odświeżyć access token
+            access_token = refresh_access_token(refresh_token, response)
+        else:
+            raise HTTPException(status_code=401, detail="Not authenticated")
 
-    token_data = verify_token(access_token)
+    try:
+        token_data = verify_token(access_token)
+    except HTTPException:
+        if refresh_token:
+            access_token = refresh_access_token(refresh_token, response)
+            token_data = verify_token(access_token)
+        else:
+            raise
+
     user = db.get(User, token_data.user_id)
-
     if not user:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(status_code=401, detail="Not authenticated")
 
     return user
 
@@ -112,8 +129,7 @@ def register_user(
         raise HTTPException(status_code=400, detail="Email already registered")
 
     user = User(
-        first_name=request.first_name,
-        last_name=request.last_name,
+        login=request.login,
         email=request.email,
         hashed_password=get_password_hash(request.password),
     )
@@ -158,13 +174,20 @@ def refresh_access_token(refresh_token: str, response: Response) -> str:
 
     new_access = create_access_token(email=email, user_id=user_id)
 
+    # Access token
     response.set_cookie(
         key="access_token",
         value=new_access,
         httponly=True,
-        secure=False,
-        samesite="lax",
+        secure=False,  # lokalnie HTTPS nie wymagane
+        samesite="lax",  # <-- zamiast 'none'
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/",
     )
-
     return new_access
+
+
+def logout_user(response: Response) -> None:
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="refresh_token", path="/")
+    logger.info("User logged out: cookies deleted")

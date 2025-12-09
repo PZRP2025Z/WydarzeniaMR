@@ -3,9 +3,12 @@
   import { lang } from '$lib/stores/stores';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { currentUser } from '$lib/stores/currentUser';
 
   let events: { id: number; name: string; location: string }[] = [];
   let newEvent = { name: '', location: '' };
+  let loading = false;
+  let error = '';
 
   const API_URL = 'http://127.0.0.1:8000/events';
 
@@ -20,26 +23,40 @@
   }
 
   async function addEvent() {
-    if (newEvent.name.trim() && newEvent.location.trim()) {
-      try {
-        const response = await fetch(`${API_URL}/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(newEvent), // <-- tutaj wysyłamy JSON
-        });
+    if (!newEvent.name.trim() || !newEvent.location.trim()) return;
 
-        if (response.ok) {
-          const createdEvent = await response.json();
-          events = [...events, createdEvent]; // dodajemy nowy event do listy
-          newEvent = { name: "", location: "" }; // reset inputów
-        } else {
-          console.error("Couldn't add event", await response.json());
-        }
-      } catch (err) {
-        console.error(err);
+    if (!$currentUser) {
+      alert('Musisz być zalogowany, aby dodać wydarzenie!');
+      return;
+    }
+
+    loading = true;
+    error = '';
+
+    try {
+      const response = await fetch(`${API_URL}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newEvent),
+        credentials: 'include' // ⬅ kluczowe, żeby ciasteczka były wysłane
+      });
+
+      if (response.ok) {
+        const createdEvent = await response.json();
+        events = [...events, createdEvent];
+        newEvent = { name: '', location: '' };
+      } else {
+        const data = await response.json();
+        error = data.detail || 'Nie udało się dodać wydarzenia';
+        console.error(error);
       }
+    } catch (err) {
+      console.error(err);
+      error = 'Błąd serwera';
+    } finally {
+      loading = false;
     }
   }
 
@@ -60,6 +77,10 @@
   <div style="background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
     <h2 style="font-size: 1.25rem; font-weight: 600;">{t('add_event', $lang)}</h2>
 
+    {#if error}
+      <p style="color:red;">{error}</p>
+    {/if}
+
     <input
       placeholder={t('event_title', $lang)}
       bind:value={newEvent.name}
@@ -72,7 +93,8 @@
     />
     <button 
       on:click={addEvent}
-      style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer;"
+      disabled={loading}
+      style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: {loading ? 0.6 : 1};"
     >
       {t('add_event', $lang)}
     </button>

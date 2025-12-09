@@ -7,7 +7,9 @@ from app.backend.auth_service import (
     login_for_access_token,
     get_current_user,
     refresh_access_token,
+    logout_user,
 )
+
 from app.database.models.user import User
 from app.database.models.auth import RegisterUserRequest, Token
 
@@ -26,19 +28,25 @@ def register_user_route(
 @router.post("/token", response_model=Token)
 def login_route(
     response: Response,
-    username: str = Form(...),
+    mail: str = Form(...),
     password: str = Form(...),
     db: Session = Depends(get_session),
 ):
-    return login_for_access_token(username, password, db, response)
+    return login_for_access_token(mail, password, db, response)
 
 
 @router.get("/me")
 def read_me(user: User = Depends(get_current_user)):
-    return {"user_id": user.id}
+    return {"user_id": user.id, "login": user.login, "emial": user.email}
 
 
 @router.post("/refresh")
 def refresh_token_route(response: Response, refresh_token: str = Cookie(None)):
     refresh_access_token(refresh_token, response)
     return {"message": "Access token refreshed"}
+
+
+@router.post("/logout")
+def logout_route(response: Response):
+    logout_user(response)
+    return {"message": "Logged out successfully"}

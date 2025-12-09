@@ -8,8 +8,7 @@ from uuid import UUID
 
 
 class RegisterUserRequest(BaseModel):
-    first_name: str
-    last_name: str
+    login: str
     email: EmailStr
     password: str
 

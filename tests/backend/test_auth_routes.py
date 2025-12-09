@@ -28,8 +28,7 @@ async def test_register_user_success():
         response = await client.post(
             "/auth/register",
             json={
-                "first_name": "string",
-                "last_name": "string",
+                "login": "string",
                 "email": "john@example.com",
                 "password": "string",
             },
@@ -48,9 +47,8 @@ async def test_register_user_duplicate_email():
 
     mock_db.exec.return_value.first.return_value = User(
         id=1,
+        login="Doe",
         email="john@example.com",
-        first_name="John",
-        last_name="Doe",
         hashed_password="hashed",
     )
 
@@ -60,8 +58,7 @@ async def test_register_user_duplicate_email():
         response = await client.post(
             "/auth/register",
             json={
-                "first_name": "John",
-                "last_name": "Doe",
+                "login": "Doe",
                 "email": "john@example.com",
                 "password": "secret123",
             },
@@ -91,7 +88,7 @@ async def test_login_invalid_password():
         response = await client.post(
             "/auth/token",
             data={
-                "username": "user@example.com",
+                "mail": "user@example.com",
                 "password": "wrongpwd",
                 "grant_type": "password",
             },
@@ -118,8 +115,8 @@ async def test_login_sets_cookie():
         response = await client.post(
             "/auth/token",
             data={
-                "username": "user@example.com",
-                "password": "correctpwd",  # tutaj MUSI być poprawne hasło
+                "mail": "user@example.com",
+                "password": "correctpwd",
                 "grant_type": "password",
             },
         )
@@ -151,7 +148,7 @@ async def test_login_with_cookie_access():
         login_response = await client.post(
             "/auth/token",
             data={
-                "username": "user@example.com",
+                "mail": "user@example.com",
                 "password": "correctpwd",
                 "grant_type": "password",
             },
@@ -192,7 +189,7 @@ async def test_refresh_access_token():
         login_response = await client.post(
             "/auth/token",
             data={
-                "username": "user@example.com",
+                "mail": "user@example.com",
                 "password": "correctpwd",
                 "grant_type": "password",
             },
