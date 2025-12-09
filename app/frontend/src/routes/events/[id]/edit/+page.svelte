@@ -1,141 +1,99 @@
 <script lang="ts">
-    import { t } from '$lib/i18n';
-    import { lang } from '$lib/stores/stores';
-    import { onMount } from "svelte";
-    import { goto } from "$app/navigation";
-    import { page } from "$app/stores";
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 
-    interface Event {
-        id: number;
-        name: string;
-        location: string;
+  interface Event {
+    id: number;
+    name: string;
+    location: string;
+    time: string;          // ISO string z backendu
+    description?: string;
+    photo?: string | null; // Base64
+  }
+
+  let event: Event | null = null;
+  let formData = { name: '', location: '', time: '', description: '', photo: null as string | null };
+  let loading = true;
+  let error = '';
+
+  const API_URL = '/api/events';
+
+  // Ładowanie danych wydarzenia
+  onMount(async () => {
+    const id = Number($page.params.id);
+    try {
+      const res = await fetch(`${API_URL}/${id}/`, { credentials: 'include' });
+      if (!res.ok) throw new Error("Nie udało się pobrać wydarzenia");
+      const data: Event = await res.json();
+      event = data;
+
+      // Format dla datetime-local: YYYY-MM-DDTHH:MM
+      formData = {
+        ...data,
+        time: data.time ? data.time.slice(0, 16) : '',
+        photo: data.photo || null
+      };
+    } catch (err) {
+      error = err instanceof Error ? err.message : "Błąd ładowania";
+    } finally {
+      loading = false;
     }
+  });
 
-    let event: Event | null = null;
-    let formData = { name: "", location: "" };
-    let isEditing = false;
-    let loading = true;
-    let error = "";
+  // Obsługa wczytania pliku zdjęcia
+  function handleFileSelect(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
 
-    const API_URL = "http://127.0.0.1:8000/events";
+    const reader = new FileReader();
+    reader.onload = () => {
+      formData.photo = (reader.result as string).split(',')[1]; // Base64
+    };
+    reader.readAsDataURL(file);
+  }
 
-    $: e = event as Event | null;
+  // Aktualizacja wydarzenia
+  async function updateEvent() {
+    if (!event) return;
 
-    onMount(async () => {
-        const id = Number($page.params.id);
-        try {
-            const res = await fetch(`${API_URL}/${id}`);
-            if (!res.ok) throw new Error("Event not found.");
-            const data: Event = await res.json();
-            event = data;
-            formData = { name: data.name, location: data.location };
-        } catch (err) {
-            error = err instanceof Error ? err.message : "Loading error";
-        } finally {
-            loading = false;
-        }
-    });
+    try {
+      const res = await fetch(`${API_URL}/${event.id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+        credentials: 'include'
+      });
 
-    async function updateEvent() {
-        if (!event) return;
+      if (!res.ok) {
+        const data = await res.json();
+        error = data.detail || "Nie udało się zaktualizować wydarzenia";
+        return;
+      }
 
-        const res = await fetch(`${API_URL}/${event.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-        });
-
-        if (!res.ok) {
-            error = "Couldn't update event";
-            return;
-        }
-
-        event = { ...event, ...formData };
-        isEditing = false;
+      const updated = await res.json();
+      goto(`/events/${updated.id}`);
+    } catch (err) {
+      console.error(err);
+      error = "Błąd serwera";
     }
-
-    async function deleteEvent() {
-        if (!event) return;
-        if (!confirm(t('remove_event_confirm', $lang))) return;
-
-        const res = await fetch(`${API_URL}/${event.id}`, { method: "DELETE" });
-
-        if (res.ok) goto("/events");
-        else error = "Couldn't delete event";
-    }
+  }
 </script>
 
-<div class="container">
-    {#if loading}
-        <p style="text-align:center; color: #666;">{t('event_loading', $lang)}</p>
+<div style="max-width:600px; margin:2rem auto; display:flex; flex-direction:column; gap:1rem;">
+  {#if loading}
+    <p>Ładowanie...</p>
+  {:else if error}
+    <p style="color:red">{error}</p>
+  {:else if event}
+    <h1>Edytuj wydarzenie</h1>
 
-    {:else if error}
-        <div style="background:#ffe5e5; border:1px solid #ff9999; color:#900; padding:12px; border-radius:6px;">
-            {error}
-        </div>
+    <input placeholder="Tytuł" bind:value={formData.name} />
+    <input placeholder="Lokalizacja" bind:value={formData.location} />
+    <input type="datetime-local" bind:value={formData.time} />
+    <textarea placeholder="Opis" bind:value={formData.description}></textarea>
+    <input type="file" accept="image/*" on:change={handleFileSelect} />
 
-    {:else if e}
-        <div style="background:#fff; padding:16px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h1 style="font-size:1.5rem; font-weight:bold; margin:0;">{e.name}</h1>
-                <button style="background:none; border:none; font-size:1.25rem; cursor:pointer;" on:click={() => goto(`/events/${e.id}`)}>
-                    ✕
-                </button>
-            </div>
-
-            {#if isEditing}
-                <form on:submit|preventDefault={updateEvent} style="display:flex; flex-direction:column; gap:12px;">
-                    <div style="display:flex; flex-direction:column;">
-                        <label for="name" style="margin-bottom:4px; font-weight:600;">{t('event_title', $lang)}</label>
-                        <input id="name" type="text" bind:value={formData.name} style="padding:8px; border:1px solid #ccc; border-radius:4px;"/>
-                    </div>
-
-                    <div style="display:flex; flex-direction:column;">
-                        <label for="location" style="margin-bottom:4px; font-weight:600;">{t('event_location', $lang)}</label>
-                        <input id="location" type="text" bind:value={formData.location} style="padding:8px; border:1px solid #ccc; border-radius:4px;"/>
-                    </div>
-
-                    <div style="display:flex; gap:8px; margin-top:8px;">
-                        <button type="submit" style="background:#007BFF; color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">
-                            Zapisz
-                        </button>
-                        <button type="button" on:click={() => isEditing=false} style="background:#888; color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">
-                            {t('cancel', $lang)}
-                        </button>
-                    </div>
-                </form>
-
-            {:else}
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <div>
-                        <h2 style="margin:0 0 4px 0; font-weight:100; color:#555; ; font-size:0.9rem;">{t('event_location', $lang)}</h2>
-                        <p style="margin:0; color:#333;">{e.location}</p>
-                    </div>
-
-                    <div style="display:flex; gap:8px;">
-                        <button on:click={() => isEditing=true} style="background:#007BFF; color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">
-                            {t('edit_event', $lang)}
-                        </button>
-                        <button on:click={deleteEvent} style="background:#d9534f; color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">
-                            {t('remove_event', $lang)}
-                        </button>
-                    </div>
-                </div>
-            {/if}
-
-        </div>
-
-    {:else}
-        <p style="text-align:center; color:#666;">{t('no_events', $lang)}</p>
-    {/if}
+    <button on:click={updateEvent}>Zapisz zmiany</button>
+  {/if}
 </div>
-
-<style>
-    .container {
-        max-width:600px;
-        margin:2rem auto;
-        padding:16px;
-        font-family: system-ui, sans-serif;
-    }
-</style>
