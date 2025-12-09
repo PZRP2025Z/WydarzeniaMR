@@ -23,9 +23,7 @@ def add_event(
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
-    event = create_event(db, event_data.name, event_data.location, owner_id=user.id)
-    logger.info(f"User {user.id} created event {event.id}")
-    return event
+    return create_event(db, event_data, owner_id=user.id)
 
 
 @router.get("/")
@@ -52,13 +50,7 @@ def edit_event(
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
-    event = update_event(
-        db,
-        event_id,
-        user_id=user.id,
-        name=event_data.name,
-        location=event_data.location,
-    )
+    event = update_event(db, event_id, user.id, event_data)
 
     if event is None:
         raise HTTPException(404, "Event not found")

@@ -1,57 +1,43 @@
 <script lang="ts">
-  import { t } from '$lib/i18n';
-  import { lang } from '$lib/stores/stores';
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { currentUser } from '$lib/stores/currentUser';
 
-  let events: { id: number; name: string; location: string }[] = [];
-  let newEvent = { name: '', location: '' };
+  let newEvent = { name: '', location: '', time: '', description: '', photo: null as string | null };
   let loading = false;
   let error = '';
 
-  const API_URL = 'http://127.0.0.1:8000/events';
+  function handleFileSelect(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
 
-  async function fetchEvents() {
-    try {
-      const res = await fetch(`${API_URL}/`);
-      if (!res.ok) throw new Error('Couldn\'t fetch events');
-      events = await res.json();
-    } catch (err) {
-      console.error(err);
-    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      newEvent.photo = (reader.result as string).split(',')[1]; // Base64
+    };
+    reader.readAsDataURL(file);
   }
 
   async function addEvent() {
-    if (!newEvent.name.trim() || !newEvent.location.trim()) return;
-
-    if (!$currentUser) {
-      alert('Musisz być zalogowany, aby dodać wydarzenie!');
-      return;
-    }
+    if (!newEvent.name.trim() || !newEvent.location.trim() || !newEvent.time.trim()) return;
 
     loading = true;
     error = '';
 
     try {
-      const response = await fetch(`${API_URL}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+      const res = await fetch(`/api/events/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEvent),
-        credentials: 'include' // ⬅ kluczowe, żeby ciasteczka były wysłane
+        credentials: 'include'
       });
 
-      if (response.ok) {
-        const createdEvent = await response.json();
-        events = [...events, createdEvent];
-        newEvent = { name: '', location: '' };
-      } else {
-        const data = await response.json();
+      if (!res.ok) {
+        const data = await res.json();
         error = data.detail || 'Nie udało się dodać wydarzenia';
-        console.error(error);
+        return;
       }
+
+      const createdEvent = await res.json();
+      goto(`/events/${createdEvent.id}`);
     } catch (err) {
       console.error(err);
       error = 'Błąd serwera';
@@ -59,62 +45,18 @@
       loading = false;
     }
   }
-
-  function viewEventDetails(id: number) {
-    goto(`/events/${id}`);
-  }
-
-  onMount(() => {
-    fetchEvents();
-  });
 </script>
 
-<div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+<div style="max-width:600px; margin:2rem auto; display:flex; flex-direction:column; gap:1rem;">
+  <h1>Dodaj nowe wydarzenie</h1>
 
-  <h1 style="font-size: 2rem; font-weight: bold;">{t('title', $lang)}</h1>
+  {#if error}<p style="color:red">{error}</p>{/if}
 
-  <!-- Formularz dodania wydarzenia -->
-  <div style="background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-    <h2 style="font-size: 1.25rem; font-weight: 600;">{t('add_event', $lang)}</h2>
+  <input placeholder="Tytuł" bind:value={newEvent.name} />
+  <input placeholder="Lokalizacja" bind:value={newEvent.location} />
+  <input placeholder="Data i godzina" bind:value={newEvent.time} type="datetime-local" />
+  <textarea placeholder="Opis" bind:value={newEvent.description}></textarea>
+  <input type="file" accept="image/*" on:change={handleFileSelect} />
 
-    {#if error}
-      <p style="color:red;">{error}</p>
-    {/if}
-
-    <input
-      placeholder={t('event_title', $lang)}
-      bind:value={newEvent.name}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    <input
-      placeholder={t('event_location', $lang)}
-      bind:value={newEvent.location}
-      style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;"
-    />
-    <button 
-      on:click={addEvent}
-      disabled={loading}
-      style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: {loading ? 0.6 : 1};"
-    >
-      {t('add_event', $lang)}
-    </button>
-  </div>
-
-  <!-- Lista wydarzenia -->
-  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-    {#each events as event (event.id)}
-      <div style="background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="font-weight: 600;">{event.name}</p>
-          <p style="font-size: 0.875rem; color: #666;">{event.location}</p>
-        </div>
-        <button 
-          on:click={() => viewEventDetails(event.id)}
-          style="padding: 0.25rem 0.5rem; border: 1px solid #007BFF; color: #007BFF; border-radius: 0.25rem; background: none; cursor: pointer;"
-        >
-          {t('event_details', $lang)}
-        </button>
-      </div>
-    {/each}
-  </div>
+  <button on:click={addEvent} disabled={loading}>Dodaj wydarzenie</button>
 </div>
