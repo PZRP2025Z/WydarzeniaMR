@@ -14,8 +14,8 @@ async def test_read_users():
     app.dependency_overrides[get_session] = lambda: mock_db
 
     fake_users = [
-        User(id=1, first_name="Alice", last_name="Smith", email="alice@example.com"),
-        User(id=2, first_name="Bob", last_name="Jones", email="bob@example.com"),
+        User(id=1, login="Alice", email="alice@example.com"),
+        User(id=2, login="Bob", email="bob@example.com"),
     ]
     mock_exec = mock_db.exec.return_value
     mock_exec.all.return_value = fake_users
@@ -36,9 +36,7 @@ async def test_read_user():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    fake_user = User(
-        id=1, first_name="Alice", last_name="Smith", email="alice@example.com"
-    )
+    fake_user = User(id=1, login="Alice", email="alice@example.com")
     mock_db.get.return_value = fake_user
 
     async with AsyncClient(
@@ -60,8 +58,7 @@ async def test_update_password_success():
     hashed_pw = get_password_hash("oldpassword")
     fake_user = User(
         id=1,
-        first_name="Alice",
-        last_name="Smith",
+        login="Smith",
         email="alice@example.com",
         hashed_password=hashed_pw,
     )
@@ -94,8 +91,7 @@ async def test_update_password_failure_wrong_current():
     hashed_pw = get_password_hash("oldpassword")
     fake_user = User(
         id=1,
-        first_name="Alice",
-        last_name="Smith",
+        login="Alice",
         email="alice@example.com",
         hashed_password=hashed_pw,
     )
@@ -123,9 +119,7 @@ async def test_delete_user():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    fake_user = User(
-        id=1, first_name="Alice", last_name="Smith", email="alice@example.com"
-    )
+    fake_user = User(id=1, login="Alice", email="alice@example.com")
     mock_db.get.return_value = fake_user
 
     async with AsyncClient(
