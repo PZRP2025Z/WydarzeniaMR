@@ -25,6 +25,9 @@ class CommentCreate(BaseModel):
 
 class CommentRead(BaseModel):
     id: int
-    user_id: int
+    user_login: str
     content: str
     created_at: datetime
+
+    class Config:
+        from_attributes = True
