@@ -11,25 +11,21 @@ import dotenv
 dotenv.load_dotenv()
 
 VENV_DIR = Path("venv")
-REQUIREMENTS_FILE = Path("requirements.txt")
 DOCKER_COMPOSE_FILE = Path("docker-compose.yaml")
 APP_MODULE = "app.main:main"
-PYTHON = (
-    VENV_DIR / "bin" / "python"
-    if os.name != "nt"
-    else VENV_DIR / "Scripts" / "python.exe"
-)
+PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
+PROJECT_ROOT = Path(__file__).resolve().parent
 running_processes = []
 
 
-def run(cmd, cwd=None, check=True, background=False):
+def run(cmd, cwd=None, check=True, background=False, env=None):
     print(f">> {' '.join(cmd)}")
     if background:
-        proc = subprocess.Popen(cmd, cwd=cwd)
+        proc = subprocess.Popen(cmd, cwd=cwd, env=env)
         running_processes.append(proc)
         return proc
     else:
-        result = subprocess.run(cmd, cwd=cwd, check=check)
+        result = subprocess.run(cmd, cwd=cwd, check=check, env=env)
         return result.returncode
 
 
@@ -42,21 +38,27 @@ def ensure_venv():
 
 
 def install_requirements():
-    if REQUIREMENTS_FILE.exists():
-        print("Installing requirements")
-        run([str(PYTHON), "-m", "pip", "install", "--upgrade", "pip"])
-        run([str(PYTHON), "-m", "pip", "install", "-r", str(REQUIREMENTS_FILE)])
-    else:
-        print("No requirements.txt found")
+    print("Installing requirements")
+    run([str(PYTHON), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"])
+    run([str(PYTHON), "-m", "pip", "install", "-e", "."])
+    run([str(PYTHON), "-m", "pip", "install", "-e", ".[test,dev]"])
 
 
 def run_tests():
     print("Running tests")
-    try:
-        run([str(PYTHON), "-m", "pytest", "--maxfail=1", "--disable-warnings", "-q"])
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(PROJECT_ROOT)
+
+    result = subprocess.run(
+        [str(PYTHON), "-m", "pytest", "--maxfail=1", "--disable-warnings", "-q"],
+        cwd=PROJECT_ROOT,
+        env=env,
+        check=False,
+    )
+    if result.returncode == 0:
         print("Tests passed")
         return True
-    except subprocess.CalledProcessError:
+    else:
         print("Tests failed. Aborting")
         return False
 
@@ -64,7 +66,7 @@ def run_tests():
 def start_docker():
     if DOCKER_COMPOSE_FILE.exists():
         print("Starting Docker services...")
-        run(["docker", "compose", "up", "-d"])
+        run(["docker", "compose", "up", "-d", "--build"])
     else:
         print("No docker-compose.yml found")
 
@@ -106,7 +108,7 @@ def wait_for_postgres(host="localhost", port=5432, timeout=60):
 
 def run_app():
     print("Starting FastAPI app")
-    run([str(PYTHON), "-m", "dramatiq", "app.dramatiq_worker"], background=True)
+    # run([str(PYTHON), "-m", "dramatiq", "app.dramatiq_worker"], background=True)
     run([str(PYTHON), "-m", "uvicorn", "app.main:app", "--reload"])
 
 
@@ -115,8 +117,11 @@ def handle_exit(sig, frame):
     for p in running_processes:
         try:
             p.terminate()
-        except Exception:
-            pass
+            p.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            p.kill()  # Force kill if it doesn't terminate
+        except Exception as e:
+            print(f"Error stopping process: {e}")
     stop_docker()
     sys.exit(0)
 
