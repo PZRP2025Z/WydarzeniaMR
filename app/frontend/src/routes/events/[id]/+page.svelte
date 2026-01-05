@@ -22,7 +22,7 @@
   }
 
   let event: Event | null = null;
-  let eventDescriptionHtml = ""; // <- wygenerowany HTML z Markdown
+  let eventDescriptionHtml = ""; 
   let loading = true;
   let error = "";
 
@@ -95,7 +95,7 @@
       }
 
       const created: Comment = await res.json();
-      comments = [created, ...comments]; // dodaj na górę
+      comments = [created, ...comments]; 
       newComment = "";
 
     } catch (err) {
@@ -143,6 +143,34 @@
     if (!event) return;
     goto(`/events/${event.id}/edit`);
   }
+
+  // -------------------------------
+  // GOOGLE CALENDAR
+  // -------------------------------
+  function formatDateForGoogleCalendar(dateStr?: string) {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    return d.toISOString().replace(/-|:|\.\d+/g, "");
+  }
+
+  function addToGoogleCalendar() {
+    if (!event) return;
+
+    const start = formatDateForGoogleCalendar(event.time);
+    const endDate = event.time ? new Date(new Date(event.time).getTime() + 60*60*1000) : null; // 1 godzina
+    const end = endDate ? formatDateForGoogleCalendar(endDate.toISOString()) : start;
+
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: event.name,
+      dates: `${start}/${end}`,
+      details: event.description ?? "",
+      location: event.location ?? ""
+    });
+
+    const url = `https://www.google.com/calendar/render?${params.toString()}`;
+    window.open(url, "_blank");
+  }
 </script>
 
 {#if loading}
@@ -155,6 +183,8 @@
 
 {:else if event}
 <div style="display:flex; max-width:1200px; margin:2rem auto; gap:2rem; font-family:system-ui, sans-serif;">
+
+  <!-- Główna kolumna -->
   <div style="flex:3; display:flex; flex-direction:column; gap:1.5rem;">
 
     <img 
@@ -170,18 +200,14 @@
       <p style="margin:0; color:#555;">Liczba uczestników: {event.attendees}</p>
     </div>
 
-    <!-- Render Markdown -->
     <div style="background:#f9f9f9; padding:1rem; border-radius:8px; min-height:150px;">
       {@html eventDescriptionHtml}
     </div>
 
-    <!-- ============================
-         KOMENTARZE
-    ============================== -->
+    <!-- KOMENTARZE -->
     <div style="background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
       <h2 style="margin-top:0; font-size:1.25rem;">Komentarze</h2>
 
-      <!-- Formularz dodawania -->
       {#if addCommentError}
         <p style="color:red;">{addCommentError}</p>
       {/if}
@@ -200,7 +226,6 @@
 
       <hr style="margin:1rem 0;" />
 
-      <!-- Lista komentarzy -->
       {#if loadingComments}
         <p>Ładowanie komentarzy…</p>
       {:else if commentsError}
@@ -216,7 +241,6 @@
           </div>
         {/each}
 
-        <!-- Załaduj więcej -->
         {#if comments.length >= commentsLimit}
           <button
             on:click={() => { loadingMoreComments = true; loadComments(false); }}
@@ -237,6 +261,10 @@
         Edytuj wydarzenie
       </button>
 
+      <button on:click={addToGoogleCalendar} style="padding:0.5rem; background:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">
+        Dodaj do kalendarza Google
+      </button>
+
       <button style="padding:0.5rem; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">
         Utwórz link spersonalizowany
       </button>
@@ -246,5 +274,6 @@
       </button>
     </div>
   </div>
+
 </div>
 {/if}
