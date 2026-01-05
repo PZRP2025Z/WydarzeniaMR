@@ -23,7 +23,7 @@
   onMount(async () => {
     const id = Number($page.params.id);
     try {
-      const res = await fetch(`${API_URL}/${id}/`, { credentials: 'include' });
+      const res = await fetch(`${API_URL}/${id}`, { credentials: 'include' });
       if (!res.ok) throw new Error("Nie udało się pobrać wydarzenia");
       const data: Event = await res.json();
       event = data;
@@ -58,7 +58,7 @@
     if (!event) return;
 
     try {
-      const res = await fetch(`${API_URL}/${event.id}/`, {
+      const res = await fetch(`${API_URL}/${event.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

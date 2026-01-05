@@ -80,7 +80,7 @@
     const id = Number($page.params.id);
 
     try {
-      const res = await fetch(`/api/events/${id}/comments/`, {
+      const res = await fetch(`/api/events/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -109,7 +109,7 @@
   onMount(async () => {
     const id = Number($page.params.id);
     try {
-      const res = await fetch(`/api/events/${id}/`);
+      const res = await fetch(`/api/events/${id}`);
       if (!res.ok) throw new Error("Nie udało się pobrać wydarzenia.");
       const data: Event = await res.json();
       event = data;
