@@ -8,8 +8,12 @@ from uuid import UUID
 
 
 class RegisterUserRequest(BaseModel):
-    first_name: str
-    last_name: str
+    login: str
+    email: EmailStr
+    password: str
+
+
+class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
@@ -20,9 +24,9 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    user_id: Optional[str] = None
+    user_id: Optional[int] = None
 
     def get_uuid(self) -> Optional[UUID]:
         if self.user_id:
-            return UUID(self.user_id)
+            return UUID(int=self.user_id)
         return None

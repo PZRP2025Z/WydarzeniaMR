@@ -1,8 +1,9 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException
+from app.database.models.event import EventCreate, EventUpdate
 from sqlmodel import Session
 from app.database.session import get_session
-from pydantic import BaseModel
+from app.backend.auth_service import get_current_user
 from app.backend.event_service import (
     create_event,
     get_events,
@@ -16,17 +17,13 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-class EventCreate(BaseModel):
-    name: str
-    location: str
-
 @router.post("/")
-def add_event(name: str, location: str, db: Session = Depends(get_session)):
-    event = create_event(db, name, location)
-    logger.info(
-        f"Created event: id={event.id}, name={event.name}, location={event.location}"
-    )
-    return event
+def add_event(
+    event_data: EventCreate,
+    db: Session = Depends(get_session),
+    user=Depends(get_current_user),
+):
+    return create_event(db, event_data, owner_id=user.id)
 
 
 @router.get("/")
@@ -49,25 +46,31 @@ def read_event(event_id: int, db: Session = Depends(get_session)):
 @router.put("/{event_id}")
 def edit_event(
     event_id: int,
-    name: str | None = None,
-    location: str | None = None,
+    event_data: EventUpdate,
     db: Session = Depends(get_session),
+    user=Depends(get_current_user),
 ):
-    event = update_event(db, event_id, name, location)
-    if not event:
-        logger.warning(f"Failed to update event with id={event_id}")
-        raise HTTPException(status_code=404, detail="Event not found")
-    logger.info(
-        f"Updated event: id={event.id}, name={event.name}, location={event.location}"
-    )
+    event = update_event(db, event_id, user.id, event_data)
+
+    if event is None:
+        raise HTTPException(404, "Event not found")
+    if event == "forbidden":
+        raise HTTPException(403, "You are not the owner of this event")
+
     return event
 
 
 @router.delete("/{event_id}")
-def remove_event(event_id: int, db: Session = Depends(get_session)):
-    success = delete_event(db, event_id)
-    if not success:
-        logger.warning(f"Failed to delete event with id={event_id}")
-        raise HTTPException(status_code=404, detail="Event not found")
-    logger.info(f"Deleted event with id={event_id}")
+def remove_event(
+    event_id: int,
+    db: Session = Depends(get_session),
+    user=Depends(get_current_user),
+):
+    result = delete_event(db, event_id, user_id=user.id)
+
+    if result is False:
+        raise HTTPException(404, "Event not found")
+    if result == "forbidden":
+        raise HTTPException(403, "You are not the owner of this event")
+
     return {"ok": True}

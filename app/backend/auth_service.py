@@ -6,23 +6,23 @@ import os
 import logging
 import jwt
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, Optional
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from typing import Optional
+
+from fastapi import HTTPException, Cookie, Response, Depends
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 
 from app.database.models.user import User
 from app.database.models.auth import TokenData, RegisterUserRequest, Token
+from app.database.session import get_session
 
 logger = logging.getLogger(__name__)
 
 TOKEN_KEY = os.getenv("TOKEN_KEY", "changeme-secret-key")
 TOKEN_ALGORITHM = os.getenv("TOKEN_ALGORITHM", "HS256")
-TOKEN_EXPIRE_MINUTES = int(os.getenv("TOKEN_EXPIRE_MINUTES", "60"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 5))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", 7))
 
-# JWT config & password hashing
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 argon2_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
@@ -34,88 +34,160 @@ def get_password_hash(password: str) -> str:
     return argon2_context.hash(password)
 
 
-def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
-    user = db.exec(select(User).where(User.email == email)).first()
-    if not user or not verify_password(password, user.hashed_password):
-        logger.warning(f"Authentication failed for email: {email}")
-        return None
-    return user
-
-
-def create_access_token(
-    email: str, user_id: int, expires_delta: Optional[timedelta] = None
-) -> str:
+def create_access_token(email: str, user_id: int, expires_delta=None) -> str:
     expire = datetime.now(timezone.utc) + (
-        expires_delta or timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+        expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-    to_encode = {"sub": email, "user_id": user_id, "exp": expire}
-    encoded_jwt = jwt.encode(to_encode, TOKEN_KEY, algorithm=TOKEN_ALGORITHM)
-    logger.debug(f"JWT created for user_id={user_id}")
-    return encoded_jwt
+    payload = {"sub": email, "user_id": user_id, "exp": int(expire.timestamp())}
+    return jwt.encode(payload, TOKEN_KEY, algorithm=TOKEN_ALGORITHM)
+
+
+def create_refresh_token(email: str, user_id: int) -> str:
+    expire = timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    return create_access_token(email, user_id, expires_delta=expire)
+
+
+def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
+    access_token = create_access_token(user.email, user.id)
+    refresh_token = create_refresh_token(user.email, user.id)
+
+    # Access token
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,  # lokalnie HTTPS nie wymagane
+        samesite="lax",  # <-- zamiast 'none'
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/",
+    )
+
+    # Refresh token
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=REFRESH_TOKEN_EXPIRE_DAYS * 86400,
+        path="/",
+    )
+
+    logger.info(f"Issued access + refresh token for {user.email}")
 
 
 def verify_token(token: str) -> TokenData:
     try:
         payload = jwt.decode(token, TOKEN_KEY, algorithms=[TOKEN_ALGORITHM])
         user_id = payload.get("user_id")
-        if not user_id:
-            raise ValueError("Missing user_id in token")
         return TokenData(user_id=user_id)
-    except Exception as e:
-        logger.warning(f"Token verification failed: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
-def register_user(request: RegisterUserRequest, db: Session) -> User:
-    existing_user = db.exec(select(User).where(User.email == request.email)).first()
-    if existing_user:
-        logger.warning(f"Attempt to register existing email: {request.email}")
+def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
+    user = db.exec(select(User).where(User.email == email)).first()
+    if not user or not verify_password(password, user.hashed_password):
+        return None
+    return user
+
+
+def get_current_user(
+    access_token: Optional[str] = Cookie(None),
+    refresh_token: Optional[str] = Cookie(None),
+    db: Session = Depends(get_session),
+    response: Response = None,
+) -> User:
+    if not access_token:
+        if refresh_token:
+            # próbujemy odświeżyć access token
+            access_token = refresh_access_token(refresh_token, response)
+        else:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+    try:
+        token_data = verify_token(access_token)
+    except HTTPException:
+        if refresh_token:
+            access_token = refresh_access_token(refresh_token, response)
+            token_data = verify_token(access_token)
+        else:
+            raise
+
+    user = db.get(User, token_data.user_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    return user
+
+
+def register_user(
+    request: RegisterUserRequest, db: Session, response: Response
+) -> User:
+    existing = db.exec(select(User).where(User.email == request.email)).first()
+    if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    hashed_pw = get_password_hash(request.password)
     user = User(
-        first_name=request.first_name,
-        last_name=request.last_name,
+        login=request.login,
         email=request.email,
-        hashed_password=hashed_pw,
+        hashed_password=get_password_hash(request.password),
     )
 
     db.add(user)
     db.commit()
     db.refresh(user)
 
-    logger.info(f"New user registered: {user.email}")
+    issue_tokens_and_set_cookies(user, response)
+
     return user
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]) -> TokenData:
-    return verify_token(token)
-
-
-CurrentUser = Annotated[TokenData, Depends(get_current_user)]
-
-
 def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: Session,
+    email: str, password: str, db: Session, response: Response
 ) -> Token:
-    """Authenticate user and return a JWT token."""
-    user = authenticate_user(form_data.username, form_data.password, db)
+    user = authenticate_user(email, password, db)
     if not user:
-        logger.warning(f"Login failed for email: {form_data.username}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
 
-    access_token = create_access_token(
-        user.email, user.id, expires_delta=timedelta(minutes=TOKEN_EXPIRE_MINUTES)
+    issue_tokens_and_set_cookies(user, response)
+
+    return Token(
+        access_token=create_access_token(user.email, user.id),
+        token_type="bearer",
     )
 
-    logger.info(f"Access token issued for user: {user.email}")
-    return Token(access_token=access_token, token_type="bearer")
+
+def refresh_access_token(refresh_token: str, response: Response) -> str:
+    """Verify refresh token and issue a new access token, set in cookie."""
+    if not refresh_token:
+        raise HTTPException(status_code=401, detail="No refresh token")
+
+    try:
+        payload = jwt.decode(refresh_token, TOKEN_KEY, algorithms=[TOKEN_ALGORITHM])
+        user_id = payload.get("user_id")
+        email = payload.get("sub")
+        if not user_id or not email:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    new_access = create_access_token(email=email, user_id=user_id)
+
+    # Access token
+    response.set_cookie(
+        key="access_token",
+        value=new_access,
+        httponly=True,
+        secure=False,  # lokalnie HTTPS nie wymagane
+        samesite="lax",  # <-- zamiast 'none'
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/",
+    )
+    return new_access
+
+
+def logout_user(response: Response) -> None:
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="refresh_token", path="/")
+    logger.info("User logged out: cookies deleted")
