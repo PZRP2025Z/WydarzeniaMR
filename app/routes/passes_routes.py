@@ -7,21 +7,28 @@ pass links that allow passwordless access for guest users and controlled
 linking to registered user accounts.
 """
 
-from fastapi import APIRouter, Depends, Response, HTTPException
-from sqlmodel import Session
-from dotenv import load_dotenv
 import os
 
-from app.database.session import get_session
+from dotenv import load_dotenv
+from fastapi import APIRouter, Body, Depends, HTTPException, Response
+from pydantic import BaseModel
+from sqlmodel import Session
+
 from app.backend.auth_service import get_current_user
 from app.backend.event_pass_service import (
-    create_event_pass,
-    resolve_event_pass,
-    create_guest_user,
     bind_pass_to_user,
+    create_event_pass,
+    create_guest_user,
     login_via_pass,
+    resolve_event_pass,
 )
 from app.database.models.user import User
+from app.database.session import get_session
+
+
+class CreatePassRequest(BaseModel):
+    display_name: str
+
 
 load_dotenv()
 
@@ -32,7 +39,7 @@ FRONTEND_BASE_URL = os.environ["FRONTEND_BASE_URL"]
 @router.post("/personal/{event_id}")
 def create_pass(
     event_id: int,
-    display_name: str,
+    request: CreatePassRequest = Body(...),
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
@@ -54,7 +61,7 @@ def create_pass(
     """
     token = create_event_pass(
         event_id=event_id,
-        display_name=display_name,
+        display_name=request.display_name,
         db=db,
     )
 
