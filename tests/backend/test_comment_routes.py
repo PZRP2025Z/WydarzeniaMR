@@ -1,12 +1,14 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from unittest.mock import MagicMock
-from sqlmodel import Session
-from app.main import app
-from app.database.session import get_session
-from app.database.models.comment import Comment
 from datetime import datetime
+from unittest.mock import MagicMock
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlmodel import Session
+
 from app.backend.auth_service import get_current_user
+from app.database.models.comment import Comment
+from app.database.session import get_session
+from app.main import app
 from app.database.models.user import User
 
 
@@ -30,6 +32,7 @@ async def test_add_comment():
 
     mock_db.add.side_effect = fake_add
     mock_db.refresh.side_effect = lambda obj: None
+    mock_db.get.return_value = fake_user
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(

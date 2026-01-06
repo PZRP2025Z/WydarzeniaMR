@@ -11,6 +11,7 @@ from app.routes import event_routes
 from app.routes import auth_routes
 from app.routes import user_routes
 from app.routes import comment_routes
+from app.routes import passes_routes
 from app.routes import participations_routes
 
 from app.logger import setup_logging
@@ -58,4 +59,5 @@ app.include_router(event_routes.router)
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
 app.include_router(comment_routes.router)
+app.include_router(passes_routes.router)
 app.include_router(participations_routes.router)

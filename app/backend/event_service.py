@@ -3,6 +3,7 @@ Basic CRUD functionality for Event model
 """
 
 from sqlmodel import Session, select
+
 from app.database.models.event import Event, EventCreate, EventUpdate
 
 
