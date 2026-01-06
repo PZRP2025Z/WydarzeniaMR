@@ -1,12 +1,14 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from unittest.mock import MagicMock
-from sqlmodel import Session
-from app.main import app
-from app.database.session import get_session
-from app.database.models.comment import Comment
 from datetime import datetime
+from unittest.mock import MagicMock
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlmodel import Session
+
 from app.backend.auth_service import get_current_user
+from app.database.models.comment import Comment
+from app.database.session import get_session
+from app.main import app
 
 
 @pytest.mark.asyncio
