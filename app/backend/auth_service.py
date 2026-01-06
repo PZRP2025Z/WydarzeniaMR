@@ -2,18 +2,17 @@
 Authentication functionality
 """
 
-import os
 import logging
-import jwt
+import os
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
-from fastapi import HTTPException, Cookie, Response, Depends
+import jwt
+from fastapi import Cookie, Depends, HTTPException, Response
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 
+from app.database.models.auth import RegisterUserRequest, Token, TokenData
 from app.database.models.user import User
-from app.database.models.auth import TokenData, RegisterUserRequest, Token
 from app.database.session import get_session
 
 logger = logging.getLogger(__name__)
@@ -85,7 +84,7 @@ def verify_token(token: str) -> TokenData:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
-def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
+def authenticate_user(email: str, password: str, db: Session) -> User | None:
     user = db.exec(select(User).where(User.email == email)).first()
     if not user or not verify_password(password, user.hashed_password):
         return None
@@ -93,8 +92,8 @@ def authenticate_user(email: str, password: str, db: Session) -> Optional[User]:
 
 
 def get_current_user(
-    access_token: Optional[str] = Cookie(None),
-    refresh_token: Optional[str] = Cookie(None),
+    access_token: str | None = Cookie(None),
+    refresh_token: str | None = Cookie(None),
     db: Session = Depends(get_session),
     response: Response = None,
 ) -> User:
@@ -121,9 +120,7 @@ def get_current_user(
     return user
 
 
-def register_user(
-    request: RegisterUserRequest, db: Session, response: Response
-) -> User:
+def register_user(request: RegisterUserRequest, db: Session, response: Response) -> User:
     existing = db.exec(select(User).where(User.email == request.email)).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -143,9 +140,7 @@ def register_user(
     return user
 
 
-def login_for_access_token(
-    email: str, password: str, db: Session, response: Response
-) -> Token:
+def login_for_access_token(email: str, password: str, db: Session, response: Response) -> Token:
     user = authenticate_user(email, password, db)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
