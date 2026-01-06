@@ -5,7 +5,7 @@ services:
     image: postgres:15
     container_name: db
     env_file:
-      - .env
+      - .env.docker
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -18,3 +18,14 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+
+  dramatiq-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: dramatiq-worker
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
