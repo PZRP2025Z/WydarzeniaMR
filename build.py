@@ -12,8 +12,6 @@ dotenv.load_dotenv()
 
 VENV_DIR = Path("venv")
 DOCKER_COMPOSE_FILE = Path("docker-compose.yaml")
-APP_MODULE = "app.main:main"
-PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
 PROJECT_ROOT = Path(__file__).resolve().parent
 running_processes = []
 
@@ -38,14 +36,18 @@ def ensure_venv():
 
 
 def install_requirements():
-    print("Installing requirements")
+    """Instaluje pakiety lokalnie do testów, ale nie uruchamia backendu."""
+    print("Installing requirements in venv for local tests")
+    PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
     run([str(PYTHON), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"])
     run([str(PYTHON), "-m", "pip", "install", "-e", "."])
     run([str(PYTHON), "-m", "pip", "install", "-e", ".[test,dev]"])
 
 
 def run_tests():
+    """Uruchamia lokalnie testy w venv (opcjonalne)."""
     print("Running tests")
+    PYTHON = VENV_DIR / "bin" / "python" if os.name != "nt" else VENV_DIR / "Scripts" / "python.exe"
     env = os.environ.copy()
     env["PYTHONPATH"] = str(PROJECT_ROOT)
 
@@ -65,7 +67,7 @@ def run_tests():
 
 def start_docker():
     if DOCKER_COMPOSE_FILE.exists():
-        print("Starting Docker services...")
+        print("Starting Docker services (frontend, backend, worker)...")
         run(["docker", "compose", "up", "-d", "--build"])
     else:
         print("No docker-compose.yml found")
@@ -75,17 +77,18 @@ def stop_docker():
     if DOCKER_COMPOSE_FILE.exists():
         print("Stopping Docker services...")
         try:
-            subprocess.run(["docker", "compose", "down"], check=False)
+            subprocess.run(["docker", "compose", "down", "-v"], check=False)
         except Exception as e:
             print(f"Could not stop Docker: {e}")
 
 
-def wait_for_postgres(host="localhost", port=5432, timeout=60):
+def wait_for_postgres(timeout=60):
+    """Czeka aż baza danych w kontenerze będzie gotowa."""
     print("Waiting for PostgreSQL")
     DB_USERNAME = os.getenv("DB_USERNAME")
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_HOST = os.getenv("DB_HOST")
-    DB_PORT = os.getenv("DB_PORT")
+    DB_PORT = int(os.getenv("DB_PORT", 5432))
     DB_NAME = os.getenv("DB_NAME")
     start = time.time()
     while time.time() - start < timeout:
@@ -106,12 +109,6 @@ def wait_for_postgres(host="localhost", port=5432, timeout=60):
     return False
 
 
-def run_app():
-    print("Starting FastAPI app")
-    # run([str(PYTHON), "-m", "dramatiq", "app.dramatiq_worker"], background=True)
-    run([str(PYTHON), "-m", "uvicorn", "app.main:app", "--reload"])
-
-
 def handle_exit(sig, frame):
     print("\nShutting down...")
     for p in running_processes:
@@ -119,7 +116,7 @@ def handle_exit(sig, frame):
             p.terminate()
             p.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            p.kill()  # Force kill if it doesn't terminate
+            p.kill()
         except Exception as e:
             print(f"Error stopping process: {e}")
     stop_docker()
@@ -131,20 +128,32 @@ def main():
         signal.signal(signal.SIGINT, handle_exit)
         signal.signal(signal.SIGTERM, handle_exit)
 
+        # Wirtualne środowisko i instalacja dla testów (nie uruchamiamy backendu lokalnie)
         ensure_venv()
         install_requirements()
 
-        # if not run_tests():
-        #    raise Exception("Tests failed")
+        # Opcjonalne testy
+        if not run_tests():
+            raise Exception("Tests failed")
 
+        # Start wszystkich kontenerów
         start_docker()
-        if not wait_for_postgres("localhost", 5432):
+
+        # Czekamy aż baza danych w kontenerze będzie gotowa
+        if not wait_for_postgres():
             raise Exception("Postgres failed to initialize")
-        run_app()
+
+        print("✅ All services started. Backend is running in Docker.")
+        print("Frontend URL: http://localhost:5173")
+        print("Backend URL: http://localhost:8000")
+        print("Dramatiq worker is running in Docker as well.")
+        input("Press Enter to shut down everything...")
+
     except Exception as e:
-        input(f"Error occured: {str(e)}")
+        input(f"Error occurred: {str(e)}")
         sys.exit(1)
-    input("Success")
+    finally:
+        stop_docker()
 
 
 if __name__ == "__main__":

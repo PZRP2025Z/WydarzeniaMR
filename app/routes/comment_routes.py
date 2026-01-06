@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/events/{event_id}/comments", tags=["comments"])
 
 
-@router.post("/", response_model=CommentRead)
+@router.post("", response_model=CommentRead)
 def add_comment(
     event_id: int,
     comment_data: CommentCreate,
@@ -19,14 +19,12 @@ def add_comment(
     user=Depends(get_current_user),
 ):
     """Add a comment to an event."""
-    comment = create_comment(
-        db, event_id=event_id, user_id=user.id, content=comment_data.content
-    )
+    comment = create_comment(db, event_id=event_id, user_id=user.id, content=comment_data.content)
     logger.info(f"User {user.id} added comment {comment.id} to event {event_id}")
     return comment
 
 
-@router.get("/", response_model=list[CommentRead])
+@router.get("", response_model=list[CommentRead])
 def read_comments(
     event_id: int,
     limit: int = Query(20, ge=1, le=100),

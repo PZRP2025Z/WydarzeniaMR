@@ -25,15 +25,17 @@
     }
   }
 
-  async function logout() {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-    } catch (err) {
-      console.error("Błąd przy wylogowaniu:", err);
-    } finally {
-      currentUser.set(null);
-    }
+async function logout() {
+  try {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  } catch (err) {
+    console.error("Błąd przy wylogowaniu:", err);
+  } finally {
+    currentUser.set(null);
+    location.reload();
   }
+}
+
 
   onMount(() => {
     fetchCurrentUser();
