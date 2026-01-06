@@ -10,16 +10,16 @@ Handles:
 - Authentication via existing auth service
 """
 
-import secrets
 import hashlib
+import secrets
 
-from datetime import datetime, timezone
 from fastapi import HTTPException, Response
+from pydantic import BaseModel
 from sqlmodel import Session, select
 
+from app.backend.auth_service import issue_tokens_and_set_cookies
 from app.database.models.event_pass import EventPass
 from app.database.models.user import User
-from app.backend.auth_service import issue_tokens_and_set_cookies
 
 
 def generate_pass_token() -> str:
@@ -55,9 +55,7 @@ def create_event_pass(
 def resolve_event_pass(token: str, db: Session) -> EventPass:
     token_hash = hash_pass_token(token)
 
-    event_pass = db.exec(
-        select(EventPass).where(EventPass.token_hash == token_hash)
-    ).first()
+    event_pass = db.exec(select(EventPass).where(EventPass.token_hash == token_hash)).first()
 
     if not event_pass:
         raise HTTPException(status_code=404, detail="Invalid pass")
@@ -81,11 +79,9 @@ def bind_pass_to_user(
     user: User,
     db: Session,
 ):
-    db.refresh()
+    db.refresh(event_pass)
     if event_pass.user_id and event_pass.user_id != user.id:
-        raise HTTPException(
-            status_code=409, detail="Pass already bound to another user"
-        )
+        raise HTTPException(status_code=409, detail="Pass already bound to another user")
 
     if event_pass.user_id:
         return
