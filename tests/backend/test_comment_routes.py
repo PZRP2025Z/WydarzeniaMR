@@ -16,6 +16,7 @@ async def test_add_comment():
 
     fake_user = MagicMock()
     fake_user.id = 42
+    fake_user.login = "testuser"
 
     app.dependency_overrides[get_current_user] = lambda: fake_user
 
@@ -24,10 +25,9 @@ async def test_add_comment():
 
     mock_db.add.side_effect = fake_add
     mock_db.refresh.side_effect = lambda obj: None
+    mock_db.get.return_value = fake_user
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/events/10/comments/",
             json={"content": "Hello world"},
@@ -54,9 +54,11 @@ async def test_get_comments_paginated():
         )
     ]
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    mock_user = MagicMock()
+    mock_user.login = "testuser"
+    mock_db.get.return_value = mock_user
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/events/10/comments/?limit=10&offset=0")
 
     assert response.status_code == 200
@@ -72,9 +74,7 @@ async def test_add_comment_unauthorized():
 
     app.dependency_overrides.pop(get_current_user, None)
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/events/1/comments/",
             json={"content": "test"},
