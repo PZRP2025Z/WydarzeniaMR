@@ -1,20 +1,38 @@
+"""
+@file users_routes.py
+@brief API endpoints for User CRUD operations.
+
+Provides routes to:
+- List all users
+- Retrieve a single user
+- Change user password
+- Delete user account
+"""
+
 import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
-from typing import List
 
-from app.database.session import get_session
-from app.database.models.user import UserResponse, PasswordChange
-from app.backend.user_service import get_users, get_user, change_password, delete_user
 from app.backend.auth_service import get_current_user
+from app.backend.user_service import change_password, delete_user, get_user, get_users
+from app.database.models.user import PasswordChange, UserResponse
+from app.database.session import get_session
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/", response_model=List[UserResponse])
+@router.get("/", response_model=list[UserResponse])
 def read_users(db: Session = Depends(get_session)):
+    """
+    @brief Retrieve a list of all users.
+
+    @param db Database session dependency.
+
+    @return List of UserResponse objects representing all users.
+    """
     users = get_users(db)
     logger.info(f"Retrieved {len(users)} users from database")
     return users
@@ -22,6 +40,16 @@ def read_users(db: Session = Depends(get_session)):
 
 @router.get("/{user_id}", response_model=UserResponse)
 def read_user(user_id: int, db: Session = Depends(get_session)):
+    """
+    @brief Retrieve a single user by ID.
+
+    @param user_id ID of the user to retrieve.
+    @param db Database session dependency.
+
+    @return UserResponse object for the specified user.
+
+    @throws HTTPException 404 if the user does not exist.
+    """
     user = get_user(db, user_id)
     if not user:
         logger.warning(f"User with id={user_id} not found")
@@ -37,7 +65,21 @@ def update_password(
     db: Session = Depends(get_session),
     current_user=Depends(get_current_user),
 ):
-    # zabezpieczenie: user może zmienić tylko swoje hasło
+    """
+    @brief Change the password for a user.
+
+    Only the currently authenticated user can change their own password.
+
+    @param user_id ID of the user whose password is to be changed.
+    @param data PasswordChange object containing current and new password.
+    @param db Database session dependency.
+    @param current_user Currently authenticated user.
+
+    @return JSON object indicating success: {"ok": True}.
+
+    @throws HTTPException 403 if the user attempts to change another user's password.
+    @throws HTTPException 400 if the password change fails (current password incorrect or new passwords mismatch).
+    """
     if current_user.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -62,6 +104,20 @@ def remove_user(
     db: Session = Depends(get_session),
     current_user=Depends(get_current_user),
 ):
+    """
+    @brief Delete a user account.
+
+    Only the currently authenticated user can delete their own account.
+
+    @param user_id ID of the user to delete.
+    @param db Database session dependency.
+    @param current_user Currently authenticated user.
+
+    @return JSON object indicating success: {"ok": True}.
+
+    @throws HTTPException 403 if a user attempts to delete another user's account.
+    @throws HTTPException 404 if the user does not exist.
+    """
     if current_user.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

@@ -1,3 +1,14 @@
+"""
+@file test_passes.py
+@brief Integration tests for event pass (magic link) API routes.
+
+Tests include:
+- Creating a personal event pass
+- Opening a pass (unbound, bound to guest, bound to regular user)
+- Accepting a pass as a guest user
+- Binding a pass to an existing authenticated user
+"""
+
 from unittest.mock import MagicMock
 
 import pytest
@@ -107,17 +118,14 @@ async def test_accept_as_guest_creates_user_and_logs_in():
         user_id=None,
     )
 
-    # resolve_event_pass
     exec_result = MagicMock()
     exec_result.first.return_value = pass_obj
     mock_db.exec.return_value = exec_result
 
-    # DB side effects
     mock_db.add.return_value = None
     mock_db.commit.return_value = None
     mock_db.refresh.return_value = None
 
-    # IMPORTANT: login_via_pass lookup
     mock_db.get.return_value = User(
         id=1,
         login="GuestUser",

@@ -1,11 +1,25 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from unittest.mock import MagicMock
-from sqlmodel import Session
+"""
+@file test_events.py
+@brief Integration tests for event CRUD API routes.
+
+Tests include:
+- Listing all events
+- Retrieving a single event
+- Creating an event (authorized and unauthorized)
+- Updating an event
+- Deleting an event
+"""
+
 from datetime import datetime
-from app.database.session import get_session
-from app.database.models.event import Event
+from unittest.mock import MagicMock
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlmodel import Session
+
 from app.backend.auth_service import get_current_user
+from app.database.models.event import Event
+from app.database.session import get_session
 from app.main import app
 
 
@@ -28,9 +42,7 @@ async def test_read_events():
     mock_exec = mock_db.exec.return_value
     mock_exec.all.return_value = fake_events
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/events/")
 
     assert response.status_code == 200
@@ -60,9 +72,7 @@ async def test_create_event():
         "photo": None,
     }
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/events/", json=payload)
 
     assert response.status_code == 200
@@ -87,9 +97,7 @@ async def test_read_event():
 
     mock_db.get.return_value = fake_event
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/events/1")
 
     assert response.status_code == 200
@@ -123,9 +131,7 @@ async def test_update_event_success():
         "description": "New Desc",
     }
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.put("/events/1", json=payload)
 
     assert response.status_code == 200
@@ -153,9 +159,7 @@ async def test_update_event_forbidden():
 
     mock_db.get.return_value = fake_event
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.put("/events/1", json={"name": "New Name"})
 
     assert response.status_code == 403
@@ -178,9 +182,7 @@ async def test_delete_event_success():
 
     mock_db.get.return_value = fake_event
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.delete("/events/1")
 
     assert response.status_code == 200
@@ -206,9 +208,7 @@ async def test_delete_event_forbidden():
 
     mock_db.get.return_value = fake_event
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.delete("/events/1")
 
     assert response.status_code == 403
@@ -220,12 +220,9 @@ async def test_create_event_unauthorized():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # remove override to simulate missing login
     app.dependency_overrides.pop(get_current_user, None)
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/events/",
             json={

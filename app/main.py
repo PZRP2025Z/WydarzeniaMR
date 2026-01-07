@@ -1,3 +1,14 @@
+"""
+@file main.py
+@brief FastAPI application entrypoint.
+
+Sets up the API application, including:
+- Database initialization with retry logic.
+- Lifespan context for startup and shutdown logging.
+- Middleware setup (CORS).
+- Inclusion of all API routers for events, authentication, users, comments, passes, and participations.
+"""
+
 import logging
 import time
 from contextlib import asynccontextmanager
@@ -23,7 +34,17 @@ logger.info("Starting Application")
 
 
 def init_db(retries: int = 30, delay: float = 1.0):
-    """Próbuje połączenia z bazą danych z retry co `delay` sekund."""
+    """
+    @brief Initialize the database schema.
+
+    Drops all existing tables and recreates them.
+    Retries the connection in case the database is not ready.
+
+    @param retries Number of attempts to connect before failing.
+    @param delay Delay in seconds between retries.
+
+    @raises RuntimeError if unable to connect after all retries.
+    """
     for attempt in range(1, retries + 1):
         try:
             SQLModel.metadata.drop_all(engine)
@@ -33,13 +54,21 @@ def init_db(retries: int = 30, delay: float = 1.0):
         except OperationalError as e:
             logger.warning(f"Database not ready, retry {attempt}/{retries}: {e}")
             time.sleep(delay)
-    # jeśli po wszystkich próbach dalej nie działa
     logger.error(f"Could not connect to database after {retries} attempts")
     raise RuntimeError("Database not ready")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    @brief FastAPI lifespan context.
+
+    Handles startup and shutdown events:
+    - Initializes the database on startup.
+    - Logs shutdown message on exit.
+
+    @yield None
+    """
     init_db()
     yield
     logger.info("Shutting down application")
@@ -49,7 +78,7 @@ app = FastAPI(title="WydarzeniaMR_API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # W produkcji najlepiej ustawić dokładny frontend
+    allow_origins=["*"],  # In production, set exact frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

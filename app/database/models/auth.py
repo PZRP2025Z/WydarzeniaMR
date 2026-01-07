@@ -1,32 +1,68 @@
 """
-Models for user logging, registration and authorization
+@file auth_models.py
+@brief Database models for authentication-related activities.
+
+Provides Pydantic models for user registration, login, and JWT token handling.
 """
 
-from pydantic import BaseModel, EmailStr
-from typing import Optional
 from uuid import UUID
 
+from pydantic import BaseModel, EmailStr
 
-class RegisterUserRequest(BaseModel):
+
+class UserRegister(BaseModel):
+    """
+    @brief Model for registering a new user.
+
+    @param login Login/username of the new user.
+    @param email Email address of the new user.
+    @param password Plain-text password of the new user.
+    """
+
     login: str
     email: EmailStr
     password: str
 
 
-class LoginRequest(BaseModel):
+class UserLogin(BaseModel):
+    """
+    @brief Model for logging in an existing user.
+
+    @param email Email address of the user.
+    @param password Plain-text password of the user.
+    """
+
     email: EmailStr
     password: str
 
 
-class Token(BaseModel):
+class TokenResponse(BaseModel):
+    """
+    @brief Model representing JWT access token response.
+
+    @param access_token JWT access token string.
+    @param token_type Type of the token (usually 'bearer').
+    """
+
     access_token: str
     token_type: str
 
 
 class TokenData(BaseModel):
-    user_id: Optional[int] = None
+    """
+    @brief Model representing decoded JWT token data.
 
-    def get_uuid(self) -> Optional[UUID]:
-        if self.user_id:
+    @param user_id ID of the user associated with the token (optional).
+    """
+
+    user_id: int | None = None
+
+    def get_uuid(self) -> UUID | None:
+        """
+        @brief Convert user_id to UUID if present.
+
+        @return UUID object if user_id is set, None otherwise.
+        """
+        if self.user_id is not None:
             return UUID(int=self.user_id)
         return None

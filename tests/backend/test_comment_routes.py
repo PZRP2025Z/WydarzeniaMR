@@ -1,3 +1,13 @@
+"""
+@file test_comment.py
+@brief Integration tests for comment API routes.
+
+Tests cover:
+- Adding a comment as an authenticated user
+- Retrieving paginated comments for an event
+- Attempting to add a comment without authentication
+"""
+
 from datetime import datetime
 from unittest.mock import MagicMock
 
@@ -7,9 +17,9 @@ from sqlmodel import Session
 
 from app.backend.auth_service import get_current_user
 from app.database.models.comment import Comment
+from app.database.models.user import User
 from app.database.session import get_session
 from app.main import app
-from app.database.models.user import User
 
 
 @pytest.mark.asyncio
@@ -23,12 +33,11 @@ async def test_add_comment():
 
     app.dependency_overrides[get_current_user] = lambda: fake_user
 
-    # Mock db.get(User, id) to return a User with a login
     mock_db.get.return_value = User(id=42, login="tester", email="test@example.com")
 
     def fake_add(obj):
         obj.id = 1
-        obj.created_at = datetime.utcnow()  # Pydantic też wymaga created_at
+        obj.created_at = datetime.utcnow()
 
     mock_db.add.side_effect = fake_add
     mock_db.refresh.side_effect = lambda obj: None
@@ -51,7 +60,6 @@ async def test_get_comments_paginated():
     mock_db = MagicMock(spec=Session)
     app.dependency_overrides[get_session] = lambda: mock_db
 
-    # Mockujemy listę komentarzy
     mock_db.exec.return_value.all.return_value = [
         Comment(
             id=1,
@@ -62,7 +70,6 @@ async def test_get_comments_paginated():
         )
     ]
 
-    # Mock db.get(User, id) aby zwracało prawdziwy obiekt z loginem
     mock_db.get.return_value = User(id=2, login="commenter", email="test@example.com")
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:

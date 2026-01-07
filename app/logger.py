@@ -1,9 +1,13 @@
 """
-Logger library that sets up file and stdout logging using the
-config/logger_config.json file.
+@file logger_setup.py
+@brief Logger setup utility.
 
-File logs are named with the date of creation and are automatically
-rotated daily, with logs older than 7 days being deleted.
+Sets up application logging to both file and stdout using the
+configuration in config/logger_config.json.
+
+Features:
+- Daily rotated log files named by date.
+- Automatic deletion of log files older than 7 days.
 """
 
 import json
@@ -13,6 +17,15 @@ from datetime import datetime
 
 
 def setup_logging():
+    """
+    @brief Configure logging for the application.
+
+    Reads the JSON configuration, ensures the logs directory exists,
+    sets up the log file name based on the current date, and applies
+    the configuration.
+
+    @return None
+    """
     log_dir = pathlib.Path("logs")
     log_dir.mkdir(exist_ok=True)
 

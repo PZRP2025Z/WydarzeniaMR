@@ -1,8 +1,19 @@
+"""
+@file conftest.py
+@brief Pytest fixtures for FastAPI integration tests.
+
+Provides:
+- `app`: FastAPI instance with event routes included for testing
+- `async_client`: Async HTTP client for sending test requests
+"""
+
+from collections.abc import AsyncGenerator
+
 import pytest
 import pytest_asyncio
-from typing import AsyncGenerator
-from httpx import AsyncClient
 from fastapi import FastAPI
+from httpx import AsyncClient
+
 from app.routes import event_routes
 
 

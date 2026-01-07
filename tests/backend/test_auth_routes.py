@@ -1,11 +1,24 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
+"""
+@file test_auth.py
+@brief Integration tests for authentication API routes.
+
+Tests include:
+- User registration (success and duplicate email)
+- User login (invalid password, successful login with cookies)
+- Accessing protected routes with access tokens
+- Refreshing access tokens using refresh tokens
+- Accessing protected routes without authentication
+"""
+
 from unittest.mock import MagicMock
+
+import pytest
+from httpx import ASGITransport, AsyncClient
 from sqlmodel import Session
 
-from app.backend.auth_service import get_password_hash, get_current_user
-from app.database.session import get_session
+from app.backend.auth_service import get_current_user, get_password_hash
 from app.database.models.user import User
+from app.database.session import get_session
 from app.main import app
 
 
@@ -22,9 +35,7 @@ async def test_register_user_success():
     mock_db.add.side_effect = fake_add
     mock_db.refresh.side_effect = lambda user: None
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/auth/register",
             json={
@@ -52,9 +63,7 @@ async def test_register_user_duplicate_email():
         hashed_password="hashed",
     )
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/auth/register",
             json={
@@ -82,9 +91,7 @@ async def test_login_invalid_password():
 
     mock_db.exec.return_value.first.return_value = fake_user
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/auth/token",
             data={
@@ -109,9 +116,7 @@ async def test_login_sets_cookie():
     )
     mock_db.exec.return_value.first.return_value = fake_user
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/auth/token",
             data={
@@ -142,9 +147,7 @@ async def test_login_with_cookie_access():
 
     app.dependency_overrides[get_current_user] = lambda: fake_user
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         login_response = await client.post(
             "/auth/token",
             data={
@@ -183,9 +186,7 @@ async def test_refresh_access_token():
     )
     mock_db.exec.return_value.first.return_value = fake_user
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         login_response = await client.post(
             "/auth/token",
             data={
@@ -215,9 +216,7 @@ async def test_refresh_access_token():
 async def test_protected_route_without_token():
     app.dependency_overrides.pop(get_current_user, None)
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/auth/me")
 
     assert response.status_code == 401
