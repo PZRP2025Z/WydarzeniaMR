@@ -1,13 +1,25 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from unittest.mock import MagicMock
-from sqlmodel import Session
+"""
+@file test_participations.py
+@brief Integration tests for participation-survey API routes.
+
+Tests include:
+- Participating in an event (new participation and updating existing)
+- Reading event participation statistics
+- Retrieving the currently authenticated user's active events
+"""
+
 from datetime import datetime
+from unittest.mock import MagicMock
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlmodel import Session
+
+from app.backend.auth_service import get_current_user
 from app.database.models.event import Event
 from app.database.models.participations import EventParticipation, ParticipationStatus
-from app.backend.auth_service import get_current_user
-from app.main import app
 from app.database.session import get_session
+from app.main import app
 
 
 def override_user(user_id=123):
@@ -87,7 +99,6 @@ async def test_read_my_active_events():
     app.dependency_overrides[get_session] = lambda: mock_db
     app.dependency_overrides[get_current_user] = lambda: override_user(123)
 
-    # zwracamy listę Event + EventParticipation
     now = datetime.utcnow()
     event1 = Event(id=1, name="Event 1", location="X", time=now, owner_id=123)
     participation1 = EventParticipation(user_id=123, event_id=1, status=ParticipationStatus.going)

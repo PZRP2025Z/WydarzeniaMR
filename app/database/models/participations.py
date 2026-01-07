@@ -1,29 +1,59 @@
-from sqlmodel import SQLModel, Field
+"""
+@file participation_models.py
+@brief Database models for participation-survey related activities.
+
+Provides SQLModel and Pydantic models for tracking user participation
+statuses in events, including going/maybe/not going options.
+"""
+
 from datetime import datetime
-from typing import Optional
 from enum import Enum
+
 from pydantic import BaseModel
+from sqlmodel import Field, SQLModel
 
 
 class ParticipationStatus(str, Enum):
+    """
+    @brief Enum representing possible participation statuses for an event.
+
+    Options:
+    - going: user will attend the event
+    - maybe: user may attend
+    - not_going: user will not attend
+    """
+
     going = "going"
     not_going = "not_going"
     maybe = "maybe"
 
 
 class ParticipationCreate(BaseModel):
+    """
+    @brief Pydantic model for creating a participation record.
+
+    @param status Participation status (going / maybe / not_going)
+    """
+
     status: ParticipationStatus
 
 
 class EventParticipation(SQLModel, table=True):
+    """
+    @brief Database table model representing a user's participation in an event.
+
+    @param id Primary key of the participation record.
+    @param user_id ID of the user participating.
+    @param event_id ID of the event.
+    @param status Participation status (going / maybe / not_going).
+    @param created_at Timestamp when participation was created.
+    @param updated_at Timestamp when participation was last updated.
+    """
+
     __tablename__ = "event_participations"
-
-    id: Optional[int] = Field(default=None, primary_key=True)
-
+    id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="users.id", index=True)
     event_id: int = Field(foreign_key="events.id", index=True)
-
     status: ParticipationStatus
-
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)

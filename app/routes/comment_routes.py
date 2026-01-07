@@ -1,10 +1,21 @@
+"""
+@file comment_routes.py
+@brief API routes for commenting functionality.
+
+Provides endpoints to:
+- Add a new comment to an event
+- Retrieve paginated comments for an event
+"""
+
 import logging
-from fastapi import APIRouter, Depends, HTTPException, Query
+
+from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session
-from app.database.session import get_session
+
+from app.backend.auth_service import get_current_user
 from app.backend.comment_service import create_comment, get_comments_for_event
 from app.database.models.comment import CommentCreate, CommentRead
-from app.backend.auth_service import get_current_user  # <-- masz to w auth
+from app.database.session import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +29,19 @@ def add_comment(
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
-    """Add a comment to an event."""
+    """
+    @brief Add a new comment to a specific event.
+
+    Creates a new comment in the database associated with the event
+    and the currently authenticated user.
+
+    @param event_id ID of the event to which the comment is added.
+    @param comment_data CommentCreate model containing the comment content.
+    @param db Database session dependency.
+    @param user Currently authenticated user (injected via dependency).
+
+    @return CommentRead object representing the newly created comment.
+    """
     comment = create_comment(db, event_id=event_id, user_id=user.id, content=comment_data.content)
     logger.info(f"User {user.id} added comment {comment.id} to event {event_id}")
     return comment
@@ -31,6 +54,19 @@ def read_comments(
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_session),
 ):
+    """
+    @brief Retrieve paginated comments for a specific event.
+
+    Fetches a list of comments for the given event, ordered by
+    creation time descending, with optional pagination.
+
+    @param event_id ID of the event whose comments are retrieved.
+    @param limit Maximum number of comments to return (default 20).
+    @param offset Number of comments to skip for pagination (default 0).
+    @param db Database session dependency.
+
+    @return List of CommentRead objects for the event.
+    """
     comments = get_comments_for_event(db, event_id, limit, offset)
     logger.info(f"Retrieved {len(comments)} comments for event {event_id}")
     return comments

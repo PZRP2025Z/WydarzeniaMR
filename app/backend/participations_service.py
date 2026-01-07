@@ -1,9 +1,15 @@
 """
-Basic CRUD functionality for Participations model
+@file participation_service.py
+@brief Backend participation survey functionality.
+
+Provides functions for setting user participation, retrieving event participation statistics,
+and listing events a user is involved with.
 """
 
-from sqlmodel import Session, select
 from datetime import datetime
+
+from sqlmodel import Session, select
+
 from app.database.models.event import Event
 from app.database.models.participations import (
     EventParticipation,
@@ -12,12 +18,18 @@ from app.database.models.participations import (
 
 
 def set_participation(
-    db: Session,
-    *,
-    user_id: int,
-    event_id: int,
-    status: ParticipationStatus,
+    db: Session, *, user_id: int, event_id: int, status: ParticipationStatus
 ) -> EventParticipation:
+    """
+    @brief Set or update a user's participation status for an event.
+
+    @param db Database session dependency.
+    @param user_id ID of the user participating in the event.
+    @param event_id ID of the event.
+    @param status ParticipationStatus enum value (going, maybe, not_going).
+
+    @return EventParticipation object representing the updated or newly created participation.
+    """
     participation = db.exec(
         select(EventParticipation).where(
             EventParticipation.user_id == user_id,
@@ -41,48 +53,59 @@ def set_participation(
     return participation
 
 
-def get_event_participation_stats(
-    db: Session,
-    *,
-    event_id: int,
-) -> dict[str, int]:
+def get_event_participation_stats(db: Session, *, event_id: int) -> dict[ParticipationStatus, int]:
     """
-    Returns statistics of participations for a specific event.
-    Counts how many users are going / maybe / not going.
+    @brief Retrieve statistics for an event's participation survey.
+
+    @param db Database session dependency.
+    @param event_id ID of the event.
+
+    @return Dictionary mapping ParticipationStatus to counts:
+            {
+                ParticipationStatus.going: int,
+                ParticipationStatus.maybe: int,
+                ParticipationStatus.not_going: int
+            }
     """
     participants = db.exec(
         select(EventParticipation).where(EventParticipation.event_id == event_id)
     ).all()
-
-    stats = {"going": 0, "maybe": 0, "not_going": 0}
+    stats: dict[ParticipationStatus, int] = {
+        ParticipationStatus.going: 0,
+        ParticipationStatus.maybe: 0,
+        ParticipationStatus.not_going: 0,
+    }
     for p in participants:
-        if p.status == ParticipationStatus.going:
-            stats["going"] += 1
-        elif p.status == ParticipationStatus.maybe:
-            stats["maybe"] += 1
-        elif p.status == ParticipationStatus.not_going:
-            stats["not_going"] += 1
-
+        stats[p.status] += 1
     return stats
 
 
-def get_user_active_events(
-    db: Session,
-    *,
-    user_id: int,
-) -> list[dict]:
+def get_user_active_events(db: Session, *, user_id: int) -> list[dict]:
     """
-    Zwraca listę wydarzeń wraz z informacją, czy użytkownik jest właścicielem i jego statusem uczestnictwa.
+    @brief Get a list of events where the user is an owner or has a participation status.
+
+    @param db Database session dependency.
+    @param user_id ID of the user.
+
+    @return List of dictionaries containing event details and the user's participation status:
+            [
+                {
+                    "id": int,
+                    "name": str,
+                    "location": str,
+                    "time": str (ISO format),
+                    "owner_id": int,
+                    "participation_status": str | None
+                },
+                ...
+            ]
     """
-    # pobierz Event + EventParticipation dla tego usera
     rows = db.exec(
         select(Event, EventParticipation)
         .join(EventParticipation, Event.id == EventParticipation.event_id, isouter=True)
         .where((Event.owner_id == user_id) | (EventParticipation.user_id == user_id))
         .order_by(Event.time)
     ).all()
-
-    # sformatuj dane tak, aby frontend mógł użyć
     events = []
     for event, participation in rows:
         status = participation.status if participation else None

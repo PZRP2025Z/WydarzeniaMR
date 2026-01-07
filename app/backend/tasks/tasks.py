@@ -1,12 +1,20 @@
-import os
-import time
-import dramatiq
-from pydantic import EmailStr
-from dramatiq.brokers.redis import RedisBroker
+"""
+@file email_service.py
+@brief Handles sending emails asynchronously using Dramatiq and Redis.
+
+Provides functionality to send welcome emails to newly registered users.
+Uses environment variables for email credentials and Redis broker configuration.
+"""
+
 import logging
-import dotenv
+import os
 import smtplib
 from email.message import EmailMessage
+
+import dotenv
+import dramatiq
+from dramatiq.brokers.redis import RedisBroker
+from pydantic import EmailStr
 
 dotenv.load_dotenv()
 
@@ -28,6 +36,15 @@ dramatiq.set_broker(redis_broker)
 
 @dramatiq.actor
 def send_welcome_email(to_email: EmailStr, user_name: str):
+    """
+    @brief Send a welcome email to a newly registered user.
+
+    @param to_email Email address of the recipient.
+    @param user_name Name of the recipient user.
+
+    This function constructs a simple welcome email and sends it using
+    Gmail SMTP. The task is executed asynchronously via Dramatiq and Redis.
+    """
     msg = EmailMessage()
     msg["From"] = EMAIL_ADDRESS
     msg["To"] = to_email

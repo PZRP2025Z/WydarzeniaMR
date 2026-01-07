@@ -1,29 +1,56 @@
 """
-Comment database model
+@file comment_models.py
+@brief Database models for comments-related activities.
+
+Provides SQLModel and Pydantic models for creating, reading, and storing comments
+associated with events and users.
 """
 
 from datetime import datetime
-from sqlmodel import SQLModel, Field, Index
+
 from pydantic import BaseModel
+from sqlmodel import Field, SQLModel
 
 
 class Comment(SQLModel, table=True):
-    __tablename__ = "comments"
+    """
+    @brief Database table model representing a comment.
 
+    @param id Primary key of the comment.
+    @param event_id Foreign key referencing the related event.
+    @param user_id Foreign key referencing the author user.
+    @param content Text content of the comment.
+    @param created_at Timestamp when the comment was created.
+    """
+
+    __tablename__ = "comments"
     id: int | None = Field(default=None, primary_key=True)
     event_id: int = Field(foreign_key="events.id", index=True)
     user_id: int = Field(foreign_key="users.id", index=True)
-    content: str
+    content: str = Field(...)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    __table_args__ = (Index("idx_event_created", "event_id", "created_at"),)
 
 
 class CommentCreate(BaseModel):
+    """
+    @brief Pydantic model for creating a new comment.
+
+    @param content Text content of the comment.
+    """
+
     content: str
 
 
 class CommentRead(BaseModel):
+    """
+    @brief Pydantic model for reading a comment.
+
+    @param id Primary key of the comment.
+    @param user_login Login/username of the comment author.
+    @param content Text content of the comment.
+    @param created_at Timestamp when the comment was created.
+    """
+
     id: int
     user_login: str
     content: str
