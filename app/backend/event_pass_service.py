@@ -99,6 +99,7 @@ def create_guest_user(display_name: str, db: Session) -> User:
     """
     user = User(
         login=display_name,
+        email=f"guest_{secrets.token_hex(8)}@guest.local",
         is_guest=True,
     )
     db.add(user)
@@ -126,6 +127,7 @@ def bind_pass_to_user(event_pass: EventPass, user: User, db: Session) -> None:
     event_pass.user_id = user.id
     db.add(event_pass)
     db.commit()
+    db.refresh(event_pass)
     logger.info("Invitation link binded to an user")
 
 
@@ -146,4 +148,5 @@ def login_via_pass(*, event_pass: EventPass, response: Response, db: Session) ->
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
     issue_tokens_and_set_cookies(user, response)
+
     logger.info("User logged via invitation link")
