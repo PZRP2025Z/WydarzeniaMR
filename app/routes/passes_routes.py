@@ -144,7 +144,6 @@ def accept_as_guest(
     user = create_guest_user(event_pass.display_name, db)
     bind_pass_to_user(event_pass, user, db)
     login_via_pass(event_pass=event_pass, response=response, db=db)
-
     return {"status": "guest_created"}
 
 

@@ -144,6 +144,9 @@ async def test_accept_as_guest_creates_user_and_logs_in():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "guest_created" or data["status"] == "logged_in"
+    set_cookie_header = response.headers.get("set-cookie", "")
+    assert "access_token=" in set_cookie_header
+    assert "refresh_token=" in set_cookie_header
 
 
 @pytest.mark.asyncio

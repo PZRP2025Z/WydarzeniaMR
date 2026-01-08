@@ -2,6 +2,7 @@
   import { t } from '$lib/i18n';
   import { lang } from '$lib/stores/stores';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { currentUser } from '$lib/stores/currentUser';
 
   let mail = '';
@@ -10,6 +11,8 @@
   let loading = false;
 
   const API_URL = '/api/auth';
+
+  $: nextUrl = $page.url.searchParams.get('next') || '/events';
 
   async function handleLogin() {
     error = '';
@@ -40,7 +43,7 @@
         } else {
           currentUser.set(null);
         }
-        await goto('/events');
+        await goto(nextUrl);
       } else {
         error = t('invalid_credentials', $lang);
       }

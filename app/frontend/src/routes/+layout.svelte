@@ -2,6 +2,7 @@
   import favicon from '$lib/assets/favicon.svg';
   import { lang } from '$lib/stores/stores';
   import { t } from '$lib/i18n';
+  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { currentUser } from '$lib/stores/currentUser';
 
@@ -28,6 +29,7 @@
 async function logout() {
   try {
     await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await goto('/login');
   } catch (err) {
     console.error("Błąd przy wylogowaniu:", err);
   } finally {

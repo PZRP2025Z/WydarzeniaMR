@@ -2,6 +2,7 @@
   import { t } from '$lib/i18n';
   import { lang } from '$lib/stores/stores';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { currentUser } from '$lib/stores/currentUser';
 
   let username = '';
@@ -12,6 +13,8 @@
   let loading = false;
 
   const API_URL = '/api/auth';
+
+  $: nextUrl = $page.url.searchParams.get('next') || '/events';
 
   async function handleRegister() {
     error = '';
@@ -41,7 +44,7 @@
         const userRes = await fetch(`${API_URL}/me`, { credentials: 'include' });
         if (userRes.ok) {
           currentUser.set(await userRes.json());
-          await goto('/events');
+          await goto(nextUrl);
         } else {
           currentUser.set(null);
           await goto('/login');
