@@ -252,6 +252,51 @@
   }
 
   // -------------------------------
+  // ZAPROSZENIA
+  // -------------------------------
+  let showInviteModal = false;
+  let creatingInvite = false;
+  let inviteError = "";
+  let createdInviteLink: string | null = null;
+
+  async function createInvite() {
+    if (!event) return;
+
+    inviteError = "";
+    createdInviteLink = null;
+    creatingInvite = true;
+
+    try {
+      const res = await fetch(`/api/invites/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ event_id: event.id })
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        inviteError = j?.detail ?? "Nie udało się utworzyć zaproszenia";
+        return;
+      }
+
+      const data = await res.json();
+      createdInviteLink = data.link;
+    } catch {
+      inviteError = "Błąd serwera";
+    } finally {
+      creatingInvite = false;
+    }
+  }
+
+  function closeInviteModal() {
+    showInviteModal = false;
+    inviteError = "";
+    createdInviteLink = null;
+  }
+
+
+  // -------------------------------
   // INNE FUNKCJE
   // -------------------------------
   function editEvent() {
@@ -408,6 +453,12 @@
       <hr />
 
       <button
+        on:click={() => showInviteModal = true}
+        style="padding:0.5rem; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">
+        Utwórz zaproszenie
+      </button>
+      
+      <button
         on:click={() => showPassModal = true}
         style="padding:0.5rem; background:#6f42c1; color:white; border:none; border-radius:4px; cursor:pointer;">
         Utwórz przepustkę
@@ -486,6 +537,74 @@
 
       <button
         on:click={closePassModal}
+        style="padding:0.4rem; background:#eee; border:none; border-radius:4px; cursor:pointer;"
+      >
+        Zamknij
+      </button>
+    </div>
+  </div>
+{/if}
+
+{#if showInviteModal}
+  <div
+    style="
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+    "
+  >
+    <div
+      style="
+        background:white;
+        padding:1.5rem;
+        border-radius:8px;
+        width:100%;
+        max-width:400px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        display:flex;
+        flex-direction:column;
+        gap:0.75rem;
+      "
+    >
+      <h3 style="margin:0;">Utwórz zaproszenie</h3>
+      <p style="font-size:0.9rem; color:#666; margin:0;">
+        Link wielokrotnego użytku dla użytkowników z kontem
+      </p>
+
+      {#if inviteError}
+        <p style="color:red; font-size:0.9rem;">{inviteError}</p>
+      {/if}
+
+      {#if createdInviteLink}
+        <div style="background:#f5f5f5; padding:0.5rem; border-radius:4px;">
+          <strong>Link zaproszenia:</strong>
+          <div style="word-break:break-all; font-size:0.85rem;">
+            {createdInviteLink}
+          </div>
+        </div>
+
+        <button
+          on:click={() => navigator.clipboard.writeText(createdInviteLink)}
+          style="padding:0.5rem; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;"
+        >
+          Kopiuj link
+        </button>
+      {:else}
+        <button
+          disabled={creatingInvite}
+          on:click={createInvite}
+          style="padding:0.5rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer; opacity:{creatingInvite ? 0.6 : 1};"
+        >
+          {creatingInvite ? "Tworzenie..." : "Utwórz zaproszenie"}
+        </button>
+      {/if}
+
+      <button
+        on:click={closeInviteModal}
         style="padding:0.4rem; background:#eee; border:none; border-radius:4px; cursor:pointer;"
       >
         Zamknij
