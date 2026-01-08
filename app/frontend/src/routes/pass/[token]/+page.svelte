@@ -20,11 +20,19 @@
 
   let event: Event | null = null;
   let eventDescriptionHtml = "";
+  let isLoggedIn = false;
 
   const token = $page.params.token;
 
   async function loadPass() {
     try {
+      // Check if user is already logged in
+      const meRes = await fetch("/api/auth/me", { credentials: "include" });
+      if (meRes.ok) {
+        isLoggedIn = true;
+        currentUser.set(await meRes.json());
+      }
+
       const res = await fetch(`/api/passes/${token}`, {
         credentials: "include"
       });
@@ -44,7 +52,6 @@
             const userData = await meRes.json();
             console.log("User data received:", userData);
             currentUser.set(userData);
-            goto(`/events/${event?.id}`);
         } else {
             console.error("Failed to fetch user, status:", meRes.status);
             const errorText = await meRes.text();
@@ -74,9 +81,9 @@
 
         goto(`/events/${data.event_id}`);
         return;
-    }
+      }
 
-    if (status === "unbound") {
+      if (status === "unbound") {
         const eventRes = await fetch(`/api/events/${data.event_id}`);
         if (!eventRes.ok) {
           error = "Nie udało się pobrać wydarzenia";
@@ -132,6 +139,25 @@
     }
   }
 
+  async function acceptInvitation() {
+    try {
+        const res = await fetch(`/api/passes/${token}/accept-login`, {
+            method: "POST",
+            credentials: "include"
+        });
+
+        if (!res.ok) {
+            error = "Nie udało się przyjąć zaproszenia";
+            return;
+        }
+
+        goto(`/events/${event?.id}`);
+    } catch (err) {
+        console.error("Error accepting invitation:", err);
+        error = "Błąd serwera";
+    }
+  }
+
   onMount(loadPass);
 </script>
 
@@ -162,26 +188,37 @@
     <hr style="margin:2rem 0;" />
 
     <div style="display:flex; flex-direction:column; gap:0.75rem;">
-      <button
-        on:click={joinAsGuest}
-        style="padding:0.75rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer;"
-      >
-        Dołącz bez konta
-      </button>
+      {#if isLoggedIn}
+        <!-- Show single button for logged-in users -->
+        <button
+          on:click={acceptInvitation}
+          style="padding:0.75rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;"
+        >
+          Przyjmij zaproszenie
+        </button>
+      {:else}
+        <!-- Show all options for non-logged-in users -->
+        <button
+          on:click={joinAsGuest}
+          style="padding:0.75rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer;"
+        >
+          Dołącz bez konta
+        </button>
 
-      <button
-        on:click={() => goto(`/login?next=/pass/${token}`)}
-        style="padding:0.75rem; background:#007BFF; color:white; border:none; border-radius:6px; cursor:pointer;"
-      >
-        Zaloguj się
-      </button>
+        <button
+          on:click={() => goto(`/login?next=/pass/${token}`)}
+          style="padding:0.75rem; background:#007BFF; color:white; border:none; border-radius:6px; cursor:pointer;"
+        >
+          Zaloguj się
+        </button>
 
-      <button
-        on:click={() => goto(`/register?next=/pass/${token}`)}
-        style="padding:0.75rem; background:#6c757d; color:white; border:none; border-radius:6px; cursor:pointer;"
-      >
-        Zarejestruj się
-      </button>
+        <button
+          on:click={() => goto(`/register?next=/pass/${token}`)}
+          style="padding:0.75rem; background:#6c757d; color:white; border:none; border-radius:6px; cursor:pointer;"
+        >
+          Zarejestruj się
+        </button>
+      {/if}
     </div>
   </div>
 {/if}
