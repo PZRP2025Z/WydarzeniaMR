@@ -206,6 +206,52 @@
   });
 
   // -------------------------------
+  // PRZEPUSTKI
+  // -------------------------------
+  let showPassModal = false;
+  let passDisplayName = "";
+  let creatingPass = false;
+  let passError = "";
+  let createdPassLink: string | null = null;
+
+  async function createPass() {
+    if (!event) return;
+
+    passError = "";
+    createdPassLink = null;
+    creatingPass = true;
+
+    try {
+      const res = await fetch(`/api/passes/personal/${event.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ display_name: passDisplayName })
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        passError = j?.detail ?? "Nie udało się utworzyć przepustki";
+        return;
+      }
+
+      const data = await res.json();
+      createdPassLink = data.link;
+    } catch {
+      passError = "Błąd serwera";
+    } finally {
+      creatingPass = false;
+    }
+  }
+
+  function closePassModal() {
+    showPassModal = false;
+    passDisplayName = "";
+    passError = "";
+    createdPassLink = null;
+  }
+
+  // -------------------------------
   // INNE FUNKCJE
   // -------------------------------
   function editEvent() {
@@ -358,8 +404,92 @@
       {#if participationError}
         <p style="color:red;">{participationError}</p>
       {/if}
+
+      <hr />
+
+      <button
+        on:click={() => showPassModal = true}
+        style="padding:0.5rem; background:#6f42c1; color:white; border:none; border-radius:4px; cursor:pointer;">
+        Utwórz przepustkę
+      </button>
     </div>
   </div>
 
 </div>
+{/if}
+
+{#if showPassModal}
+  <div
+    style="
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+    "
+  >
+    <div
+      style="
+        background:white;
+        padding:1.5rem;
+        border-radius:8px;
+        width:100%;
+        max-width:400px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        display:flex;
+        flex-direction:column;
+        gap:0.75rem;
+      "
+    >
+      <h3 style="margin:0;">Utwórz przepustkę</h3>
+
+      <label style="font-size:0.9rem; color:#555;">
+        Imię / nazwa gościa
+      </label>
+
+      <input
+        type="text"
+        bind:value={passDisplayName}
+        placeholder="np. Jan Kowalski"
+        style="padding:0.5rem; border:1px solid #ccc; border-radius:4px;"
+      />
+
+      {#if passError}
+        <p style="color:red; font-size:0.9rem;">{passError}</p>
+      {/if}
+
+      {#if createdPassLink}
+        <div style="background:#f5f5f5; padding:0.5rem; border-radius:4px;">
+          <strong>Link:</strong>
+          <div style="word-break:break-all; font-size:0.85rem;">
+            {createdPassLink}
+          </div>
+        </div>
+
+        <button
+          on:click={() => navigator.clipboard.writeText(createdPassLink)}
+          style="padding:0.5rem; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;"
+        >
+          Kopiuj link
+        </button>
+      {:else}
+        <button
+          disabled={creatingPass || !passDisplayName.trim()}
+          on:click={createPass}
+          style="padding:0.5rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer;"
+        >
+          {creatingPass ? "Tworzenie..." : "Utwórz"}
+        </button>
+      {/if}
+
+      <button
+        on:click={closePassModal}
+        style="padding:0.4rem; background:#eee; border:none; border-radius:4px; cursor:pointer;"
+      >
+        Zamknij
+      </button>
+    </div>
+  </div>
 {/if}
