@@ -82,7 +82,7 @@ def read_me(user: User = Depends(get_current_user)):
 
     @return Dictionary containing user_id, login, and email.
     """
-    return {"user_id": user.id, "login": user.login, "emial": user.email}
+    return {"user_id": user.id, "login": user.login, "email": user.email}
 
 
 @router.post("/refresh")
