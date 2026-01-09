@@ -90,7 +90,7 @@ async def test_read_event_participation_stats():
 
     assert response.status_code == 200
     data = response.json()
-    assert data == {"going": 1, "maybe": 1, "not_going": 1}
+    assert data == {"going": 1, "maybe": 1, "not_going": 1, "invited": 0}
 
 
 @pytest.mark.asyncio
