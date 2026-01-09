@@ -18,6 +18,7 @@ from app.backend.event_invitation_service import (
     create_event_invite,
     resolve_event_invitation,
 )
+from app.backend.participations_service import join_event
 from app.database.models.user import User
 from app.database.session import get_session
 
@@ -84,3 +85,31 @@ def open_invite(
     return {
         "event_id": invitation.event_id,
     }
+
+
+@router.post("/{token}/accept")
+def accept_invitation(
+    token: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_session),
+):
+    """
+    @brief Accept an event invitation with an authenticated account.
+
+    Adds the authenticated user to the event. The invitation remains valid
+    for other users to use.
+
+    @param token Event invitation token.
+    @param user Currently authenticated user.
+    @param db Database session dependency.
+
+    @return JSON confirming successful acceptance with event_id.
+
+    @throws HTTPException 401 if the user is not authenticated.
+    @throws HTTPException 404 if the invitation token is invalid.
+    @throws HTTPException 410 if the invitation has expired.
+    """
+    invitation = resolve_event_invitation(token, db)
+    join_event(db=db, user_id=user.id, event_id=invitation.event_id)
+
+    return {"status": "accepted", "event_id": invitation.event_id}
