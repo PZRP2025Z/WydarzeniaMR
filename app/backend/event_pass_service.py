@@ -18,6 +18,7 @@ from fastapi import HTTPException, Response
 from sqlmodel import Session, select
 
 from app.backend.auth_service import issue_tokens_and_set_cookies
+from app.backend.participations_service import join_event
 from app.database.models.event_pass import EventPass
 from app.database.models.user import User
 
@@ -128,6 +129,7 @@ def bind_pass_to_user(event_pass: EventPass, user: User, db: Session) -> None:
     db.add(event_pass)
     db.commit()
     db.refresh(event_pass)
+    join_event(db=db, user_id=user.id, event_id=event_pass.id)
     logger.info("Invitation link binded to an user")
 
 
