@@ -26,6 +26,7 @@ class ParticipationStatus(str, Enum):
     going = "going"
     not_going = "not_going"
     maybe = "maybe"
+    invited = "invited"
 
 
 class ParticipationCreate(BaseModel):

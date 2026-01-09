@@ -16,6 +16,16 @@ from app.database.models.participations import (
     ParticipationStatus,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def join_event(db: Session, *, user_id: int, event_id: int) -> EventParticipation:
+    return set_participation(
+        db=db, user_id=user_id, event_id=event_id, status=ParticipationStatus.invited
+    )
+
 
 def set_participation(
     db: Session, *, user_id: int, event_id: int, status: ParticipationStatus
@@ -48,6 +58,7 @@ def set_participation(
         )
         db.add(participation)
 
+    logger.info(f"Set participation of user {user_id} to {status} for event {event_id}")
     db.commit()
     db.refresh(participation)
     return participation
@@ -74,6 +85,7 @@ def get_event_participation_stats(db: Session, *, event_id: int) -> dict[Partici
         ParticipationStatus.going: 0,
         ParticipationStatus.maybe: 0,
         ParticipationStatus.not_going: 0,
+        ParticipationStatus.invited: 0,
     }
     for p in participants:
         stats[p.status] += 1

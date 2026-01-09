@@ -118,9 +118,16 @@ async def test_accept_as_guest_creates_user_and_logs_in():
         user_id=None,
     )
 
-    exec_result = MagicMock()
-    exec_result.first.return_value = pass_obj
-    mock_db.exec.return_value = exec_result
+    pass_exec_result = MagicMock()
+    pass_exec_result.first.return_value = pass_obj
+
+    participation_exec_result = MagicMock()
+    participation_exec_result.first.return_value = None
+
+    mock_db.exec.side_effect = [
+        pass_exec_result,
+        participation_exec_result,
+    ]
 
     mock_db.add.return_value = None
     mock_db.commit.return_value = None
@@ -155,7 +162,17 @@ async def test_accept_with_existing_login_binds_pass():
     pass_obj = EventPass(
         token_hash="hashedtoken", event_id=123, display_name="GuestUser", user_id=None
     )
-    mock_db.exec.return_value.first.return_value = pass_obj
+    pass_exec_result = MagicMock()
+    pass_exec_result.first.return_value = pass_obj
+
+    participation_exec_result = MagicMock()
+    participation_exec_result.first.return_value = None
+
+    mock_db.exec.side_effect = [
+        pass_exec_result,
+        participation_exec_result,
+    ]
+
     fake_user = User(
         id=42, login="ExistingUser", email="user@example.com", hashed_password="hashed"
     )
