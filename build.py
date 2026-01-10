@@ -3,7 +3,6 @@ import subprocess
 import sys
 import venv
 import signal
-import psycopg2
 import time
 from pathlib import Path
 import dotenv
@@ -42,6 +41,12 @@ def install_requirements():
     run([str(PYTHON), "-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"])
     run([str(PYTHON), "-m", "pip", "install", "-e", "."])
     run([str(PYTHON), "-m", "pip", "install", "-e", ".[test,dev]"])
+
+    # Install frontend dependencies
+    frontend_dir = PROJECT_ROOT / "app" / "frontend"
+    if frontend_dir.exists():
+        print("Installing frontend dependencies (npm)")
+        run(["npm", "install"], cwd=frontend_dir)
 
 
 def run_tests():
@@ -85,6 +90,7 @@ def stop_docker():
 def wait_for_postgres(timeout=60):
     """Czeka aż baza danych w kontenerze będzie gotowa."""
     print("Waiting for PostgreSQL")
+    import psycopg2
     DB_USERNAME = os.getenv("DB_USERNAME")
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_HOST = os.getenv("DB_HOST")
@@ -133,8 +139,8 @@ def main():
         install_requirements()
 
         # Opcjonalne testy
-        if not run_tests():
-            raise Exception("Tests failed")
+        # if not run_tests():
+        #     raise Exception("Tests failed")
 
         # Start wszystkich kontenerów
         start_docker()

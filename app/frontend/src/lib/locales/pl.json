@@ -22,6 +22,7 @@
   "already_account": "Masz już konto?",
   "no_account": "Nie masz konta?",
   "username_password_required": "Nazwa użytkownika i hasło są wymagane",
+  "mail_password_required": "Email i hasło są wymagane",
   "invalid_credentials": "Błędna nazwa użytkownika lub hasło",
   "server_unreachable": "Nie można połączyć się z serwerem",
   "passwords_do_not_match": "Hasła się nie zgadzają",

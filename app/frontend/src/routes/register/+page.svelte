@@ -18,8 +18,8 @@
 
   async function handleRegister() {
     error = '';
-    
-    if (!username.trim() || !email.trim() || !password.trim()) {
+
+    if (!username || !email || !password) {
       error = t('username_password_required', $lang);
       return;
     }
@@ -32,15 +32,14 @@
     loading = true;
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const res = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login: username, email, password }),
-        credentials: 'include' // ⬅⬅⬅ żeby cookies się ustawiły
+        credentials: 'include'
       });
 
-      if (response.ok) {
-        // automatyczne ustawienie currentUser
+      if (res.ok) {
         const userRes = await fetch(`${API_URL}/me`, { credentials: 'include' });
         if (userRes.ok) {
           currentUser.set(await userRes.json());
@@ -50,38 +49,45 @@
           await goto('/login');
         }
       } else {
-        const data = await response.json();
+        const data = await res.json();
         error = data.detail || t('registration_error', $lang);
       }
-    } catch (err) {
+    } catch {
       error = t('server_unreachable', $lang);
-      console.error(err);
     } finally {
       loading = false;
     }
   }
 </script>
 
-<div style="max-width: 400px; margin: 2rem auto; padding: 1.5rem;">
-  <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem;">{t('register', $lang)}</h1>
+<div class="min-h-[70vh] flex items-center justify-center px-4">
+  <div class="w-full max-w-md bg-surface border border-surface-300 rounded-xl p-6 shadow">
+    <h1 class="text-2xl font-bold mb-6">
+      {t('register', $lang)}
+    </h1>
 
-  {#if error}
-    <div style="background-color: #f8d7da; color: #721c24; padding: 0.75rem; border-radius: 0.25rem; margin-bottom: 1rem;">
-      {error}
-    </div>
-  {/if}
+    {#if error}
+      <div class="mb-4 bg-error-100 text-error-700 p-3 rounded">
+        {error}
+      </div>
+    {/if}
 
-  <form on:submit|preventDefault={handleRegister} style="display: flex; flex-direction: column; gap: 1rem;">
-    <input type="text" placeholder={t('username', $lang)} bind:value={username} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
-    <input type="email" placeholder={t('email', $lang)} bind:value={email} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
-    <input type="password" placeholder={t('password', $lang)} bind:value={password} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
-    <input type="password" placeholder={t('confirm_password', $lang)} bind:value={passwordConfirm} style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem; width: 100%;" />
-    <button type="submit" disabled={loading} style="padding: 0.5rem; background-color: #007BFF; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: {loading ? 0.6 : 1};">
-      {loading ? t('register_loading', $lang) : t('register', $lang)}
-    </button>
-  </form>
+    <form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4">
+      <input class="input" placeholder={t('username', $lang)} bind:value={username} />
+      <input class="input" type="email" placeholder={t('email', $lang)} bind:value={email} />
+      <input class="input" type="password" placeholder={t('password', $lang)} bind:value={password} />
+      <input class="input" type="password" placeholder={t('confirm_password', $lang)} bind:value={passwordConfirm} />
 
-  <p style="margin-top: 1rem; text-align: center;">
-    {t('already_account', $lang)} <a href="/login" style="color: #007BFF; text-decoration: none;">{t('login', $lang)}</a>
-  </p>
+      <button type="submit" disabled={loading} class="btn btn-primary w-full font-semibold">
+        {loading ? t('register_loading', $lang) : t('register', $lang)}
+      </button>
+    </form>
+
+    <p class="mt-6 text-sm text-center text-surface-600">
+      {t('already_account', $lang)}
+      <a href="/login" class="text-primary font-medium hover:underline hover:text-primary-hover ml-1">
+        {t('login', $lang)}
+      </a>
+    </p>
+  </div>
 </div>
