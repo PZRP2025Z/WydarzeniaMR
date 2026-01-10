@@ -205,6 +205,9 @@ def get_current_user(
 
     @throws HTTPException 401 if no valid tokens are present or user not found.
     """
+    if response is None:
+        response = Response()
+
     if not access_token:
         if refresh_token:
             access_token = refresh_access_token(refresh_token, response)
