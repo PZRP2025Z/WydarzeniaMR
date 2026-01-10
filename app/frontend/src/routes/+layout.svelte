@@ -1,4 +1,5 @@
 <script lang="ts">
+  import '../app.css';
   import favicon from '$lib/assets/favicon.svg';
   import { lang } from '$lib/stores/stores';
   import { t } from '$lib/i18n';
@@ -25,19 +26,19 @@
     }
   }
 
-async function logout() {
-  try {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-  } catch (err) {
-    console.error("Błąd przy wylogowaniu:", err);
-  } finally {
-    currentUser.set(null);
-    location.reload();
+  async function logout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch (err) {
+      console.error("Błąd przy wylogowaniu:", err);
+    } finally {
+      currentUser.set(null);
+    }
   }
-}
-
 
   onMount(() => {
+    // ustawienie motywu Skeletona
+    document.documentElement.setAttribute('data-theme', 'cerberus');
     fetchCurrentUser();
   });
 </script>
@@ -46,23 +47,58 @@ async function logout() {
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<nav style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid #ccc;">
-  <a href="/">{t('home_title', $lang)}</a>
-  <a href="/events">{t('add_event', $lang)}</a>
+<!-- NAVBAR -->
+<nav
+  class="flex items-center gap-4 p-4 border-b border-surface-300
+         bg-surface-200 dark:bg-surface-900 shadow-sm"
+>
+  <a href="/" class="font-semibold text-surface hover:underline">
+    {t('home_title', $lang)}
+  </a>
+  <a href="/events" class="font-semibold text-surface hover:underline">
+    {t('add_event', $lang)}
+  </a>
 
-  {#if $currentUser}
-    <span style="margin-left:auto; font-weight:600;">
-      Witaj: {$currentUser.login ?? $currentUser.email}
-      <button on:click={logout} style="margin-left:0.5rem;">Wyloguj</button>
-    </span>
+  {#if $currentUser === undefined}
+    <div class="ml-auto h-6 w-32 bg-surface-200 rounded animate-pulse"></div>
+
+  {:else if $currentUser}
+    <div class="ml-auto flex items-center gap-2">
+      <span class="font-semibold">
+        Witaj: {$currentUser.login ?? $currentUser.email}
+      </span>
+      <button on:click={logout} class="btn-danger px-3 py-1 rounded">
+        Wyloguj
+      </button>
+    </div>
+
   {:else}
-    <a href="/login" style="margin-left:auto;">Logowanie</a>
-    <a href="/register">Rejestracja</a>
+    <div class="ml-auto flex gap-2">
+      <a href="/login" class="btn-primary px-3 py-1 rounded">
+        Logowanie
+      </a>
+      <a href="/register"
+         class="px-3 py-1 rounded text-white hover:brightness-110"
+         style="background:#6F42C1">
+        Rejestracja
+      </a>
+    </div>
   {/if}
 </nav>
 
-<button on:click={toggleLang} style="margin:1rem;">
+<button
+  on:click={toggleLang}
+  class="ml-4 mt-4 px-3 py-1 rounded
+         bg-surface-300 text-surface-900
+         dark:bg-surface-700 dark:text-surface-50
+         hover:bg-surface-400 dark:hover:bg-surface-600
+         transition"
+>
   { $lang === 'pl' ? 'EN' : 'PL' }
 </button>
 
-{@render children()}
+
+<!-- STRONA -->
+<main class="mt-4">
+  {@render children()}
+</main>
