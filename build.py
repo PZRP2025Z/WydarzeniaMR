@@ -42,11 +42,11 @@ def install_requirements():
     run([str(PYTHON), "-m", "pip", "install", "-e", "."])
     run([str(PYTHON), "-m", "pip", "install", "-e", ".[test,dev]"])
 
-    # Install frontend dependencies
-    frontend_dir = PROJECT_ROOT / "app" / "frontend"
-    if frontend_dir.exists():
-        print("Installing frontend dependencies (npm)")
-        run(["npm", "install"], cwd=frontend_dir)
+    # # Install frontend dependencies
+    # frontend_dir = PROJECT_ROOT / "app" / "frontend"
+    # if frontend_dir.exists():
+    #     print("Installing frontend dependencies (npm)")
+    #     run(["npm", "install"], cwd=frontend_dir)
 
 
 def run_tests():
@@ -91,6 +91,7 @@ def wait_for_postgres(timeout=60):
     """Czeka aż baza danych w kontenerze będzie gotowa."""
     print("Waiting for PostgreSQL")
     import psycopg2
+
     DB_USERNAME = os.getenv("DB_USERNAME")
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_HOST = os.getenv("DB_HOST")
