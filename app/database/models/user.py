@@ -7,6 +7,7 @@ password management, and API response structures.
 """
 
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 from pydantic import BaseModel, EmailStr
 from sqlmodel import Field, SQLModel
@@ -59,3 +60,10 @@ class PasswordChange(BaseModel):
     current_password: str
     new_password: str
     new_password_confirm: str
+
+
+class UserEmailInfo(NamedTuple):
+    """Container for user email information."""
+
+    email: str
+    login: str
