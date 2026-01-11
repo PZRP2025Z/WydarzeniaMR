@@ -26,6 +26,7 @@ dependencies = [
     "python-multipart",
     "argon2-cffi",
     "dramatiq",
+    "alembic",
 ]
 
 [project.optional-dependencies]
