@@ -77,9 +77,9 @@
 
   {#if loading}
     {#each Array(3) as _}
-      <div class="bg-surface-100 border border-surface-300 rounded-lg p-4 animate-pulse">
-        <div class="h-4 w-2/3 bg-surface-300 rounded mb-2"></div>
-        <div class="h-3 w-1/3 bg-surface-300 rounded"></div>
+      <div class="bg-surface-50 dark:bg-surface-800 border border-surface-300 rounded-lg p-4 animate-pulse">
+        <div class="h-4 w-2/3 bg-surface-200 dark:bg-surface-400 rounded mb-2"></div> 
+        <div class="h-3 w-1/3 bg-surface-200 dark:bg-surface-400 rounded"></div>
       </div>
     {/each}
 
