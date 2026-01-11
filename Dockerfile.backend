@@ -17,6 +17,7 @@ COPY alembic ./alembic
 COPY alembic.ini ./
 COPY entrypoint.sh ./
 
+RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-CMD ["./entrypoint.sh"]
+CMD ["sh", "/app/entrypoint.sh"]
