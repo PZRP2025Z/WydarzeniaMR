@@ -1,6 +1,8 @@
 """
-@file auth_service.py
-@brief Backend authentication functionality and JWT token management.
+auth_service.py
+================
+
+Backend authentication functionality and JWT token management.
 
 This module provides functions for password hashing, JWT token creation and
 verification, user authentication, login, registration, and logout operations.
@@ -15,6 +17,7 @@ from fastapi import Cookie, Depends, HTTPException, Response
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 
+from app.backend.tasks.tasks import send_welcome_email
 from app.database.models.auth import TokenData, TokenResponse, UserRegister
 from app.database.models.user import User
 from app.database.session import get_session
@@ -37,38 +40,35 @@ argon2_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
-    @brief Verify a plain password against a hashed password.
+    Verify a plain password against a hashed password.
 
-    @param plain_password Password provided by the user.
-    @param hashed_password Stored hashed password.
-
-    @return True if the password matches, False otherwise.
+    :param plain_password: Password provided by the user.
+    :param hashed_password: Stored hashed password.
+    :return: True if the password matches, False otherwise.
     """
     return argon2_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     """
-    @brief Hash a plain password using Argon2.
+    Hash a plain password using Argon2.
 
-    @param password Password to hash.
-
-    @return Hashed password as a string.
+    :param password: Password to hash.
+    :return: Hashed password as a string.
     """
     return argon2_context.hash(password)
 
 
-######################## TOKENS  ########################
+######################## TOKENS ########################
 
 
 def create_access_token(email: str, user_id: int) -> str:
     """
-    @brief Create a short-living access token for authentication.
+    Create a short-living access token for authentication.
 
-    @param email User's email.
-    @param user_id User's ID.
-
-    @return JWT access token as a string.
+    :param email: User's email.
+    :param user_id: User's ID.
+    :return: JWT access token as a string.
     """
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     payload = {"sub": email, "user_id": user_id, "exp": int(expire.timestamp()), "type": "access"}
@@ -78,12 +78,11 @@ def create_access_token(email: str, user_id: int) -> str:
 
 def create_refresh_token(email: str, user_id: int) -> str:
     """
-    @brief Create a long-living refresh token used to generate new access tokens.
+    Create a long-living refresh token used to generate new access tokens.
 
-    @param email User's email.
-    @param user_id User's ID.
-
-    @return JWT refresh token as a string.
+    :param email: User's email.
+    :param user_id: User's ID.
+    :return: JWT refresh token as a string.
     """
     expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {"sub": email, "user_id": user_id, "exp": int(expire.timestamp()), "type": "refresh"}
@@ -93,13 +92,14 @@ def create_refresh_token(email: str, user_id: int) -> str:
 
 def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
     """
-    @brief Issue both access and refresh tokens and set them as HTTP-only cookies.
+    Issue both access and refresh tokens and set them as HTTP-only cookies.
 
-    @param user Authenticated user for whom the tokens are issued.
-    @param response FastAPI Response object used to set cookies.
+    :param user: Authenticated user for whom the tokens are issued.
+    :param response: FastAPI Response object used to set cookies.
     """
     access_token = create_access_token(user.email, user.id)
     refresh_token = create_refresh_token(user.email, user.id)
+
     # Access token
     response.set_cookie(
         key=ACCESS_TOKEN_KEY,
@@ -110,6 +110,7 @@ def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         path="/",
     )
+
     # Refresh token
     response.set_cookie(
         key=REFRESH_TOKEN_KEY,
@@ -125,13 +126,11 @@ def issue_tokens_and_set_cookies(user: User, response: Response) -> None:
 
 def verify_token(token: str) -> TokenData:
     """
-    @brief Verify a JWT token and extract user data.
+    Verify a JWT token and extract user data.
 
-    @param token JWT token string to verify.
-
-    @return TokenData object containing user_id.
-
-    @throws HTTPException 401 if token is invalid or expired.
+    :param token: JWT token string to verify.
+    :return: TokenData object containing user_id.
+    :raises HTTPException: 401 if token is invalid or expired.
     """
     try:
         payload = jwt.decode(token, TOKEN_KEY, algorithms=[TOKEN_ALGORITHM])
@@ -144,17 +143,15 @@ def verify_token(token: str) -> TokenData:
 
 def refresh_access_token(refresh_token: str, response: Response) -> str:
     """
-    @brief Refresh the access token using a valid refresh token.
+    Refresh the access token using a valid refresh token.
 
     If the access token has expired, verifies the refresh token and issues a new
     access token, setting it in the response cookies.
 
-    @param refresh_token JWT refresh token.
-    @param response FastAPI Response object used to set the new access token cookie.
-
-    @return New JWT access token as a string.
-
-    @throws HTTPException 401 if refresh token is missing, invalid, or expired.
+    :param refresh_token: JWT refresh token.
+    :param response: FastAPI Response object used to set the new access token cookie.
+    :return: New JWT access token as a string.
+    :raises HTTPException: 401 if refresh token is missing, invalid, or expired.
     """
     if not refresh_token:
         raise HTTPException(status_code=401, detail="No refresh token")
@@ -166,7 +163,9 @@ def refresh_access_token(refresh_token: str, response: Response) -> str:
             raise HTTPException(status_code=401, detail="Invalid token")
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token") from None
+
     new_access = create_access_token(email=email, user_id=user_id)
+
     # Set access token cookie
     response.set_cookie(
         key=ACCESS_TOKEN_KEY,
@@ -191,19 +190,17 @@ def get_current_user(
     response: Response = None,
 ) -> User:
     """
-    @brief Retrieve the currently authenticated user based on access token.
+    Retrieve the currently authenticated user based on access token.
 
     If the access token is expired but a valid refresh token exists,
     it issues a new access token.
 
-    @param access_token JWT access token from cookies.
-    @param refresh_token JWT refresh token from cookies.
-    @param db Database session dependency.
-    @param response FastAPI Response object used to refresh access token if needed.
-
-    @return User object representing the currently authenticated user.
-
-    @throws HTTPException 401 if no valid tokens are present or user not found.
+    :param access_token: JWT access token from cookies.
+    :param refresh_token: JWT refresh token from cookies.
+    :param db: Database session dependency.
+    :param response: FastAPI Response object used to refresh access token if needed.
+    :return: User object representing the currently authenticated user.
+    :raises HTTPException: 401 if no valid tokens are present or user not found.
     """
     if response is None:
         response = Response()
@@ -230,15 +227,13 @@ def get_current_user(
 
 def register_user(request: UserRegister, db: Session, response: Response) -> User:
     """
-    @brief Register a new user and issue JWT tokens.
+    Register a new user and issue JWT tokens.
 
-    @param request UserRegister Pydantic model containing registration info.
-    @param db Database session dependency.
-    @param response FastAPI Response object used to set authentication cookies.
-
-    @return Newly created User object.
-
-    @throws HTTPException 400 if the email is already registered.
+    :param request: UserRegister Pydantic model containing registration info.
+    :param db: Database session dependency.
+    :param response: FastAPI Response object used to set authentication cookies.
+    :return: Newly created User object.
+    :raises HTTPException: 400 if the email is already registered.
     """
     existing = db.exec(select(User).where(User.email == request.email)).first()
     if existing:
@@ -252,19 +247,22 @@ def register_user(request: UserRegister, db: Session, response: Response) -> Use
     db.commit()
     db.refresh(user)
     issue_tokens_and_set_cookies(user, response)
+    try:
+        send_welcome_email(user.email, user.login)
+    except Exception as e:
+        logger.warning(f"Exception occurred while trying to send welcome email: {e}")
     logger.info("New user registered")
     return user
 
 
 def authenticate_user(email: str, password: str, db: Session) -> User | None:
     """
-    @brief Authenticate a user with email and password.
+    Authenticate a user with email and password.
 
-    @param email User's email.
-    @param password User's password.
-    @param db Database session dependency.
-
-    @return User object if authentication is successful, None otherwise.
+    :param email: User's email.
+    :param password: User's password.
+    :param db: Database session dependency.
+    :return: User object if authentication is successful, None otherwise.
     """
     user = db.exec(select(User).where(User.email == email)).first()
     if not user or not verify_password(password, user.hashed_password):
@@ -277,16 +275,14 @@ def login_for_access_token(
     email: str, password: str, db: Session, response: Response
 ) -> TokenResponse:
     """
-    @brief Log in a user and issue JWT tokens as cookies.
+    Log in a user and issue JWT tokens as cookies.
 
-    @param email User's email.
-    @param password User's password.
-    @param db Database session dependency.
-    @param response FastAPI Response object used to set authentication cookies.
-
-    @return TokenResponse object containing access token and token type.
-
-    @throws HTTPException 401 if authentication fails.
+    :param email: User's email.
+    :param password: User's password.
+    :param db: Database session dependency.
+    :param response: FastAPI Response object used to set authentication cookies.
+    :return: TokenResponse object containing access token and token type.
+    :raises HTTPException: 401 if authentication fails.
     """
     user = authenticate_user(email, password, db)
     if not user:
@@ -302,9 +298,9 @@ def login_for_access_token(
 
 def logout_user(response: Response) -> None:
     """
-    @brief Log out a user by deleting authentication cookies.
+    Log out a user by deleting authentication cookies.
 
-    @param response FastAPI Response object used to delete cookies.
+    :param response: FastAPI Response object used to delete cookies.
     """
     response.delete_cookie(key=ACCESS_TOKEN_KEY, path="/")
     response.delete_cookie(key=REFRESH_TOKEN_KEY, path="/")

@@ -1,44 +1,55 @@
 """
-@file participation_service.py
-@brief Backend participation survey functionality.
+participation_service.py
+========================
+
+Backend participation survey functionality.
 
 Provides functions for setting user participation, retrieving event participation statistics,
 and listing events a user is involved with.
 """
 
+import logging
 from datetime import datetime
 
 from sqlmodel import Session, select
 
+from app.backend.notification_service import notify_participant_joined
 from app.database.models.event import Event
 from app.database.models.participations import (
     EventParticipation,
     ParticipationStatus,
 )
 
-import logging
-
 logger = logging.getLogger(__name__)
 
 
 def join_event(db: Session, *, user_id: int, event_id: int) -> EventParticipation:
-    return set_participation(
+    """
+    Set participation status of a user as invited for a specific event.
+
+    :param db: Database session dependency.
+    :param user_id: ID of the user.
+    :param event_id: ID of the event.
+    :return: EventParticipation object representing the newly created participation.
+    """
+    event_participation = set_participation(
         db=db, user_id=user_id, event_id=event_id, status=ParticipationStatus.invited
     )
+    notify_participant_joined(db, event_id=event_id, new_participant_id=user_id)
+    return event_participation
 
 
 def set_participation(
     db: Session, *, user_id: int, event_id: int, status: ParticipationStatus
 ) -> EventParticipation:
     """
-    @brief Set or update a user's participation status for an event.
+    Set or update a user's participation status for an event.
 
-    @param db Database session dependency.
-    @param user_id ID of the user participating in the event.
-    @param event_id ID of the event.
-    @param status ParticipationStatus enum value (going, maybe, not_going).
-
-    @return EventParticipation object representing the updated or newly created participation.
+    :param db: Database session dependency.
+    :param user_id: ID of the user participating in the event.
+    :param event_id: ID of the event.
+    :param status: ParticipationStatus enum value (going, maybe, not_going, invited).
+    :return: EventParticipation object representing the updated or newly created participation.
     """
     participation = db.exec(
         select(EventParticipation).where(
@@ -66,17 +77,17 @@ def set_participation(
 
 def get_event_participation_stats(db: Session, *, event_id: int) -> dict[ParticipationStatus, int]:
     """
-    @brief Retrieve statistics for an event's participation survey.
+    Retrieve statistics for an event's participation survey.
 
-    @param db Database session dependency.
-    @param event_id ID of the event.
-
-    @return Dictionary mapping ParticipationStatus to counts:
-            {
-                ParticipationStatus.going: int,
-                ParticipationStatus.maybe: int,
-                ParticipationStatus.not_going: int
-            }
+    :param db: Database session dependency.
+    :param event_id: ID of the event.
+    :return: Dictionary mapping ParticipationStatus to counts:
+             {
+                 ParticipationStatus.going: int,
+                 ParticipationStatus.maybe: int,
+                 ParticipationStatus.not_going: int,
+                 ParticipationStatus.invited: int
+             }
     """
     participants = db.exec(
         select(EventParticipation).where(EventParticipation.event_id == event_id)
@@ -94,23 +105,22 @@ def get_event_participation_stats(db: Session, *, event_id: int) -> dict[Partici
 
 def get_user_active_events(db: Session, *, user_id: int) -> list[dict]:
     """
-    @brief Get a list of events where the user is an owner or has a participation status.
+    Get a list of events where the user is an owner or has a participation status.
 
-    @param db Database session dependency.
-    @param user_id ID of the user.
-
-    @return List of dictionaries containing event details and the user's participation status:
-            [
-                {
-                    "id": int,
-                    "name": str,
-                    "location": str,
-                    "time": str (ISO format),
-                    "owner_id": int,
-                    "participation_status": str | None
-                },
-                ...
-            ]
+    :param db: Database session dependency.
+    :param user_id: ID of the user.
+    :return: List of dictionaries containing event details and the user's participation status:
+             [
+                 {
+                     "id": int,
+                     "name": str,
+                     "location": str,
+                     "time": str (ISO format),
+                     "owner_id": int,
+                     "participation_status": str | None
+                 },
+                 ...
+             ]
     """
     rows = db.exec(
         select(Event, EventParticipation)

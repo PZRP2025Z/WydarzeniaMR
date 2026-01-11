@@ -1,23 +1,24 @@
 """
-@file event_invitation.py
-@brief Database models for invitation link related activities.
+event_invitation.py
+===================
 
-Provides SQLModel table for storing event invites for users, including token hash, event association.
+Database models for invitation link related activities.
+
+Provides SQLModel table for storing event invites for users, including token hash and event association.
 """
 
 from datetime import datetime, timezone
-
 from sqlmodel import Field, SQLModel
 
 
 class EventInvitation(SQLModel, table=True):
     """
-    @brief Database table model representing an event invitation link.
+    Database table model representing an event invitation link.
 
-    @param id Primary key of the event pass.
-    @param token_hash SHA-256 hash of the pass token (unique, indexed).
-    @param event_id ID of the event the pass grants access to.
-    @param created_at Timestamp when the pass was created (UTC).
+    :param id: Primary key of the event pass.
+    :param token_hash: SHA-256 hash of the pass token (unique, indexed).
+    :param event_id: ID of the event the pass grants access to.
+    :param created_at: Timestamp when the pass was created (UTC).
     """
 
     __tablename__ = "event_invitations"

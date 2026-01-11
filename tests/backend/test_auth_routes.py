@@ -12,7 +12,9 @@ Tests include:
 
 from unittest.mock import MagicMock
 
+import dramatiq
 import pytest
+from dramatiq.message import Message
 from httpx import ASGITransport, AsyncClient
 from sqlmodel import Session
 

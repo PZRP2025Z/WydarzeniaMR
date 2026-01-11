@@ -1,6 +1,8 @@
 """
-@file participation_models.py
-@brief Database models for participation-survey related activities.
+participation_models.py
+=======================
+
+Database models for participation-survey related activities.
 
 Provides SQLModel and Pydantic models for tracking user participation
 statuses in events, including going/maybe/not going options.
@@ -8,19 +10,19 @@ statuses in events, including going/maybe/not going options.
 
 from datetime import datetime
 from enum import Enum
-
 from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
 
 
 class ParticipationStatus(str, Enum):
     """
-    @brief Enum representing possible participation statuses for an event.
+    Enum representing possible participation statuses for an event.
 
     Options:
     - going: user will attend the event
     - maybe: user may attend
     - not_going: user will not attend
+    - invited: user has been invited
     """
 
     going = "going"
@@ -31,9 +33,9 @@ class ParticipationStatus(str, Enum):
 
 class ParticipationCreate(BaseModel):
     """
-    @brief Pydantic model for creating a participation record.
+    Pydantic model for creating a participation record.
 
-    @param status Participation status (going / maybe / not_going)
+    :param status: Participation status (going / maybe / not_going)
     """
 
     status: ParticipationStatus
@@ -41,14 +43,14 @@ class ParticipationCreate(BaseModel):
 
 class EventParticipation(SQLModel, table=True):
     """
-    @brief Database table model representing a user's participation in an event.
+    Database table model representing a user's participation in an event.
 
-    @param id Primary key of the participation record.
-    @param user_id ID of the user participating.
-    @param event_id ID of the event.
-    @param status Participation status (going / maybe / not_going).
-    @param created_at Timestamp when participation was created.
-    @param updated_at Timestamp when participation was last updated.
+    :param id: Primary key of the participation record.
+    :param user_id: ID of the user participating.
+    :param event_id: ID of the event.
+    :param status: Participation status (going / maybe / not_going / invited).
+    :param created_at: Timestamp when participation was created.
+    :param updated_at: Timestamp when participation was last updated.
     """
 
     __tablename__ = "event_participations"

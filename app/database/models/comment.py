@@ -1,26 +1,27 @@
 """
-@file comment_models.py
-@brief Database models for comments-related activities.
+comment_models.py
+=================
+
+Database models for comments-related activities.
 
 Provides SQLModel and Pydantic models for creating, reading, and storing comments
 associated with events and users.
 """
 
 from datetime import datetime
-
 from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
 
 
 class Comment(SQLModel, table=True):
     """
-    @brief Database table model representing a comment.
+    Database table model representing a comment.
 
-    @param id Primary key of the comment.
-    @param event_id Foreign key referencing the related event.
-    @param user_id Foreign key referencing the author user.
-    @param content Text content of the comment.
-    @param created_at Timestamp when the comment was created.
+    :param id: Primary key of the comment.
+    :param event_id: Foreign key referencing the related event.
+    :param user_id: Foreign key referencing the author user.
+    :param content: Text content of the comment.
+    :param created_at: Timestamp when the comment was created.
     """
 
     __tablename__ = "comments"
@@ -33,9 +34,9 @@ class Comment(SQLModel, table=True):
 
 class CommentCreate(BaseModel):
     """
-    @brief Pydantic model for creating a new comment.
+    Pydantic model for creating a new comment.
 
-    @param content Text content of the comment.
+    :param content: Text content of the comment.
     """
 
     content: str
@@ -43,12 +44,12 @@ class CommentCreate(BaseModel):
 
 class CommentRead(BaseModel):
     """
-    @brief Pydantic model for reading a comment.
+    Pydantic model for reading a comment.
 
-    @param id Primary key of the comment.
-    @param user_login Login/username of the comment author.
-    @param content Text content of the comment.
-    @param created_at Timestamp when the comment was created.
+    :param id: Primary key of the comment.
+    :param user_login: Login/username of the comment author.
+    :param content: Text content of the comment.
+    :param created_at: Timestamp when the comment was created.
     """
 
     id: int
