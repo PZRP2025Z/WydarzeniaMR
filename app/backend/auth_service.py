@@ -15,6 +15,7 @@ from fastapi import Cookie, Depends, HTTPException, Response
 from passlib.context import CryptContext
 from sqlmodel import Session, select
 
+from app.backend.tasks.tasks import send_welcome_email
 from app.database.models.auth import TokenData, TokenResponse, UserRegister
 from app.database.models.user import User
 from app.database.session import get_session
@@ -252,6 +253,10 @@ def register_user(request: UserRegister, db: Session, response: Response) -> Use
     db.commit()
     db.refresh(user)
     issue_tokens_and_set_cookies(user, response)
+    try:
+        send_welcome_email(user.email, user.login)
+    except Exception as e:
+        logger.warning(f"Exception occurred while trying to send welcome email: {e}")
     logger.info("New user registered")
     return user
 
