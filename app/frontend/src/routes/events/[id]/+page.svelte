@@ -540,14 +540,20 @@
 
       <hr />
 
-      <button 
-        on:click={() => showNotificationModal = true} 
-        style="padding:0.5rem; background:#ff9800; color:white; border:none; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
-        🔔 Powiadomienia
+      <button
+        on:click={() => showNotificationModal = true}
+        class="btn w-full bg-amber-500 text-white flex items-center justify-center gap-2 px-3"
+      >
+        <span class="text-lg">🔔</span>
+        <span class="text-center whitespace-normal">Powiadomienia</span>
       </button>
 
-      <button on:click={addToGoogleCalendar} style="padding:0.5rem; background:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Dodaj do kalendarza Google
+      <button
+        on:click={addToGoogleCalendar}
+        class="btn btn-danger w-full flex items-center justify-center gap-2 px-3"
+      >
+        <img src="/images/Google_Calendar_icon_(2020).svg.png" alt="Google Calendar" class="w-5 h-5 shrink-0" />
+        <span class="text-center whitespace-normal">Dodaj do kalendarza Google</span>
       </button>
 
       <hr />
@@ -613,53 +619,31 @@
 
 <!-- Modal powiadomień -->
 {#if showNotificationModal}
-  <div
-    style="
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.5);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:1000;
-    "
-  >
-    <div
-      style="
-        background:white;
-        padding:1.5rem;
-        border-radius:8px;
-        width:100%;
-        max-width:500px;
-        max-height:80vh;
-        overflow-y:auto;
-        box-shadow:0 10px 30px rgba(0,0,0,0.2);
-        display:flex;
-        flex-direction:column;
-        gap:1rem;
-      "
-    >
-      <h3 style="margin:0; font-size:1.5rem;">Ustawienia powiadomień</h3>
-      <p style="margin:0; color:#666; font-size:0.9rem;">
-        Wybierz, jakie powiadomienia chcesz otrzymywać o tym wydarzeniu
-      </p>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
+    <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto space-y-4 mx-4">
+      <h3 class="text-lg font-semibold m-0">Ustawienia powiadomień</h3>
+      <p class="text-surface-700 dark:text-surface-300 text-sm m-0">Wybierz, jakie powiadomienia chcesz otrzymywać o tym wydarzeniu</p>
 
       {#if loadingPreferences}
-        <p style="color:#666; text-align:center;">Ładowanie...</p>
+        <div class="text-center text-surface-600 py-6">Ładowanie…</div>
       {:else}
-        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="flex flex-col gap-4">
           {#each notificationTypes as { type, label }}
-            <div style="border:1px solid #e0e0e0; border-radius:6px; padding:1rem;">
-              <h4 style="margin:0 0 0.75rem 0; font-size:1rem; color:#333;">{label}</h4>
-              
-              <div style="display:flex; flex-direction:column; gap:0.5rem;">
+            <div class="bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-800 rounded p-4">
+              <h4 class="text-sm font-medium mb-3 text-surface-700 dark:text-surface-300">{label}</h4>
+
+              <div class="flex flex-col gap-2">
                 {#each channels as { channel, label: channelLabel, icon }}
-                  <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; padding:0.5rem; border-radius:4px; background:{isSubscribed(type, channel) ? '#f0f7ff' : 'transparent'}; border:1px solid {isSubscribed(type, channel) ? '#007BFF' : '#e0e0e0'};">
+                  <label
+                    class="flex items-center gap-2 p-3 rounded cursor-pointer border border-surface-200 dark:border-surface-800 transition"
+                    class:bg-primary-100={isSubscribed(type, channel)}
+                    class:border-primary-600={isSubscribed(type, channel)}
+                  >
                     <input
                       type="checkbox"
                       checked={isSubscribed(type, channel)}
                       on:change={() => togglePreference(type, channel)}
-                      style="cursor:pointer;"
+                      class="cursor-pointer"
                     />
                     <span>{icon} {channelLabel}</span>
                   </label>
@@ -671,21 +655,22 @@
       {/if}
 
       {#if preferencesError}
-        <p style="color:red; font-size:0.9rem; margin:0;">{preferencesError}</p>
+        <div class="text-error-700 text-sm">{preferencesError}</div>
       {/if}
 
-      <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+      <div class="grid grid-cols-2 gap-2 mt-2">
         <button
           disabled={savingPreferences}
           on:click={saveNotificationPreferences}
-          style="flex:1; padding:0.75rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer; opacity:{savingPreferences ? 0.6 : 1}; font-weight:500;"
+          class="btn btn-primary"
+          style="opacity: {savingPreferences ? 0.6 : 1};"
         >
           {savingPreferences ? "Zapisywanie..." : "Zapisz"}
         </button>
 
         <button
           on:click={closeNotificationModal}
-          style="flex:1; padding:0.75rem; background:#f5f5f5; color:#333; border:none; border-radius:4px; cursor:pointer; font-weight:500;"
+          class="btn w-full bg-surface-100 text-surface-900"
         >
           Anuluj
         </button>
@@ -696,10 +681,10 @@
 
 {#if showPassModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
-    <div class="card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
+    <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
       <h3 class="text-lg font-semibold m-0">Utwórz przepustkę</h3>
 
-      <label class="text-sm text-surface-600">Imię / nazwa gościa</label>
+      <label class="text-sm text-surface-700 dark:text-surface-300">Imię / nazwa gościa</label>
 
       <input
         type="text"
@@ -746,9 +731,9 @@
 
 {#if showInviteModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
-    <div class="card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
+    <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
       <h3 class="text-lg font-semibold m-0">Utwórz zaproszenie</h3>
-      <p class="text-sm text-surface-600 m-0">Link wielokrotnego użytku dla użytkowników z kontem</p>
+      <p class="text-sm text-surface-700 dark:text-surface-300 m-0">Link wielokrotnego użytku dla użytkowników z kontem</p>
 
       {#if inviteError}
         <div class="text-error-700 text-sm">{inviteError}</div>
