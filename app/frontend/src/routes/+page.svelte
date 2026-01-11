@@ -3,20 +3,21 @@
   import { goto } from '$app/navigation';
   import { currentUser } from '$lib/stores/currentUser';
   import { get } from 'svelte/store';
+  import EventCard from '$lib/components/EventCard.svelte';
 
   interface EventItem {
     id: number;
     name: string;
     location: string;
-    time: string; // ISO string
+    time: string;
     owner_id: number;
     participation_status?: 'going' | 'maybe' | 'not_going' | null;
   }
 
   let events: EventItem[] = [];
   let loading = true;
-  let error = "";
-  let now = new Date(); // <-- teraz mamy globalną zmienną "teraz"
+  let error = '';
+  let now = new Date();
 
   async function fetchMyEvents() {
     const user = get(currentUser);
@@ -26,23 +27,24 @@
     }
 
     try {
-      const res = await fetch(`/api/participations/me/events`, { credentials: "include" });
-      if (!res.ok) throw new Error("Nie udało się pobrać Twoich wydarzeń");
-      const data: EventItem[] = await res.json();
+      const res = await fetch(`/api/participations/me/events`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Nie udało się pobrać Twoich wydarzeń');
 
+      const data: EventItem[] = await res.json();
       const nowDate = new Date();
 
-      const futureEvents = data.filter(e => new Date(e.time) >= nowDate);
-      const pastEvents = data.filter(e => new Date(e.time) < nowDate);
+      const future = data.filter(e => new Date(e.time) >= nowDate);
+      const past = data.filter(e => new Date(e.time) < nowDate);
 
-      futureEvents.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
-      pastEvents.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+      future.sort((a, b) => +new Date(a.time) - +new Date(b.time));
+      past.sort((a, b) => +new Date(a.time) - +new Date(b.time));
 
-      events = [...futureEvents, ...pastEvents];
-      now = nowDate; // aktualizujemy globalny "now"
+      events = [...future, ...past];
+      now = nowDate;
     } catch (err) {
-      console.error(err);
-      error = err instanceof Error ? err.message : "Błąd przy pobieraniu wydarzeń";
+      error = err instanceof Error ? err.message : 'Błąd przy pobieraniu wydarzeń';
     } finally {
       loading = false;
     }
@@ -53,6 +55,7 @@
       if (user) fetchMyEvents();
       else loading = false;
     });
+    return unsubscribe;
   });
 
   function goToEvent(id: number) {
@@ -60,80 +63,75 @@
   }
 
   function daysUntilEvent(event: EventItem) {
-    const eventDate = new Date(event.time);
-    const diff = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-    if (diff === 0) return "Dzisiaj";
+    const diff = Math.ceil(
+      (new Date(event.time).getTime() - now.getTime()) / 86400000
+    );
+    if (diff === 0) return 'Dzisiaj';
     if (diff > 0) return `Za ${diff} dni`;
     return null;
   }
 </script>
 
-<style>
-  .tag {
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-  }
-  .owner { background: #007BFF; }
-  .going { background: #28a745; }
-  .maybe { background: #ffc107; color: #333; }
-  .past { background: #6c757d; }
-  .separator { border-top: 1px solid #ccc; margin: 1rem 0; }
-</style>
-
-<div style="max-width: 600px; margin: 2rem auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-  <h2 style="font-size: 1.25rem; font-weight: 600;">Moje wydarzenia</h2>
+<div class="max-w-xl mx-auto mt-8 p-6 flex flex-col gap-4">
+  <h2 class="text-xl font-semibold">Moje wydarzenia</h2>
 
   {#if loading}
-    <p style="color:#666;">Ładowanie wydarzeń…</p>
+    {#each Array(3) as _}
+      <div class="bg-surface-50 dark:bg-surface-800 border border-surface-300 rounded-lg p-4 animate-pulse">
+        <div class="h-4 w-2/3 bg-surface-200 dark:bg-surface-400 rounded mb-2"></div> 
+        <div class="h-3 w-1/3 bg-surface-200 dark:bg-surface-400 rounded"></div>
+      </div>
+    {/each}
+
   {:else if error}
-    <p style="color:red;">{error}</p>
+    <div class="bg-surface-100 border border-error-300 text-error-700 p-4 rounded">
+      {error}
+    </div>
+
   {:else if events.length === 0}
-    <p style="color:#666;">Nie masz jeszcze żadnych wydarzeń</p>
+    <p class="text-surface-600">Nie masz jeszcze żadnych wydarzeń</p>
+
   {:else}
     {#each events as event, i (event.id)}
-      {#if i > 0 && new Date(events[i-1].time) < now && new Date(event.time) >= now}
-        <div class="separator"></div>
+      {#if i > 0 && new Date(events[i - 1].time) < now && new Date(event.time) >= now}
+        <hr class="my-4 border-surface-300" />
       {/if}
 
-      <div 
-        style="background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;"
-      >
-        <div>
-          <p style="font-weight: 600; margin: 0;">{event.name}</p>
-          <p style="font-size: 0.875rem; color: #666; margin: 0;">{event.location}</p>
-          
-          <p style="margin: 0.25rem 0;">
-            {#if event.owner_id === get(currentUser)?.user_id}
-              <span class="tag owner">Właściciel</span>
-            {:else if event.participation_status === "going"}
-              <span class="tag going">Będę</span>
-            {:else if event.participation_status === "maybe"}
-              <span class="tag maybe">Może będę</span>
-            {:else if new Date(event.time) < now}
-              <span class="tag past">Już było</span>
-            {/if}
-          </p>
+      <EventCard onClick={() => goToEvent(event.id)}>
+        <p class="font-semibold">{event.name}</p>
+        <p class="text-sm text-surface-600">{event.location}</p>
 
-          {#if new Date(event.time) >= now}
-            <p style="font-size: 0.75rem; color:#888; margin: 0;">{daysUntilEvent(event)}</p>
+        <div class="flex flex-wrap gap-2 mt-1">
+          {#if event.owner_id === get(currentUser)?.user_id}
+            <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#007BFF">
+              Właściciel
+            </span>
+          {:else if event.participation_status === 'going'}
+            <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#28a745">
+              Będę
+            </span>
+          {:else if event.participation_status === 'maybe'}
+            <span class="px-2 py-0.5 text-xs rounded text-black" style="background:#ffc107">
+              Może
+            </span>
+          {:else if new Date(event.time) < now}
+            <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#6c757d">
+              Już było
+            </span>
           {/if}
-
-          <p style="font-size: 0.75rem; color:#888; margin: 0;">
-            {new Date(event.time).toLocaleDateString()} {new Date(event.time).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
-          </p>
         </div>
 
-        <button 
-          on:click={() => goToEvent(event.id)}
-          style="padding: 0.5rem 0.75rem; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;"
-        >
-          Zobacz szczegóły
-        </button>
-      </div>
+        {#if new Date(event.time) >= now}
+          <p class="text-xs text-surface-500 mt-1">
+            {daysUntilEvent(event)}
+          </p>
+        {/if}
+
+        <p class="text-xs text-surface-500">
+          {new Date(event.time).toLocaleDateString()}
+          {new Date(event.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </p>
+      </EventCard>
     {/each}
   {/if}
 </div>

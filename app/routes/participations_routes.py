@@ -1,11 +1,13 @@
 """
-@file participation_routes.py
-@brief API routes for participation survey functionality.
+participation_routes.py
+=======================
 
-Provides endpoints to:
-- Set a user's participation status for an event
-- Retrieve participation statistics for an event
-- Get a list of events where the user is participating or is the owner
+API routes for participation survey functionality.
+
+This module provides endpoints for:
+- Setting a user's participation status for an event
+- Retrieving participation statistics for an event
+- Listing events where the user is participating or is the owner
 """
 
 import logging
@@ -30,22 +32,24 @@ router = APIRouter(prefix="/participations", tags=["participations"])
 @router.post("/events/{event_id}")
 def participate_in_event(
     event_id: int,
-    participation: ParticipationCreate,  # <- pobiera JSON
+    participation: ParticipationCreate,
     db: Session = Depends(get_session),
     user=Depends(get_current_user),
 ):
     """
-    @brief Set participation status for a user in an event.
+    Set participation status for a user in an event.
 
     Updates or creates the participation record for the authenticated user
     for the specified event.
 
-    @param event_id ID of the event.
-    @param participation ParticipationCreate model with status (going/maybe/not_going).
-    @param db Database session dependency.
-    @param user Currently authenticated user.
+    Parameters:
+    - event_id: ID of the event
+    - participation: ParticipationCreate object with status (going/maybe/not_going)
+    - db: Database session
+    - user: Currently authenticated user
 
-    @return EventParticipation model reflecting the user's participation status.
+    Returns:
+    - EventParticipation object reflecting the user's participation status
     """
     participation_obj = set_participation(
         db,
@@ -53,6 +57,7 @@ def participate_in_event(
         event_id=event_id,
         status=participation.status,
     )
+    logger.info(f"User {user.id} set participation '{participation.status}' for event {event_id}")
     return participation_obj
 
 
@@ -62,14 +67,16 @@ def read_event_participation_stats(
     db: Session = Depends(get_session),
 ):
     """
-    @brief Retrieve participation statistics for a specific event.
+    Retrieve participation statistics for a specific event.
 
     Counts how many users are going, maybe, or not going to the event.
 
-    @param event_id ID of the event.
-    @param db Database session dependency.
+    Parameters:
+    - event_id: ID of the event
+    - db: Database session
 
-    @return Dictionary with participation counts: {"going": int, "maybe": int, "not_going": int}.
+    Returns:
+    - Dictionary with participation counts, e.g. {"going": int, "maybe": int, "not_going": int}
     """
     stats = get_event_participation_stats(db, event_id=event_id)
     logger.info(f"Participation stats for event {event_id}: {stats}")
@@ -82,22 +89,22 @@ def read_my_active_events(
     user=Depends(get_current_user),
 ):
     """
-    @brief Get a list of events the current user is participating in or owns.
+    Get a list of events the current user is participating in or owns.
 
     Includes events where the user has a participation record or is the event owner.
 
-    @param db Database session dependency.
-    @param user Currently authenticated user.
+    Parameters:
+    - db: Database session
+    - user: Currently authenticated user
 
-    @return List of events with participation status, e.g.:
-            [{"id": int, "name": str, "location": str, "time": str,
-              "owner_id": int, "participation_status": str | None}, ...]
+    Returns:
+    - List of events with participation status, e.g.:
+      [{"id": int, "name": str, "location": str, "time": str,
+        "owner_id": int, "participation_status": str | None}, ...]
     """
     events = get_user_active_events(
         db,
         user_id=user.id,
     )
-
     logger.info(f"User {user.id} has {len(events)} active events")
-
     return events

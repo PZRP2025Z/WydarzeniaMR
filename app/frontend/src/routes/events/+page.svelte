@@ -11,7 +11,7 @@
 
     const reader = new FileReader();
     reader.onload = () => {
-      newEvent.photo = (reader.result as string).split(',')[1]; // Base64
+      newEvent.photo = (reader.result as string).split(',')[1];
     };
     reader.readAsDataURL(file);
   }
@@ -39,7 +39,6 @@
       const createdEvent = await res.json();
       goto(`/events/${createdEvent.id}`);
     } catch (err) {
-      console.error(err);
       error = 'Błąd serwera';
     } finally {
       loading = false;
@@ -47,16 +46,76 @@
   }
 </script>
 
-<div style="max-width:600px; margin:2rem auto; display:flex; flex-direction:column; gap:1rem;">
-  <h1>Dodaj nowe wydarzenie</h1>
+<div class="max-w-xl mx-auto mt-10 px-4">
+  <div class="card p-6 space-y-4 bg-surface">
 
-  {#if error}<p style="color:red">{error}</p>{/if}
+    <h1 class="text-2xl font-semibold">
+      Dodaj nowe wydarzenie
+    </h1>
 
-  <input placeholder="Tytuł" bind:value={newEvent.name} />
-  <input placeholder="Lokalizacja" bind:value={newEvent.location} />
-  <input placeholder="Data i godzina" bind:value={newEvent.time} type="datetime-local" />
-  <textarea placeholder="Opis" bind:value={newEvent.description}></textarea>
-  <input type="file" accept="image/*" on:change={handleFileSelect} />
+    {#if error}
+      <div class="bg-error-100 text-error-700 p-3 rounded">
+        {error}
+      </div>
+    {/if}
 
-  <button on:click={addEvent} disabled={loading}>Dodaj wydarzenie</button>
+    <div class="space-y-3">
+      <input
+        class="input"
+        placeholder="Tytuł"
+        bind:value={newEvent.name}
+      />
+
+      <input
+        class="input"
+        placeholder="Lokalizacja"
+        bind:value={newEvent.location}
+      />
+
+      <input
+        class="input"
+        type="datetime-local"
+        bind:value={newEvent.time}
+      />
+
+      <textarea
+        class="textarea"
+        placeholder="Opis"
+        rows="4"
+        bind:value={newEvent.description}
+      ></textarea>
+
+      <div class="space-y-1">
+        <input
+          id="photo-upload"
+          type="file"
+          accept="image/*"
+          class="hidden"
+          on:change={handleFileSelect}
+        />
+        <label for="photo-upload" class="btn btn-outline w-full flex justify-center items-center gap-2 cursor-pointer">
+          {#if newEvent.photo}
+            Zmień zdjęcie
+          {:else}
+            Wybierz zdjęcie
+          {/if}
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm6 3l2 3h-4l2-3z" />
+          </svg>
+        </label>
+        {#if newEvent.photo}
+          <p class="text-sm text-surface-500">Plik wybrany ✅</p>
+        {/if}
+      </div>
+    </div>
+
+    <button
+      on:click={addEvent}
+      disabled={loading}
+      class="btn btn-primary w-full font-semibold"
+    >
+      {loading ? 'Dodawanie…' : 'Dodaj wydarzenie'}
+    </button>
+
+  </div>
 </div>

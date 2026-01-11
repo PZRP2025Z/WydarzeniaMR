@@ -1,6 +1,8 @@
 """
-@file logger_setup.py
-@brief Logger setup utility.
+logger_setup.py
+===============
+
+Logger setup utility.
 
 Sets up application logging to both file and stdout using the
 configuration in config/logger_config.json.
@@ -18,13 +20,13 @@ from datetime import datetime
 
 def setup_logging():
     """
-    @brief Configure logging for the application.
+    Configure logging for the application.
 
     Reads the JSON configuration, ensures the logs directory exists,
     sets up the log file name based on the current date, and applies
-    the configuration.
+    the logging configuration.
 
-    @return None
+    :return: None
     """
     log_dir = pathlib.Path("logs")
     log_dir.mkdir(exist_ok=True)

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>WydarzeniaMR API &#8212; WydarzeniaMR  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to WydarzeniaMR’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="wydarzeniamr-api">
+<h1>WydarzeniaMR API<a class="headerlink" href="#wydarzeniamr-api" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p id="module-backend.auth_service">&#64;file auth_service.py
+&#64;brief Backend authentication functionality and JWT token management.</p>
+<p>This module provides functions for password hashing, JWT token creation and
+verification, user authentication, login, registration, and logout operations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.authenticate_user">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">authenticate_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">User</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#backend.auth_service.authenticate_user" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Authenticate a user with email and password.</p>
+<p>&#64;param email User’s email.
+&#64;param password User’s password.
+&#64;param db Database session dependency.</p>
+<p>&#64;return User object if authentication is successful, None otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.create_access_token">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">create_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#backend.auth_service.create_access_token" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Create a short-living access token for authentication.</p>
+<p>&#64;param email User’s email.
+&#64;param user_id User’s ID.</p>
+<p>&#64;return JWT access token as a string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.create_refresh_token">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">create_refresh_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#backend.auth_service.create_refresh_token" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Create a long-living refresh token used to generate new access tokens.</p>
+<p>&#64;param email User’s email.
+&#64;param user_id User’s ID.</p>
+<p>&#64;return JWT refresh token as a string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.get_current_user">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">get_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">Cookie(None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">Cookie(None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">User</span></span></span><a class="headerlink" href="#backend.auth_service.get_current_user" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Retrieve the currently authenticated user based on access token.</p>
+<p>If the access token is expired but a valid refresh token exists,
+it issues a new access token.</p>
+<p>&#64;param access_token JWT access token from cookies.
+&#64;param refresh_token JWT refresh token from cookies.
+&#64;param db Database session dependency.
+&#64;param response FastAPI Response object used to refresh access token if needed.</p>
+<p>&#64;return User object representing the currently authenticated user.</p>
+<p>&#64;throws HTTPException 401 if no valid tokens are present or user not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.get_password_hash">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">get_password_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#backend.auth_service.get_password_hash" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Hash a plain password using Argon2.</p>
+<p>&#64;param password Password to hash.</p>
+<p>&#64;return Hashed password as a string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.issue_tokens_and_set_cookies">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">issue_tokens_and_set_cookies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#backend.auth_service.issue_tokens_and_set_cookies" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Issue both access and refresh tokens and set them as HTTP-only cookies.</p>
+<p>&#64;param user Authenticated user for whom the tokens are issued.
+&#64;param response FastAPI Response object used to set cookies.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.login_for_access_token">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">login_for_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TokenResponse</span></span></span><a class="headerlink" href="#backend.auth_service.login_for_access_token" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Log in a user and issue JWT tokens as cookies.</p>
+<p>&#64;param email User’s email.
+&#64;param password User’s password.
+&#64;param db Database session dependency.
+&#64;param response FastAPI Response object used to set authentication cookies.</p>
+<p>&#64;return TokenResponse object containing access token and token type.</p>
+<p>&#64;throws HTTPException 401 if authentication fails.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.logout_user">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">logout_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#backend.auth_service.logout_user" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Log out a user by deleting authentication cookies.</p>
+<p>&#64;param response FastAPI Response object used to delete cookies.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.refresh_access_token">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">refresh_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#backend.auth_service.refresh_access_token" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Refresh the access token using a valid refresh token.</p>
+<p>If the access token has expired, verifies the refresh token and issues a new
+access token, setting it in the response cookies.</p>
+<p>&#64;param refresh_token JWT refresh token.
+&#64;param response FastAPI Response object used to set the new access token cookie.</p>
+<p>&#64;return New JWT access token as a string.</p>
+<p>&#64;throws HTTPException 401 if refresh token is missing, invalid, or expired.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.register_user">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">register_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UserRegister</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">User</span></span></span><a class="headerlink" href="#backend.auth_service.register_user" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Register a new user and issue JWT tokens.</p>
+<p>&#64;param request UserRegister Pydantic model containing registration info.
+&#64;param db Database session dependency.
+&#64;param response FastAPI Response object used to set authentication cookies.</p>
+<p>&#64;return Newly created User object.</p>
+<p>&#64;throws HTTPException 400 if the email is already registered.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.verify_password">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">verify_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plain_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hashed_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#backend.auth_service.verify_password" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Verify a plain password against a hashed password.</p>
+<p>&#64;param plain_password Password provided by the user.
+&#64;param hashed_password Stored hashed password.</p>
+<p>&#64;return True if the password matches, False otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.auth_service.verify_token">
+<span class="sig-prename descclassname"><span class="pre">backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">verify_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TokenData</span></span></span><a class="headerlink" href="#backend.auth_service.verify_token" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief Verify a JWT token and extract user data.</p>
+<p>&#64;param token JWT token string to verify.</p>
+<p>&#64;return TokenData object containing user_id.</p>
+<p>&#64;throws HTTPException 401 if token is invalid or expired.</p>
+</dd></dl>
+
+<p id="module-database.session">&#64;file session.py
+&#64;brief Database engine and session setup.</p>
+<p>Sets up the SQLModel/SQLAlchemy engine and provides a session generator
+for dependency injection in FastAPI routes and backend services.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="database.session.get_session">
+<span class="sig-prename descclassname"><span class="pre">database.session.</span></span><span class="sig-name descname"><span class="pre">get_session</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#database.session.get_session" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;brief SQLModel session generator.</p>
+<p>Yields a database session for use in FastAPI dependencies or
+backend services. Ensures that the session is properly closed
+after usage.</p>
+<p>&#64;return Yields a SQLModel Session object.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">WydarzeniaMR</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">WydarzeniaMR API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.authenticate_user"><code class="docutils literal notranslate"><span class="pre">authenticate_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.create_access_token"><code class="docutils literal notranslate"><span class="pre">create_access_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.create_refresh_token"><code class="docutils literal notranslate"><span class="pre">create_refresh_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.get_current_user"><code class="docutils literal notranslate"><span class="pre">get_current_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.get_password_hash"><code class="docutils literal notranslate"><span class="pre">get_password_hash()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.issue_tokens_and_set_cookies"><code class="docutils literal notranslate"><span class="pre">issue_tokens_and_set_cookies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.login_for_access_token"><code class="docutils literal notranslate"><span class="pre">login_for_access_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.logout_user"><code class="docutils literal notranslate"><span class="pre">logout_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.refresh_access_token"><code class="docutils literal notranslate"><span class="pre">refresh_access_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.register_user"><code class="docutils literal notranslate"><span class="pre">register_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.verify_password"><code class="docutils literal notranslate"><span class="pre">verify_password()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.auth_service.verify_token"><code class="docutils literal notranslate"><span class="pre">verify_token()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database.session.get_session"><code class="docutils literal notranslate"><span class="pre">get_session()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to WydarzeniaMR’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/modules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

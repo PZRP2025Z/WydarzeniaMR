@@ -1,6 +1,8 @@
 """
-@file event_routes.py
-@brief API routes for Event CRUD operations.
+event_routes.py
+=================
+
+API routes for Event CRUD operations.
 
 Provides endpoints to:
 - Create a new event
@@ -37,16 +39,10 @@ def add_event(
     user=Depends(get_current_user),
 ):
     """
-    @brief Create a new event.
+    Create a new event.
 
     Adds a new event to the database with the currently authenticated user
-    set as the owner.
-
-    @param event_data EventCreate model with event details.
-    @param db Database session dependency.
-    @param user Currently authenticated user.
-
-    @return The newly created Event model.
+    set as the owner. Logs the creation.
     """
     return create_event(db, event_data, owner_id=user.id)
 
@@ -54,13 +50,9 @@ def add_event(
 @router.get("/")
 def read_events(db: Session = Depends(get_session)):
     """
-    @brief Retrieve all events.
+    Retrieve all events.
 
-    Fetches a list of all events from the database.
-
-    @param db Database session dependency.
-
-    @return List of Event models.
+    Fetches a list of all events from the database and logs the retrieval.
     """
     events = get_events(db)
     logger.info(f"Retrieved {len(events)} events from database")
@@ -70,15 +62,9 @@ def read_events(db: Session = Depends(get_session)):
 @router.get("/{event_id}")
 def read_event(event_id: int, db: Session = Depends(get_session)):
     """
-    @brief Retrieve a single event by its ID.
+    Retrieve a single event by its ID.
 
     Fetches the event details from the database. Raises 404 if not found.
-
-    @param event_id ID of the event to retrieve.
-    @param db Database session dependency.
-
-    @return Event model corresponding to the given ID.
-    @throws HTTPException 404 if the event is not found.
     """
     event = get_event(db, event_id)
     if not event:
@@ -96,19 +82,10 @@ def edit_event(
     user=Depends(get_current_user),
 ):
     """
-    @brief Update an existing event.
+    Update an existing event.
 
     Allows the owner of the event to update its details. Raises 403 if
     the user is not the owner, 404 if the event does not exist.
-
-    @param event_id ID of the event to update.
-    @param event_data EventUpdate model with updated fields.
-    @param db Database session dependency.
-    @param user Currently authenticated user.
-
-    @return Updated Event model.
-    @throws HTTPException 403 if the user is not the owner.
-    @throws HTTPException 404 if the event does not exist.
     """
     event = update_event(db, event_id, user.id, event_data)
 
@@ -127,18 +104,10 @@ def remove_event(
     user=Depends(get_current_user),
 ):
     """
-    @brief Delete an existing event.
+    Delete an existing event.
 
     Allows the owner of the event to delete it. Raises 403 if the user
     is not the owner, 404 if the event does not exist.
-
-    @param event_id ID of the event to delete.
-    @param db Database session dependency.
-    @param user Currently authenticated user.
-
-    @return JSON confirming deletion: {"ok": True}.
-    @throws HTTPException 403 if the user is not the owner.
-    @throws HTTPException 404 if the event does not exist.
     """
     result = delete_event(db, event_id, user_id=user.id)
 

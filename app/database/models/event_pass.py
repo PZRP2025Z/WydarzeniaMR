@@ -1,26 +1,27 @@
 """
-@file event_pass_models.py
-@brief Database models for invitation link (event pass) related activities.
+event_pass_models.py
+===================
+
+Database models for invitation link (event pass) related activities.
 
 Provides SQLModel table for storing event passes (magic links) for guests
 and users, including token hash, event association, and display name.
 """
 
 from datetime import datetime, timezone
-
 from sqlmodel import Field, SQLModel
 
 
 class EventPass(SQLModel, table=True):
     """
-    @brief Database table model representing an event pass (invitation link).
+    Database table model representing an event pass (invitation link).
 
-    @param id Primary key of the event pass.
-    @param token_hash SHA-256 hash of the pass token (unique, indexed).
-    @param event_id ID of the event the pass grants access to.
-    @param user_id Optional ID of the user bound to the pass.
-    @param display_name Display name of the guest or user associated with the pass.
-    @param created_at Timestamp when the pass was created (UTC).
+    :param id: Primary key of the event pass.
+    :param token_hash: SHA-256 hash of the pass token (unique, indexed).
+    :param event_id: ID of the event the pass grants access to.
+    :param user_id: Optional ID of the user bound to the pass.
+    :param display_name: Display name of the guest or user associated with the pass.
+    :param created_at: Timestamp when the pass was created (UTC).
     """
 
     __tablename__ = "event_passes"
