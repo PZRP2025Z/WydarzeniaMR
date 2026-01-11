@@ -162,63 +162,76 @@
 </script>
 
 {#if loading}
-  <p style="text-align:center; margin-top:3rem;">Ładowanie przepustki…</p>
-
-{:else if error}
-  <div style="max-width:600px; margin:3rem auto; background:#ffe5e5; padding:1rem; border-radius:6px;">
-    {error}
+  <div class="max-w-md mx-auto mt-12 px-4">
+    <div class="card p-6">
+      <div class="animate-pulse space-y-4">
+        <div class="h-48 bg-surface-200 rounded"></div>
+        <div class="h-6 bg-surface-200 rounded w-3/4"></div>
+        <div class="h-4 bg-surface-200 rounded w-1/2"></div>
+      </div>
+    </div>
   </div>
 
-{:else if event && status === "unbound"}
-  <div style="max-width:800px; margin:2rem auto; font-family:system-ui;">
-
-    <img
-      src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
-      alt="Zdjęcie wydarzenia"
-      style="width:100%; height:300px; object-fit:cover; border-radius:8px;"
-    />
-
-    <h1>{event.name}</h1>
-    <p style="color:#555;">📍 {event.location}</p>
-
-    <div style="background:#f9f9f9; padding:1rem; border-radius:8px;">
-      {@html eventDescriptionHtml}
+{:else if error}
+  <div class="max-w-md mx-auto mt-12 px-4">
+    <div class="card p-4 bg-error-100 text-error-700">
+      {error}
     </div>
+  </div>
 
-    <hr style="margin:2rem 0;" />
+{:else if event && status === "unbound"} 
+  <div class="max-w-3xl mx-auto mt-8 px-4">
+    <div class="card p-6 space-y-4">
+      <img
+        src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
+        alt="Zdjęcie wydarzenia"
+        class="w-full h-72 object-cover rounded-lg shadow"
+      />
 
-    <div style="display:flex; flex-direction:column; gap:0.75rem;">
-      {#if isLoggedIn}
-        <!-- Show single button for logged-in users -->
-        <button
-          on:click={acceptInvitation}
-          style="padding:0.75rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;"
-        >
-          Przyjmij zaproszenie
-        </button>
-      {:else}
-        <!-- Show all options for non-logged-in users -->
-        <button
-          on:click={joinAsGuest}
-          style="padding:0.75rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer;"
-        >
-          Dołącz bez konta
-        </button>
+      <div>
+        <h1 class="text-2xl font-semibold">{event.name}</h1>
+        <p class="text-sm text-surface-600">📍 {event.location}</p>
+      </div>
 
-        <button
-          on:click={() => goto(`/login?next=/pass/${token}`)}
-          style="padding:0.75rem; background:#007BFF; color:white; border:none; border-radius:6px; cursor:pointer;"
-        >
-          Zaloguj się
-        </button>
+      <div class="bg-surface-100 dark:bg-surface-800 p-4 rounded break-words whitespace-pre-wrap">{@html eventDescriptionHtml}</div>
 
-        <button
-          on:click={() => goto(`/register?next=/pass/${token}`)}
-          style="padding:0.75rem; background:#6c757d; color:white; border:none; border-radius:6px; cursor:pointer;"
-        >
-          Zarejestruj się
-        </button>
-      {/if}
+      <hr class="my-4" />
+
+      <div>
+        {#if isLoggedIn}
+          <button
+            on:click={acceptInvitation}
+            class="btn btn-primary w-full"
+          >
+            Przyjmij zaproszenie
+          </button>
+        {:else}
+          <div class="space-y-3">
+            <button
+              on:click={joinAsGuest}
+              class="btn w-full"
+              style="background:#28a745; color:white"
+            >
+              Dołącz bez konta
+            </button>
+
+            <button
+              on:click={() => goto(`/login?next=/pass/${token}`)}
+              class="btn btn-primary w-full"
+            >
+              Zaloguj się
+            </button>
+
+            <button
+              on:click={() => goto(`/register?next=/pass/${token}`)}
+              class="btn w-full"
+              style="background:#6c757d; color:white"
+            >
+              Zarejestruj się
+            </button>
+          </div>
+        {/if}
+      </div>
     </div>
   </div>
 {/if}
