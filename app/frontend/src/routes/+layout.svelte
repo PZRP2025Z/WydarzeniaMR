@@ -27,7 +27,7 @@
     }
   }
 
-async function logout() {
+  async function logout() {
   try {
     await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     await goto('/login');
@@ -37,12 +37,15 @@ async function logout() {
     currentUser.set(null);
     location.reload();
   }
+}
 
-  onMount(() => {
-    // ustawienie motywu Skeletona
-    document.documentElement.setAttribute('data-theme', 'cerberus');
-    fetchCurrentUser();
-  });
+// wywołanie onMount poza funkcją logout
+onMount(() => {
+  // ustawienie motywu Skeletona
+  document.documentElement.setAttribute('data-theme', 'cerberus');
+  fetchCurrentUser();
+});
+
 </script>
 
 <svelte:head>
