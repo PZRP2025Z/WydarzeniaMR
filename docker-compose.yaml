@@ -5,7 +5,7 @@ services:
     image: postgres:15
     container_name: db
     env_file:
-      - .env.docker
+      - .env
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -14,12 +14,22 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
     container_name: redis
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   backend:
     build:
@@ -27,10 +37,12 @@ services:
       dockerfile: Dockerfile.backend
     container_name: backend
     env_file:
-      - .env.docker
+      - .env
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8000:8000"
 
@@ -53,11 +65,11 @@ services:
       dockerfile: Dockerfile.worker
     container_name: dramatiq-worker
     env_file:
-      - .env.docker
+      - .env
     depends_on:
-      - db
-      - redis
-      - backend
+      redis:
+        condition: service_healthy
+
 
 volumes:
   postgres_data:
