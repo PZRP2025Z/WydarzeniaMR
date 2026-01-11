@@ -70,22 +70,22 @@ onMount(() => {
   {:else if $currentUser}
     <div class="ml-auto flex items-center gap-2">
       <span class="font-semibold">
-        Witaj: {$currentUser.login ?? $currentUser.email}
+        {t('hello', $lang)} {$currentUser.login ?? $currentUser.email}
       </span>
       <button on:click={logout} class="btn-danger px-3 py-1 rounded">
-        Wyloguj
+        {t('log_out', $lang)}
       </button>
     </div>
 
   {:else}
     <div class="ml-auto flex gap-2">
       <a href="/login" class="btn-primary px-3 py-1 rounded">
-        Logowanie
+        {t('login', $lang)}
       </a>
       <a href="/register"
          class="px-3 py-1 rounded text-white hover:brightness-110"
          style="background:#6F42C1">
-        Rejestracja
+        {t('register', $lang)}
       </a>
     </div>
   {/if}

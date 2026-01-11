@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
 
   interface Event {
     id: number;
@@ -29,7 +31,7 @@
     const id = Number($page.params.id);
     try {
       const res = await fetch(`${API_URL}/${id}`, { credentials: 'include' });
-      if (!res.ok) throw new Error('Nie udało się pobrać wydarzenia');
+      if (!res.ok) throw new Error(t('error_loading_event', $lang));
       const data: Event = await res.json();
       event = data;
 
@@ -39,7 +41,7 @@
         photo: data.photo || null
       };
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Błąd ładowania';
+      error = err instanceof Error ? err.message : t('error_loading', $lang);
     } finally {
       loading = false;
     }
@@ -69,14 +71,14 @@
 
       if (!res.ok) {
         const data = await res.json();
-        error = data.detail || 'Nie udało się zaktualizować wydarzenia';
+        error = data.detail || t('error_update_event', $lang);
         return;
       }
 
       const updated = await res.json();
       goto(`/events/${updated.id}`);
     } catch (err) {
-      error = 'Błąd serwera';
+      error = t('server_error', $lang);
     }
   }
 </script>
@@ -85,7 +87,7 @@
   <div class="card p-6 space-y-4 bg-surface">
 
     {#if loading}
-      <p class="text-surface-500">Ładowanie…</p>
+      <p class="text-surface-500">{t('loading', $lang)}</p>
     {:else if error}
       <div class="bg-error-100 text-error-700 p-3 rounded">
         {error}
@@ -93,19 +95,19 @@
     {:else if event}
 
       <h1 class="text-2xl font-semibold">
-        Edytuj wydarzenie
+        {t('edit_event', $lang)}
       </h1>
 
       <div class="space-y-3">
         <input
           class="input"
-          placeholder="Tytuł"
+          placeholder={t('title', $lang)}
           bind:value={formData.name}
         />
 
         <input
           class="input"
-          placeholder="Lokalizacja"
+          placeholder={t('event_location', $lang)}
           bind:value={formData.location}
         />
 
@@ -117,7 +119,7 @@
 
         <textarea
           class="textarea"
-          placeholder="Opis"
+          placeholder={t('description', $lang)}
           rows="4"
           bind:value={formData.description}
         ></textarea>
@@ -136,9 +138,9 @@
             class="btn btn-outline w-full flex justify-center items-center gap-2 cursor-pointer"
           >
             {#if formData.photo}
-              Zmień zdjęcie
+              {t('change_photo', $lang)}
             {:else}
-              Wybierz zdjęcie
+              {t('choose_photo', $lang)}
             {/if}
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm6 3l2 3h-4l2-3z" />
@@ -146,7 +148,7 @@
           </label>
 
           {#if formData.photo}
-            <p class="text-sm text-surface-500">Plik wybrany ✅</p>
+            <p class="text-sm text-surface-500">{t('file_selected', $lang)}</p>
           {/if}
         </div>
       </div>
@@ -155,7 +157,7 @@
         on:click={updateEvent}
         class="btn btn-primary w-full font-semibold"
       >
-        Zapisz zmiany
+        {t('save_changes', $lang)}
       </button>
 
     {/if}

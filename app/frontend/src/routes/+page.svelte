@@ -3,6 +3,8 @@
   import { goto } from '$app/navigation';
   import { currentUser } from '$lib/stores/currentUser';
   import { get } from 'svelte/store';
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
   import EventCard from '$lib/components/EventCard.svelte';
 
   interface EventItem {
@@ -30,7 +32,7 @@
       const res = await fetch(`/api/participations/me/events`, {
         credentials: 'include'
       });
-      if (!res.ok) throw new Error('Nie udało się pobrać Twoich wydarzeń');
+      if (!res.ok) throw new Error(t('error_could_not_load_events', $lang));
 
       const data: EventItem[] = await res.json();
       const nowDate = new Date();
@@ -44,7 +46,7 @@
       events = [...future, ...past];
       now = nowDate;
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Błąd przy pobieraniu wydarzeń';
+      error = err instanceof Error ? err.message : t('error_loading_event', $lang);
     } finally {
       loading = false;
     }
@@ -62,18 +64,27 @@
     goto(`/events/${id}`);
   }
 
+  function pluralKeyPl(count: number) {
+    if (count === 1) return 'one';
+    return 'many';
+  }
+
+
   function daysUntilEvent(event: EventItem) {
     const diff = Math.ceil(
       (new Date(event.time).getTime() - now.getTime()) / 86400000
     );
-    if (diff === 0) return 'Dzisiaj';
-    if (diff > 0) return `Za ${diff} dni`;
+    if (diff === 0) return t('today', $lang);
+    if (diff > 0) {
+      const key = diff === 1 ? 'in_days_one' : 'in_days_many';
+      return t(key as any, $lang).replace('{{count}}', String(diff));
+    }
     return null;
   }
 </script>
 
 <div class="max-w-xl mx-auto mt-8 p-6 flex flex-col gap-4">
-  <h2 class="text-xl font-semibold">Moje wydarzenia</h2>
+  <h2 class="text-xl font-semibold">{t('my_events', $lang)}</h2>
 
   {#if loading}
     {#each Array(3) as _}
@@ -89,7 +100,7 @@
     </div>
 
   {:else if events.length === 0}
-    <p class="text-surface-600">Nie masz jeszcze żadnych wydarzeń</p>
+    <p class="text-surface-600">{t('no_events', $lang)}</p>
 
   {:else}
     {#each events as event, i (event.id)}
@@ -104,19 +115,19 @@
         <div class="flex flex-wrap gap-2 mt-1">
           {#if event.owner_id === get(currentUser)?.user_id}
             <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#007BFF">
-              Właściciel
+              {t('owner', $lang)}
             </span>
           {:else if event.participation_status === 'going'}
             <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#28a745">
-              Będę
+              {t('going', $lang)}
             </span>
           {:else if event.participation_status === 'maybe'}
             <span class="px-2 py-0.5 text-xs rounded text-black" style="background:#ffc107">
-              Może
+              {t('maybe', $lang)}
             </span>
           {:else if new Date(event.time) < now}
             <span class="px-2 py-0.5 text-xs rounded text-white" style="background:#6c757d">
-              Już było
+              {t('passed', $lang)}
             </span>
           {/if}
         </div>

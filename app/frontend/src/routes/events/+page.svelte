@@ -1,5 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
 
   let newEvent = { name: '', location: '', time: '', description: '', photo: null as string | null };
   let loading = false;
@@ -32,14 +34,14 @@
 
       if (!res.ok) {
         const data = await res.json();
-        error = data.detail || 'Nie udało się dodać wydarzenia';
+        error = data.detail || t('error_add_event', $lang);
         return;
       }
 
       const createdEvent = await res.json();
       goto(`/events/${createdEvent.id}`);
     } catch (err) {
-      error = 'Błąd serwera';
+      error = t('server_error', $lang);
     } finally {
       loading = false;
     }
@@ -50,7 +52,7 @@
   <div class="card p-6 space-y-4 bg-surface">
 
     <h1 class="text-2xl font-semibold">
-      Dodaj nowe wydarzenie
+      {t('add_new_event', $lang)}
     </h1>
 
     {#if error}
@@ -62,13 +64,13 @@
     <div class="space-y-3">
       <input
         class="input"
-        placeholder="Tytuł"
+        placeholder={t('title', $lang)}
         bind:value={newEvent.name}
       />
 
       <input
         class="input"
-        placeholder="Lokalizacja"
+        placeholder={t('event_location', $lang)}
         bind:value={newEvent.location}
       />
 
@@ -80,7 +82,7 @@
 
       <textarea
         class="textarea"
-        placeholder="Opis"
+        placeholder={t('description', $lang)}
         rows="4"
         bind:value={newEvent.description}
       ></textarea>
@@ -95,16 +97,16 @@
         />
         <label for="photo-upload" class="btn btn-outline w-full flex justify-center items-center gap-2 cursor-pointer">
           {#if newEvent.photo}
-            Zmień zdjęcie
+            {t('change_photo', $lang)}
           {:else}
-            Wybierz zdjęcie
+            {t('choose_photo', $lang)}
           {/if}
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm6 3l2 3h-4l2-3z" />
           </svg>
         </label>
         {#if newEvent.photo}
-          <p class="text-sm text-surface-500">Plik wybrany ✅</p>
+          <p class="text-sm text-surface-500">{t('file_selected', $lang)}</p>
         {/if}
       </div>
     </div>
@@ -114,7 +116,7 @@
       disabled={loading}
       class="btn btn-primary w-full font-semibold"
     >
-      {loading ? 'Dodawanie…' : 'Dodaj wydarzenie'}
+      {loading ? t('adding_event', $lang) : t('add_event', $lang)}
     </button>
 
   </div>

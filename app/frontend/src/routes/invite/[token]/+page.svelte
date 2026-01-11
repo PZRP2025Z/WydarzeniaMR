@@ -3,6 +3,8 @@
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { currentUser } from '$lib/stores/currentUser';
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
 
   interface Event {
     id: number;
@@ -37,9 +39,9 @@
 
       if (!inviteRes.ok) {
         if (inviteRes.status === 410) {
-          error = "To zaproszenie wygasło";
+          error = t('invite_expired', $lang);
         } else {
-          error = "Nieprawidłowe zaproszenie";
+          error = t('invalid_invite', $lang);
         }
         return;
       }
@@ -49,14 +51,14 @@
       // Get event details
       const eventRes = await fetch(`/api/events/${inviteData.event_id}`);
       if (!eventRes.ok) {
-        error = "Nie udało się pobrać wydarzenia";
+        error = t('error_event_load_fail', $lang);
         return;
       }
 
       event = await eventRes.json();
     } catch (err) {
       console.error("Error loading invite:", err);
-      error = "Błąd serwera";
+      error = t('server_error', $lang);
     } finally {
       loading = false;
     }
@@ -77,7 +79,7 @@
 
       if (!res.ok) {
         const errorData = await res.json();
-        error = errorData.detail || "Nie udało się przyjąć zaproszenia";
+        error = errorData.detail || t('error_accept_invitation', $lang);
         return;
       }
 
@@ -85,7 +87,7 @@
       goto(`/events/${data.event_id}`);
     } catch (err) {
       console.error("Error accepting invitation:", err);
-      error = "Błąd serwera";
+      error = t('server_error', $lang);
     } finally {
       accepting = false;
     }
@@ -117,7 +119,7 @@
     <div class="card p-6 space-y-4">
       <img
         src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
-        alt="Zdjęcie wydarzenia"
+        alt={t('event_photo_alt', $lang)}
         class="w-full h-72 object-cover rounded-lg shadow"
       />
 
@@ -134,30 +136,30 @@
 
       <div class="text-center">
         {#if isLoggedIn}
-          <p class="mb-4 text-surface-600">Zostałeś zaproszony do tego wydarzenia</p>
+          <p class="mb-4 text-surface-600">{t('you_are_invited', $lang)}</p>
           <button
             on:click={acceptInvitation}
             disabled={accepting}
             class="btn btn-primary w-full"
             style="opacity: {accepting ? 0.6 : 1};"
           >
-            {accepting ? 'Przyjmowanie...' : 'Przyjmij zaproszenie'}
+            {accepting ? t('accepting_invitation', $lang) : t('accept_invitation', $lang)}
           </button>
         {:else}
-          <p class="mb-4 text-surface-600">Aby przyjąć zaproszenie, musisz się zalogować</p>
+          <p class="mb-4 text-surface-600">{t('invite_login_required', $lang)}</p>
           <div class="space-y-3 max-w-xs mx-auto">
             <button
               on:click={() => goto(`/login?next=/invite/${token}`)}
               class="btn btn-primary w-full"
             >
-              Zaloguj się
+              {t('login', $lang)}
             </button>
             <button
               on:click={() => goto(`/register?next=/invite/${token}`)}
               class="btn w-full"
               style="background:#6c757d; color:white"
             >
-              Zarejestruj się
+              {t('register', $lang)}
             </button>
           </div>
         {/if}
