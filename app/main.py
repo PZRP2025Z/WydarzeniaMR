@@ -25,6 +25,7 @@ from app.routes import comment_routes
 from app.routes import passes_routes
 from app.routes import participations_routes
 from app.routes import invites_routes
+from app.routes import notification_routes
 
 from app.logger import setup_logging
 from app.database.session import engine
@@ -92,3 +93,4 @@ app.include_router(comment_routes.router)
 app.include_router(passes_routes.router)
 app.include_router(participations_routes.router)
 app.include_router(invites_routes.router)
+app.include_router(notification_routes.router)
