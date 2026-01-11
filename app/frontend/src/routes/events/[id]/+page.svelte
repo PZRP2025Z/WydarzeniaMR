@@ -327,74 +327,85 @@
 </script>
 
 {#if loading}
-  <p style="text-align:center; color:#666;">Ładowanie wydarzenia...</p>
+  <div class="max-w-3xl mx-auto mt-8 px-4">
+    <div class="card p-6">
+      <div class="animate-pulse space-y-4">
+        <div class="h-64 bg-surface-200 rounded"></div>
+        <div class="h-6 bg-surface-200 rounded w-1/2"></div>
+        <div class="h-4 bg-surface-200 rounded w-1/3"></div>
+      </div>
+    </div>
+  </div>
 {:else if error}
-  <div style="background:#ffe5e5; border:1px solid #ff9999; color:#900; padding:12px; border-radius:6px;">
-    {error}
+  <div class="max-w-3xl mx-auto mt-8 px-4">
+    <div class="card p-4 bg-error-100 text-error-700">
+      {error}
+    </div>
   </div>
 {:else if event}
-<div style="display:flex; max-width:1200px; margin:2rem auto; gap:2rem; font-family:system-ui, sans-serif;">
+<div class="max-w-6xl mx-auto mt-8 px-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
 
   <!-- Główna kolumna -->
-  <div style="flex:3; display:flex; flex-direction:column; gap:1.5rem;">
+  <div class="lg:col-span-3 space-y-6">
 
     <img 
       src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"} 
       alt="Zdjęcie wydarzenia" 
-      style="width:100%; height:300px; object-fit:fill; border-radius:8px;"
+      class="w-full h-72 object-cover rounded-lg shadow"
     />
 
-    <div style="display:flex; gap:1rem; color:#555; font-size:0.95rem;">
-      <span>✅ Będą: <strong>{participationStats.going}</strong></span>
-      <span>🤔 Może: <strong>{participationStats.maybe}</strong></span>
-      <span>❌ Nie będą: <strong>{participationStats.not_going}</strong></span>
+    <div class="flex gap-4 text-sm text-surface-600">
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">✅ Będą: <strong class="ml-1">{participationStats.going}</strong></span>
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">🤔 Może: <strong class="ml-1">{participationStats.maybe}</strong></span>
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">❌ Nie będą: <strong class="ml-1">{participationStats.not_going}</strong></span>
     </div>
 
-    <div style="display:flex; flex-direction:column; gap:0.5rem;">
-      <h1 style="font-size:2rem; font-weight:bold; margin:0;">{event.name}</h1>
-      <p style="margin:0; color:#555;">Data: {eventDate} | Godzina: {eventTime}</p>
-      <p style="margin:0; color:#555;">Lokalizacja: {event.location}</p>
-      <p style="margin:0; color:#555;">Liczba uczestników: {event.attendees}</p>
-    </div>
+    <div class="card p-6 bg-surface">
+      <h1 class="text-2xl font-semibold mb-1">{event.name}</h1>
+      <p class="text-sm text-surface-600 mb-1">Data: {eventDate} | Godzina: {eventTime}</p>
+      <p class="text-sm text-surface-600 mb-1">Lokalizacja: {event.location}</p>
+      <p class="text-sm text-surface-600">Liczba uczestników: {event.attendees}</p>
 
-    <div style="background:#f9f9f9; padding:1rem; border-radius:8px; min-height:150px;">
-      {@html eventDescriptionHtml}
+      <hr class="my-4" />
+
+      <div class="prose max-w-none break-words whitespace-pre-wrap">
+        {@html eventDescriptionHtml}
+      </div>
     </div>
 
     <!-- KOMENTARZE -->
-    <div style="background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
-      <h2 style="margin-top:0; font-size:1.25rem;">Komentarze</h2>
+    <div class="card p-6">
+      <h2 class="text-lg font-semibold mb-3">Komentarze</h2>
 
       {#if addCommentError}
-        <p style="color:red;">{addCommentError}</p>
+        <div class="bg-error-100 text-error-700 p-2 rounded mb-3">{addCommentError}</div>
       {/if}
 
       <textarea
         rows="3"
         placeholder="Dodaj komentarz..."
         bind:value={newComment}
-        style="width:100%; border:1px solid #ccc; border-radius:6px; padding:0.5rem; margin-bottom:0.5rem;"
+        class="textarea w-full mb-2"
       ></textarea>
 
-      <button on:click={sendComment}
-        style="padding:0.5rem 1rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Dodaj komentarz
-      </button>
+      <div class="flex items-center gap-2">
+        <button on:click={sendComment} class="btn btn-primary" disabled={loadingComments}>{loadingComments ? 'Dodawanie…' : 'Dodaj komentarz'}</button>
+      </div>
 
-      <hr style="margin:1rem 0;" />
+      <hr class="my-4" />
 
       {#if loadingComments}
         <p>Ładowanie komentarzy…</p>
       {:else if commentsError}
-        <p style="color:red;">{commentsError}</p>
+        <div class="text-error-700">{commentsError}</div>
       {:else if comments.length === 0}
-        <p style="color:#999;">Brak komentarzy</p>
+        <p class="text-surface-500">Brak komentarzy</p>
       {:else}
         {#each comments as c}
-          <div style="padding:0.5rem 0; border-bottom:1px solid #eee;">
+          <div class="py-3 border-b border-surface-200">
             <strong>{c.user_login}</strong>
-            <p style="margin:0.25rem 0;">{c.content}</p>
-            <small style="color:#888;">{new Date(c.created_at).toLocaleString()}</small>
+            <p class="mt-1 break-words whitespace-pre-wrap">{c.content}</p>
+            <small class="text-surface-500">{new Date(c.created_at).toLocaleString()}</small>
           </div>
         {/each}
 
@@ -402,7 +413,7 @@
           <button
             on:click={() => { loadingMoreComments = true; loadComments(false); }}
             disabled={loadingMoreComments}
-            style="margin-top:1rem; padding:0.5rem; border:none; background:#eee; border-radius:4px; cursor:pointer;"
+            class="btn w-full mt-4"
           >
             {loadingMoreComments ? "Ładowanie..." : "Załaduj więcej"}
           </button>
@@ -412,55 +423,65 @@
   </div>
 
   <!-- Kolumna boczna -->
-  <div style="flex:1; display:flex; flex-direction:column; gap:1rem;">
-    <div style="background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); display:flex; flex-direction:column; gap:0.75rem;">
-      <button on:click={editEvent} style="padding:0.5rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Edytuj wydarzenie
-      </button>
+  <div class="space-y-6">
+    <div class="card p-4 space-y-3">
+      <button on:click={editEvent} class="btn btn-primary w-full">Edytuj wydarzenie</button>
 
-      <button on:click={addToGoogleCalendar} style="padding:0.5rem; background:#f44336; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Dodaj do kalendarza Google
-      </button>
+      <button on:click={addToGoogleCalendar} class="btn btn-danger w-full">Dodaj do kalendarza Google</button>
 
       <hr />
 
       <strong>Twoja obecność</strong>
-      <button
-        disabled={participationLoading}
-        on:click={() => setParticipation("going")}
-        style="padding:0.5rem; background:{myParticipation === 'going' ? '#1e7e34' : '#28a745'}; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Będę
-      </button>
+      <div class="space-y-2">
+        <button
+          disabled={participationLoading}
+          on:click={() => setParticipation("going")}
+          class="btn w-full"
+          class:bg-emerald-600={myParticipation === 'going'}
+          class:text-white={myParticipation === 'going'}
+        >
+          Będę
+        </button>
 
-      <button
-        disabled={participationLoading}
-        on:click={() => setParticipation("maybe")}
-        style="padding:0.5rem; background:{myParticipation === 'maybe' ? '#d39e00' : '#ffc107'}; color:black; border:none; border-radius:4px; cursor:pointer;">
-        Może będę
-      </button>
+        <button
+          disabled={participationLoading}
+          on:click={() => setParticipation("maybe")}
+          class="btn w-full"
+          class:bg-amber-400={myParticipation === 'maybe'}
+          class:text-black={myParticipation === 'maybe'}
+        >
+          Może będę
+        </button>
 
-      <button
-        disabled={participationLoading}
-        on:click={() => setParticipation("not_going")}
-        style="padding:0.5rem; background:{myParticipation === 'not_going' ? '#bd2130' : '#dc3545'}; color:white; border:none; border-radius:4px; cursor:pointer;">
-        Nie będzie mnie
-      </button>
+        <button
+          disabled={participationLoading}
+          on:click={() => setParticipation("not_going")}
+          class="btn w-full"
+          class:bg-rose-600={myParticipation === 'not_going'}
+          class:text-white={myParticipation === 'not_going'}
+        >
+          Nie będzie mnie
+        </button>
 
-      {#if participationError}
-        <p style="color:red;">{participationError}</p>
-      {/if}
+        {#if participationError}
+          <div class="text-error-700">{participationError}</div>
+        {/if}
+      </div>
 
       <hr />
 
       <button
         on:click={() => showInviteModal = true}
-        style="padding:0.5rem; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">
+        class="btn w-full bg-teal-600 text-white"
+      >
         Utwórz zaproszenie
       </button>
       
       <button
         on:click={() => showPassModal = true}
-        style="padding:0.5rem; background:#6f42c1; color:white; border:none; border-radius:4px; cursor:pointer;">
+        class="btn w-full"
+        style="background:#6f42c1; color:white"
+      >
         Utwórz przepustkę
       </button>
     </div>
@@ -470,58 +491,32 @@
 {/if}
 
 {#if showPassModal}
-  <div
-    style="
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.5);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:1000;
-    "
-  >
-    <div
-      style="
-        background:white;
-        padding:1.5rem;
-        border-radius:8px;
-        width:100%;
-        max-width:400px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.2);
-        display:flex;
-        flex-direction:column;
-        gap:0.75rem;
-      "
-    >
-      <h3 style="margin:0;">Utwórz przepustkę</h3>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
+    <div class="card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
+      <h3 class="text-lg font-semibold m-0">Utwórz przepustkę</h3>
 
-      <label style="font-size:0.9rem; color:#555;">
-        Imię / nazwa gościa
-      </label>
+      <label class="text-sm text-surface-600">Imię / nazwa gościa</label>
 
       <input
         type="text"
         bind:value={passDisplayName}
         placeholder="np. Jan Kowalski"
-        style="padding:0.5rem; border:1px solid #ccc; border-radius:4px;"
+        class="input"
       />
 
       {#if passError}
-        <p style="color:red; font-size:0.9rem;">{passError}</p>
+        <div class="text-error-700 text-sm">{passError}</div>
       {/if}
 
       {#if createdPassLink}
-        <div style="background:#f5f5f5; padding:0.5rem; border-radius:4px;">
+        <div class="bg-surface-100 dark:bg-surface-800 p-2 rounded">
           <strong>Link:</strong>
-          <div style="word-break:break-all; font-size:0.85rem;">
-            {createdPassLink}
-          </div>
+          <div class="break-words text-sm mt-1">{createdPassLink}</div>
         </div>
 
         <button
           on:click={() => navigator.clipboard.writeText(createdPassLink)}
-          style="padding:0.5rem; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;"
+          class="btn btn-success w-full"
         >
           Kopiuj link
         </button>
@@ -529,7 +524,7 @@
         <button
           disabled={creatingPass || !passDisplayName.trim()}
           on:click={createPass}
-          style="padding:0.5rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer;"
+          class="btn btn-primary w-full"
         >
           {creatingPass ? "Tworzenie..." : "Utwórz"}
         </button>
@@ -537,7 +532,7 @@
 
       <button
         on:click={closePassModal}
-        style="padding:0.4rem; background:#eee; border:none; border-radius:4px; cursor:pointer;"
+        class="btn w-full mt-2"
       >
         Zamknij
       </button>
@@ -546,50 +541,24 @@
 {/if}
 
 {#if showInviteModal}
-  <div
-    style="
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.5);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:1000;
-    "
-  >
-    <div
-      style="
-        background:white;
-        padding:1.5rem;
-        border-radius:8px;
-        width:100%;
-        max-width:400px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.2);
-        display:flex;
-        flex-direction:column;
-        gap:0.75rem;
-      "
-    >
-      <h3 style="margin:0;">Utwórz zaproszenie</h3>
-      <p style="font-size:0.9rem; color:#666; margin:0;">
-        Link wielokrotnego użytku dla użytkowników z kontem
-      </p>
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
+    <div class="card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
+      <h3 class="text-lg font-semibold m-0">Utwórz zaproszenie</h3>
+      <p class="text-sm text-surface-600 m-0">Link wielokrotnego użytku dla użytkowników z kontem</p>
 
       {#if inviteError}
-        <p style="color:red; font-size:0.9rem;">{inviteError}</p>
+        <div class="text-error-700 text-sm">{inviteError}</div>
       {/if}
 
       {#if createdInviteLink}
-        <div style="background:#f5f5f5; padding:0.5rem; border-radius:4px;">
+        <div class="bg-surface-100 dark:bg-surface-800 p-2 rounded">
           <strong>Link zaproszenia:</strong>
-          <div style="word-break:break-all; font-size:0.85rem;">
-            {createdInviteLink}
-          </div>
+          <div class="break-words text-sm mt-1">{createdInviteLink}</div>
         </div>
 
         <button
           on:click={() => navigator.clipboard.writeText(createdInviteLink)}
-          style="padding:0.5rem; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;"
+          class="btn btn-success w-full"
         >
           Kopiuj link
         </button>
@@ -597,7 +566,7 @@
         <button
           disabled={creatingInvite}
           on:click={createInvite}
-          style="padding:0.5rem; background:#007BFF; color:white; border:none; border-radius:4px; cursor:pointer; opacity:{creatingInvite ? 0.6 : 1};"
+          class="btn btn-primary w-full"
         >
           {creatingInvite ? "Tworzenie..." : "Utwórz zaproszenie"}
         </button>
@@ -605,7 +574,7 @@
 
       <button
         on:click={closeInviteModal}
-        style="padding:0.4rem; background:#eee; border:none; border-radius:4px; cursor:pointer;"
+        class="btn w-full mt-2"
       >
         Zamknij
       </button>
