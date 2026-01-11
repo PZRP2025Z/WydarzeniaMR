@@ -13,6 +13,7 @@ from unittest.mock import MagicMock
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlmodel import Session
+from unittest.mock import patch
 
 from app.backend.auth_service import get_current_user
 from app.database.models.event_invitation import EventInvitation
@@ -90,7 +91,8 @@ async def test_open_invite_no_authentication_required():
 
 
 @pytest.mark.asyncio
-async def test_accept_invitation_with_authenticated_user():
+@patch("app.backend.participations_service.notify_participant_joined")
+async def test_accept_invitation_with_authenticated_user(mock_notify):
     """Test that an authenticated user can accept an invitation."""
     mock_db = MagicMock(spec=Session)
 
@@ -160,7 +162,8 @@ async def test_accept_invitation_requires_authentication():
 
 
 @pytest.mark.asyncio
-async def test_accept_invitation_multiple_users():
+@patch("app.backend.participations_service.notify_participant_joined")
+async def test_accept_invitation_multiple_users(mock_notify):
     """Test that multiple users can accept the same invitation."""
     mock_db = MagicMock(spec=Session)
 

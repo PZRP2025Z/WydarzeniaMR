@@ -8,11 +8,17 @@ Provides functions for setting user participation, retrieving event participatio
 and listing events a user is involved with.
 """
 
-from datetime import datetime
-from sqlmodel import Session, select
-from app.database.models.event import Event
-from app.database.models.participations import EventParticipation, ParticipationStatus
 import logging
+from datetime import datetime
+
+from sqlmodel import Session, select
+
+from app.backend.notification_service import notify_participant_joined
+from app.database.models.event import Event
+from app.database.models.participations import (
+    EventParticipation,
+    ParticipationStatus,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +32,11 @@ def join_event(db: Session, *, user_id: int, event_id: int) -> EventParticipatio
     :param event_id: ID of the event.
     :return: EventParticipation object representing the newly created participation.
     """
-    return set_participation(
+    event_participation = set_participation(
         db=db, user_id=user_id, event_id=event_id, status=ParticipationStatus.invited
     )
+    notify_participant_joined(db, event_id=event_id, new_participant_id=user_id)
+    return event_participation
 
 
 def set_participation(

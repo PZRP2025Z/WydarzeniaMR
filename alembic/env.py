@@ -10,6 +10,7 @@ from app.database.models.event import Event
 from app.database.models.event_invitation import EventInvitation
 from app.database.models.event_pass import EventPass
 from app.database.models.participations import EventParticipation
+from app.database.models.notifications import NotificationPreference
 from app.database.models.user import User
 from app.database.session import engine
 

@@ -9,7 +9,7 @@ Tests include:
 - Binding a pass to an existing authenticated user
 """
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -108,7 +108,8 @@ async def test_open_pass_bound_regular_user_requires_login():
 
 
 @pytest.mark.asyncio
-async def test_accept_as_guest_creates_user_and_logs_in():
+@patch("app.backend.participations_service.notify_participant_joined")
+async def test_accept_as_guest_creates_user_and_logs_in(mock_notify):
     mock_db = MagicMock(spec=Session)
 
     pass_obj = EventPass(
@@ -157,7 +158,8 @@ async def test_accept_as_guest_creates_user_and_logs_in():
 
 
 @pytest.mark.asyncio
-async def test_accept_with_existing_login_binds_pass():
+@patch("app.backend.participations_service.notify_participant_joined")
+async def test_accept_with_existing_login_binds_pass(mock_notify):
     mock_db = MagicMock(spec=Session)
     pass_obj = EventPass(
         token_hash="hashedtoken", event_id=123, display_name="GuestUser", user_id=None
