@@ -95,63 +95,73 @@
 </script>
 
 {#if loading}
-  <p style="text-align:center; margin-top:3rem;">Ładowanie zaproszenia…</p>
+  <div class="max-w-md mx-auto mt-12 px-4">
+    <div class="card p-6">
+      <div class="animate-pulse space-y-4">
+        <div class="h-48 bg-surface-200 rounded"></div>
+        <div class="h-6 bg-surface-200 rounded w-3/4"></div>
+        <div class="h-4 bg-surface-200 rounded w-1/2"></div>
+      </div>
+    </div>
+  </div>
 
 {:else if error}
-  <div style="max-width:600px; margin:3rem auto; background:#ffe5e5; padding:1rem; border-radius:6px;">
-    {error}
+  <div class="max-w-md mx-auto mt-12 px-4">
+    <div class="card p-4 bg-error-100 text-error-700">
+      {error}
+    </div>
   </div>
 
 {:else if event}
-  <div style="max-width:800px; margin:2rem auto; font-family:system-ui;">
-    <img
-      src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
-      alt="Zdjęcie wydarzenia"
-      style="width:100%; height:300px; object-fit:cover; border-radius:8px;"
-    />
+  <div class="max-w-3xl mx-auto mt-8 px-4">
+    <div class="card p-6 space-y-4">
+      <img
+        src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
+        alt="Zdjęcie wydarzenia"
+        class="w-full h-72 object-cover rounded-lg shadow"
+      />
 
-    <h1>{event.name}</h1>
-    <p style="color:#555;">📍 {event.location}</p>
-
-    {#if event.description}
-      <div style="background:#f9f9f9; padding:1rem; border-radius:8px; margin:1rem 0;">
-        {event.description}
+      <div>
+        <h1 class="text-2xl font-semibold">{event.name}</h1>
+        <p class="text-sm text-surface-600">📍 {event.location}</p>
       </div>
-    {/if}
 
-    <hr style="margin:2rem 0;" />
-
-    <div style="text-align:center;">
-      {#if isLoggedIn}
-        <p style="margin-bottom:1rem; color:#555;">
-          Zostałeś zaproszony do tego wydarzenia
-        </p>
-        <button
-          on:click={acceptInvitation}
-          disabled={accepting}
-          style="padding:0.75rem 2rem; background:#28a745; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; font-size:1rem; opacity: {accepting ? 0.6 : 1};"
-        >
-          {accepting ? 'Przyjmowanie...' : 'Przyjmij zaproszenie'}
-        </button>
-      {:else}
-        <p style="margin-bottom:1rem; color:#555;">
-          Aby przyjąć zaproszenie, musisz się zalogować
-        </p>
-        <div style="display:flex; flex-direction:column; gap:0.75rem; max-width:300px; margin:0 auto;">
-          <button
-            on:click={() => goto(`/login?next=/invite/${token}`)}
-            style="padding:0.75rem; background:#007BFF; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;"
-          >
-            Zaloguj się
-          </button>
-          <button
-            on:click={() => goto(`/register?next=/invite/${token}`)}
-            style="padding:0.75rem; background:#6c757d; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;"
-          >
-            Zarejestruj się
-          </button>
-        </div>
+      {#if event.description}
+        <div class="bg-surface-100 dark:bg-surface-800 p-4 rounded break-words whitespace-pre-wrap">{event.description}</div>
       {/if}
+
+      <hr class="my-4" />
+
+      <div class="text-center">
+        {#if isLoggedIn}
+          <p class="mb-4 text-surface-600">Zostałeś zaproszony do tego wydarzenia</p>
+          <button
+            on:click={acceptInvitation}
+            disabled={accepting}
+            class="btn btn-primary w-full"
+            style="opacity: {accepting ? 0.6 : 1};"
+          >
+            {accepting ? 'Przyjmowanie...' : 'Przyjmij zaproszenie'}
+          </button>
+        {:else}
+          <p class="mb-4 text-surface-600">Aby przyjąć zaproszenie, musisz się zalogować</p>
+          <div class="space-y-3 max-w-xs mx-auto">
+            <button
+              on:click={() => goto(`/login?next=/invite/${token}`)}
+              class="btn btn-primary w-full"
+            >
+              Zaloguj się
+            </button>
+            <button
+              on:click={() => goto(`/register?next=/invite/${token}`)}
+              class="btn w-full"
+              style="background:#6c757d; color:white"
+            >
+              Zarejestruj się
+            </button>
+          </div>
+        {/if}
+      </div>
     </div>
   </div>
 {/if}
