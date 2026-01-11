@@ -3,6 +3,8 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { marked } from 'marked';
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
 
   // -------------------------------
   // TYPY
@@ -94,14 +96,14 @@
 
 
       if (!res.ok) {
-        participationError = "Nie udało się zapisać decyzji";
+        participationError = t('error_save_participation', $lang);
         return;
       }
 
       myParticipation = status;
       await loadParticipationStats();
     } catch {
-      participationError = "Błąd serwera";
+      participationError = t('server_error', $lang);
     } finally {
       participationLoading = false;
     }
@@ -129,14 +131,14 @@
       const id = Number($page.params.id);
       const res = await fetch(`/api/events/${id}/comments?limit=${commentsLimit}&offset=${commentsOffset}`, { credentials: "include" });
       if (!res.ok) {
-        commentsError = "Nie udało się pobrać komentarzy.";
+        commentsError = t('error_comments_load', $lang);
         return;
       }
       const data: Comment[] = await res.json();
       comments = [...comments, ...data];
       commentsOffset += data.length;
     } catch {
-      commentsError = "Błąd podczas ładowania komentarzy";
+      commentsError = t('error_comments_loading', $lang);
     } finally {
       loadingComments = false;
       loadingMoreComments = false;
@@ -159,7 +161,7 @@
       if (!res.ok) {
         let j;
         try { j = await res.json(); } catch {}
-        addCommentError = j?.detail ?? "Nie udało się dodać komentarza";
+        addCommentError = j?.detail ?? t('error_add_comment', $lang);
         return;
       }
 
@@ -167,7 +169,7 @@
       comments = [created, ...comments];
       newComment = "";
     } catch {
-      addCommentError = "Błąd serwera";
+      addCommentError = t('server_error', $lang);
     }
   }
 
@@ -179,7 +181,7 @@
 
     try {
       const res = await fetch(`/api/events/${id}`);
-      if (!res.ok) throw new Error("Nie udało się pobrać wydarzenia.");
+      if (!res.ok) throw new Error(t('error_loading_event', $lang));
       event = await res.json();
 
       if (event.time) {
@@ -187,11 +189,11 @@
         eventDate = d.toLocaleDateString();
         eventTime = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       } else {
-        eventDate = "Brak daty";
-        eventTime = "Brak godziny";
+        eventDate = t('no_date', $lang);
+        eventTime = t('no_time', $lang);
       }
 
-      event.description ??= "Brak opisu";
+      event.description ??= t('no_description', $lang);
       event.attendees ??= 0;
       eventDescriptionHtml = marked(event.description);
 
@@ -199,7 +201,7 @@
       await loadMyParticipation();
       await loadParticipationStats();
     } catch (err) {
-      error = err instanceof Error ? err.message : "Błąd ładowania wydarzenia";
+      error = err instanceof Error ? err.message : t('error_loading_event', $lang);
     } finally {
       loading = false;
     }
@@ -216,12 +218,12 @@
 
   // Struktura do zarządzania preferencjami w UI
   const notificationTypes: { type: NotificationType; label: string }[] = [
-    { type: "event_updated", label: "Aktualizacje wydarzenia" },
-    { type: "participant_joined", label: "Nowi uczestnicy" }
+    { type: "event_updated", label: t('notification_event_updated', $lang) },
+    { type: "participant_joined", label: t('notification_participant_joined', $lang) }
   ];
 
   const channels: { channel: NotificationChannel; label: string; icon: string }[] = [
-    { channel: "email", label: "Email", icon: "📧" }
+    { channel: "email", label: t('channel_email', $lang), icon: "📧" }
   ];
 
   // Mapa preferencji
@@ -243,7 +245,7 @@
       });
 
       if (!res.ok) {
-        throw new Error("Nie udało się pobrać preferencji");
+        throw new Error(t('error_load_preferences', $lang));
       }
 
       notificationPreferences = await res.json();
@@ -255,7 +257,7 @@
       });
 
     } catch (err) {
-      preferencesError = err instanceof Error ? err.message : "Błąd ładowania preferencji";
+      preferencesError = err instanceof Error ? err.message : t('error_loading_preferences', $lang);
     } finally {
       loadingPreferences = false;
     }
@@ -298,13 +300,13 @@
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data?.detail ?? "Nie udało się zapisać preferencji");
+        throw new Error(data?.detail ?? t('error_save_preferences', $lang));
       }
 
       notificationPreferences = await res.json();
       showNotificationModal = false;
     } catch (err) {
-      preferencesError = err instanceof Error ? err.message : "Błąd zapisywania preferencji";
+      preferencesError = err instanceof Error ? err.message : t('error_saving_preferences', $lang);
     } finally {
       savingPreferences = false;
     }
@@ -342,14 +344,14 @@
 
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        passError = j?.detail ?? "Nie udało się utworzyć przepustki";
+        passError = j?.detail ?? t('error_create_pass', $lang);
         return;
       }
 
       const data = await res.json();
       createdPassLink = data.link;
     } catch {
-      passError = "Błąd serwera";
+      passError = t('server_error', $lang);
     } finally {
       creatingPass = false;
     }
@@ -387,14 +389,14 @@
 
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        inviteError = j?.detail ?? "Nie udało się utworzyć zaproszenia";
+        inviteError = j?.detail ?? t('error_create_invite', $lang);
         return;
       }
 
       const data = await res.json();
       createdInviteLink = data.link;
     } catch {
-      inviteError = "Błąd serwera";
+      inviteError = t('server_error', $lang);
     } finally {
       creatingInvite = false;
     }
@@ -466,16 +468,16 @@
     />
 
     <div class="flex gap-4 text-sm text-surface-600">
-      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">✅ Będą: <strong class="ml-1">{participationStats.going}</strong></span>
-      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">🤔 Może: <strong class="ml-1">{participationStats.maybe}</strong></span>
-      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">❌ Nie będą: <strong class="ml-1">{participationStats.not_going}</strong></span>
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">{t('stat_going', $lang)} <strong class="ml-1">{participationStats.going}</strong></span>
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">{t('stat_maybe', $lang)} <strong class="ml-1">{participationStats.maybe}</strong></span>
+      <span class="inline-flex items-center gap-2 px-2 py-1 bg-surface-100 dark:bg-surface-700 rounded text-surface-700 dark:text-white">{t('stat_not_going', $lang)} <strong class="ml-1">{participationStats.not_going}</strong></span>
     </div>
 
     <div class="card p-6 bg-surface">
       <h1 class="text-2xl font-semibold mb-1">{event.name}</h1>
-      <p class="text-sm text-surface-600 mb-1">Data: {eventDate} | Godzina: {eventTime}</p>
-      <p class="text-sm text-surface-600 mb-1">Lokalizacja: {event.location}</p>
-      <p class="text-sm text-surface-600">Liczba uczestników: {event.attendees}</p>
+      <p class="text-sm text-surface-600 mb-1">{t('date_label', $lang)}: {eventDate} | {t('time_label', $lang)}: {eventTime}</p>
+      <p class="text-sm text-surface-600 mb-1">{t('event_location', $lang)}: {event.location}</p>
+      <!-- <p class="text-sm text-surface-600">{t('attendees', $lang)}: {event.attendees}</p> -->
 
       <hr class="my-4" />
 
@@ -486,7 +488,7 @@
 
     <!-- KOMENTARZE -->
     <div class="card p-6">
-      <h2 class="text-lg font-semibold mb-3">Komentarze</h2>
+      <h2 class="text-lg font-semibold mb-3">{t('comments', $lang)}</h2>
 
       {#if addCommentError}
         <div class="bg-error-100 text-error-700 p-2 rounded mb-3">{addCommentError}</div>
@@ -494,23 +496,23 @@
 
       <textarea
         rows="3"
-        placeholder="Dodaj komentarz..."
+        placeholder={t('add_comment_placeholder', $lang)}
         bind:value={newComment}
         class="textarea w-full mb-2"
       ></textarea>
 
       <div class="flex items-center gap-2">
-        <button on:click={sendComment} class="btn btn-primary" disabled={loadingComments}>{loadingComments ? 'Dodawanie…' : 'Dodaj komentarz'}</button>
+        <button on:click={sendComment} class="btn btn-primary" disabled={loadingComments}>{loadingComments ? t('adding_comment', $lang) : t('add_comment', $lang)}</button>
       </div>
 
       <hr class="my-4" />
 
       {#if loadingComments}
-        <p>Ładowanie komentarzy…</p>
+        <p>{t('loading_comments', $lang)}</p>
       {:else if commentsError}
         <div class="text-error-700">{commentsError}</div>
       {:else if comments.length === 0}
-        <p class="text-surface-500">Brak komentarzy</p>
+        <p class="text-surface-500">{t('no_comments', $lang)}</p>
       {:else}
         {#each comments as c}
           <div class="py-3 border-b border-surface-200">
@@ -526,7 +528,7 @@
             disabled={loadingMoreComments}
             class="btn w-full mt-4"
           >
-            {loadingMoreComments ? "Ładowanie..." : "Załaduj więcej"}
+            {loadingMoreComments ? t('loading_more', $lang) : t('load_more', $lang)}
           </button>
         {/if}
       {/if}
@@ -536,7 +538,7 @@
   <!-- Kolumna boczna -->
   <div class="space-y-6">
     <div class="card p-4 space-y-3">
-      <button on:click={editEvent} class="btn btn-primary w-full">Edytuj wydarzenie</button>
+      <button on:click={editEvent} class="btn btn-primary w-full">{t('edit_event', $lang)}</button>
 
       <hr />
 
@@ -545,7 +547,7 @@
         class="btn w-full bg-amber-500 text-white flex items-center justify-center gap-2 px-3"
       >
         <span class="text-lg">🔔</span>
-        <span class="text-center whitespace-normal">Powiadomienia</span>
+        <span class="text-center whitespace-normal">{t('notifications', $lang)}</span>
       </button>
 
       <button
@@ -553,12 +555,12 @@
         class="btn btn-danger w-full flex items-center justify-center gap-2 px-3"
       >
         <img src="/images/Google_Calendar_icon_(2020).svg.png" alt="Google Calendar" class="w-5 h-5 shrink-0" />
-        <span class="text-center whitespace-normal">Dodaj do kalendarza Google</span>
+        <span class="text-center whitespace-normal">{t('add_to_google_calendar', $lang)}</span>
       </button>
 
       <hr />
 
-      <strong>Twoja obecność</strong>
+      <strong>{t('your_attendance', $lang)}</strong>
       <div class="space-y-2">
         <button
           disabled={participationLoading}
@@ -567,7 +569,7 @@
           class:bg-emerald-600={myParticipation === 'going'}
           class:text-white={myParticipation === 'going'}
         >
-          Będę
+          {t('participation_going', $lang)}
         </button>
 
         <button
@@ -577,7 +579,7 @@
           class:bg-amber-400={myParticipation === 'maybe'}
           class:text-black={myParticipation === 'maybe'}
         >
-          Może będę
+          {t('participation_maybe', $lang)}
         </button>
 
         <button
@@ -587,7 +589,7 @@
           class:bg-rose-600={myParticipation === 'not_going'}
           class:text-white={myParticipation === 'not_going'}
         >
-          Nie będzie mnie
+          {t('participation_not_going', $lang)}
         </button>
 
         {#if participationError}
@@ -601,7 +603,7 @@
         on:click={() => showInviteModal = true}
         class="btn w-full bg-teal-600 text-white"
       >
-        Utwórz zaproszenie
+        {t('create_invite', $lang)}
       </button>
       
       <button
@@ -609,7 +611,7 @@
         class="btn w-full"
         style="background:#6f42c1; color:white"
       >
-        Utwórz przepustkę
+        {t('create_pass', $lang)}
       </button>
     </div>
   </div>
@@ -621,11 +623,11 @@
 {#if showNotificationModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
     <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto space-y-4 mx-4">
-      <h3 class="text-lg font-semibold m-0">Ustawienia powiadomień</h3>
-      <p class="text-surface-700 dark:text-surface-300 text-sm m-0">Wybierz, jakie powiadomienia chcesz otrzymywać o tym wydarzeniu</p>
+      <h3 class="text-lg font-semibold m-0">{t('notification_settings', $lang)}</h3>
+      <p class="text-surface-700 dark:text-surface-300 text-sm m-0">{t('notification_settings_desc', $lang)}</p>
 
       {#if loadingPreferences}
-        <div class="text-center text-surface-600 py-6">Ładowanie…</div>
+        <div class="text-center text-surface-600 py-6">{t('loading_preferences', $lang)}</div>
       {:else}
         <div class="flex flex-col gap-4">
           {#each notificationTypes as { type, label }}
@@ -665,14 +667,14 @@
           class="btn btn-primary"
           style="opacity: {savingPreferences ? 0.6 : 1};"
         >
-          {savingPreferences ? "Zapisywanie..." : "Zapisz"}
+          {savingPreferences ? t('saving_preferences', $lang) : t('save', $lang)}
         </button>
 
         <button
           on:click={closeNotificationModal}
           class="btn w-full bg-surface-100 text-surface-900"
         >
-          Anuluj
+          {t('cancel', $lang)}
         </button>
       </div>
     </div>
@@ -682,14 +684,14 @@
 {#if showPassModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
     <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
-      <h3 class="text-lg font-semibold m-0">Utwórz przepustkę</h3>
+      <h3 class="text-lg font-semibold m-0">{t('create_pass', $lang)}</h3>
 
-      <label class="text-sm text-surface-700 dark:text-surface-300">Imię / nazwa gościa</label>
+      <label class="text-sm text-surface-700 dark:text-surface-300">{t('pass_display_name_label', $lang)}</label>
 
       <input
         type="text"
         bind:value={passDisplayName}
-        placeholder="np. Jan Kowalski"
+        placeholder={t('pass_display_placeholder', $lang)}
         class="input"
       />
 
@@ -699,7 +701,7 @@
 
       {#if createdPassLink}
         <div class="bg-surface-100 dark:bg-surface-800 p-2 rounded">
-          <strong>Link:</strong>
+          <strong>{t('link_label', $lang)}</strong>
           <div class="break-words text-sm mt-1">{createdPassLink}</div>
         </div>
 
@@ -707,7 +709,7 @@
           on:click={() => navigator.clipboard.writeText(createdPassLink)}
           class="btn btn-success w-full"
         >
-          Kopiuj link
+          {t('copy_link', $lang)}
         </button>
       {:else}
         <button
@@ -715,7 +717,7 @@
           on:click={createPass}
           class="btn btn-primary w-full"
         >
-          {creatingPass ? "Tworzenie..." : "Utwórz"}
+          {creatingPass ? t('creating_pass', $lang) : t('create', $lang)}
         </button>
       {/if}
 
@@ -723,7 +725,7 @@
         on:click={closePassModal}
         class="btn w-full mt-2"
       >
-        Zamknij
+        {t('close', $lang)}
       </button>
     </div>
   </div>
@@ -732,8 +734,8 @@
 {#if showInviteModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
     <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-sm space-y-4 mx-4 bg-surface shadow-lg rounded-lg">
-      <h3 class="text-lg font-semibold m-0">Utwórz zaproszenie</h3>
-      <p class="text-sm text-surface-700 dark:text-surface-300 m-0">Link wielokrotnego użytku dla użytkowników z kontem</p>
+      <h3 class="text-lg font-semibold m-0">{t('create_invite', $lang)}</h3>
+      <p class="text-sm text-surface-700 dark:text-surface-300 m-0">{t('invite_description', $lang)}</p>
 
       {#if inviteError}
         <div class="text-error-700 text-sm">{inviteError}</div>
@@ -741,7 +743,7 @@
 
       {#if createdInviteLink}
         <div class="bg-surface-100 dark:bg-surface-800 p-2 rounded">
-          <strong>Link zaproszenia:</strong>
+          <strong>{t('invite_link_label', $lang)}</strong>
           <div class="break-words text-sm mt-1">{createdInviteLink}</div>
         </div>
 
@@ -749,7 +751,7 @@
           on:click={() => navigator.clipboard.writeText(createdInviteLink)}
           class="btn btn-success w-full"
         >
-          Kopiuj link
+          {t('copy_link', $lang)}
         </button>
       {:else}
         <button
@@ -757,7 +759,7 @@
           on:click={createInvite}
           class="btn btn-primary w-full"
         >
-          {creatingInvite ? "Tworzenie..." : "Utwórz zaproszenie"}
+          {creatingInvite ? t('creating_invite', $lang) : t('create_invite', $lang)}
         </button>
       {/if}
 
@@ -765,7 +767,7 @@
         on:click={closeInviteModal}
         class="btn w-full mt-2"
       >
-        Zamknij
+        {t('close', $lang)}
       </button>
     </div>
   </div>

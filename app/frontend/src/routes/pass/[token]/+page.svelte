@@ -3,6 +3,8 @@
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { marked } from "marked";
+  import { t } from '$lib/i18n';
+  import { lang } from '$lib/stores/stores';
   import { currentUser } from '$lib/stores/currentUser';
 
   interface Event {
@@ -38,7 +40,7 @@
       });
 
       if (!res.ok) {
-        error = "Nieprawidłowa lub wygasła przepustka";
+        error = t('error_bad_pass', $lang);
         return;
       }
 
@@ -56,7 +58,7 @@
             console.error("Failed to fetch user, status:", meRes.status);
             const errorText = await meRes.text();
             console.error("Error:", errorText);
-            error = "Nie udało się zalogować";
+            error = t('error_login_fail', $lang);
         }
         goto(`/events/${data.event_id}`);
         return;
@@ -86,16 +88,16 @@
       if (status === "unbound") {
         const eventRes = await fetch(`/api/events/${data.event_id}`);
         if (!eventRes.ok) {
-          error = "Nie udało się pobrać wydarzenia";
+          error = t('error_event_load_fail', $lang);
           return;
         }
 
         event = await eventRes.json();
-        event.description ??= "Brak opisu";
+        event.description ??= t('no_description', $lang);
         eventDescriptionHtml = marked(event.description);
       }
     } catch {
-      error = "Błąd serwera";
+      error = t('server_error', $lang);
     } finally {
       loading = false;
     }
@@ -112,7 +114,7 @@
         console.log("Response status:", res.status);
         
         if (!res.ok) {
-            error = "Nie udało się dołączyć";
+            error = t('error_guest_join_fail', $lang);
             return;
         }
 
@@ -131,11 +133,11 @@
             console.error("Failed to fetch user, status:", meRes.status);
             const errorText = await meRes.text();
             console.error("Error:", errorText);
-            error = "Nie udało się zalogować";
+            error = t('error_login_fail', $lang);
         }
     } catch (err) {
         console.error("Error in joinAsGuest:", err);
-        error = "Błąd serwera";
+        error = t('server_error', $lang);
     }
   }
 
@@ -147,14 +149,14 @@
         });
 
         if (!res.ok) {
-            error = "Nie udało się przyjąć zaproszenia";
+            error = t('error_accept_invitation', $lang);
             return;
         }
 
         goto(`/events/${event?.id}`);
     } catch (err) {
         console.error("Error accepting invitation:", err);
-        error = "Błąd serwera";
+        error = t('server_error', $lang);
     }
   }
 
@@ -184,7 +186,7 @@
     <div class="card p-6 space-y-4">
       <img
         src={event.photo ? `data:image/jpeg;base64,${event.photo}` : "/images/placeholder-event.jpg"}
-        alt="Zdjęcie wydarzenia"
+        alt={t('event_photo_alt', $lang)}
         class="w-full h-72 object-cover rounded-lg shadow"
       />
 
@@ -203,7 +205,7 @@
             on:click={acceptInvitation}
             class="btn btn-primary w-full"
           >
-            Przyjmij zaproszenie
+            {t('accept_invitation', $lang)}
           </button>
         {:else}
           <div class="space-y-3">
@@ -212,14 +214,14 @@
               class="btn w-full"
               style="background:#28a745; color:white"
             >
-              Dołącz bez konta
+              {t('join_as_guest', $lang)}
             </button>
 
             <button
               on:click={() => goto(`/login?next=/pass/${token}`)}
               class="btn btn-primary w-full"
             >
-              Zaloguj się
+              {t('login', $lang)}
             </button>
 
             <button
@@ -227,7 +229,7 @@
               class="btn w-full"
               style="background:#6c757d; color:white"
             >
-              Zarejestruj się
+              {t('register', $lang)}
             </button>
           </div>
         {/if}
