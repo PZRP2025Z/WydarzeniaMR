@@ -1,22 +1,23 @@
 """
-@file auth_models.py
-@brief Database models for authentication-related activities.
+auth_models.py
+===============
+
+Database models for authentication-related activities.
 
 Provides Pydantic models for user registration, login, and JWT token handling.
 """
 
 from uuid import UUID
-
 from pydantic import BaseModel, EmailStr
 
 
 class UserRegister(BaseModel):
     """
-    @brief Model for registering a new user.
+    Model for registering a new user.
 
-    @param login Login/username of the new user.
-    @param email Email address of the new user.
-    @param password Plain-text password of the new user.
+    :param login: Login/username of the new user.
+    :param email: Email address of the new user.
+    :param password: Plain-text password of the new user.
     """
 
     login: str
@@ -26,10 +27,10 @@ class UserRegister(BaseModel):
 
 class UserLogin(BaseModel):
     """
-    @brief Model for logging in an existing user.
+    Model for logging in an existing user.
 
-    @param email Email address of the user.
-    @param password Plain-text password of the user.
+    :param email: Email address of the user.
+    :param password: Plain-text password of the user.
     """
 
     email: EmailStr
@@ -38,10 +39,10 @@ class UserLogin(BaseModel):
 
 class TokenResponse(BaseModel):
     """
-    @brief Model representing JWT access token response.
+    Model representing JWT access token response.
 
-    @param access_token JWT access token string.
-    @param token_type Type of the token (usually 'bearer').
+    :param access_token: JWT access token string.
+    :param token_type: Type of the token (usually 'bearer').
     """
 
     access_token: str
@@ -50,18 +51,18 @@ class TokenResponse(BaseModel):
 
 class TokenData(BaseModel):
     """
-    @brief Model representing decoded JWT token data.
+    Model representing decoded JWT token data.
 
-    @param user_id ID of the user associated with the token (optional).
+    :param user_id: ID of the user associated with the token (optional).
     """
 
     user_id: int | None = None
 
     def get_uuid(self) -> UUID | None:
         """
-        @brief Convert user_id to UUID if present.
+        Convert user_id to UUID if present.
 
-        @return UUID object if user_id is set, None otherwise.
+        :return: UUID object if user_id is set, None otherwise.
         """
         if self.user_id is not None:
             return UUID(int=self.user_id)

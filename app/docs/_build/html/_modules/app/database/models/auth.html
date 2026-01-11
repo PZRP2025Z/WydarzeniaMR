@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.database.models.auth &mdash; WydarzeniaMR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            WydarzeniaMR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules.html">app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../source/app.html">app package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.backend.html">app.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.database.html">app.database package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.frontend.html">app.frontend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.routes.html">app.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#module-app.conf">app.conf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#module-app.dramatiq_worker">app.dramatiq_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#module-app.logger">app.logger module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.html#logger-setup-py">logger_setup.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../source/app.html#app.logger.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#module-app.main">app.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../source/app.html#module-app">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">WydarzeniaMR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">app.database.models.auth</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for app.database.models.auth</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">auth_models.py</span>
+<span class="sd">===============</span>
+
+<span class="sd">Database models for authentication-related activities.</span>
+
+<span class="sd">Provides Pydantic models for user registration, login, and JWT token handling.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span>
+
+
+<div class="viewcode-block" id="UserRegister">
+<a class="viewcode-back" href="../../../../source/app.database.models.html#app.database.models.auth.UserRegister">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserRegister</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for registering a new user.</span>
+
+<span class="sd">    :param login: Login/username of the new user.</span>
+<span class="sd">    :param email: Email address of the new user.</span>
+<span class="sd">    :param password: Plain-text password of the new user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">login</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="UserLogin">
+<a class="viewcode-back" href="../../../../source/app.database.models.html#app.database.models.auth.UserLogin">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserLogin</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for logging in an existing user.</span>
+
+<span class="sd">    :param email: Email address of the user.</span>
+<span class="sd">    :param password: Plain-text password of the user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="TokenResponse">
+<a class="viewcode-back" href="../../../../source/app.database.models.html#app.database.models.auth.TokenResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model representing JWT access token response.</span>
+
+<span class="sd">    :param access_token: JWT access token string.</span>
+<span class="sd">    :param token_type: Type of the token (usually &#39;bearer&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_type</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="TokenData">
+<a class="viewcode-back" href="../../../../source/app.database.models.html#app.database.models.auth.TokenData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model representing decoded JWT token data.</span>
+
+<span class="sd">    :param user_id: ID of the user associated with the token (optional).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TokenData.get_uuid">
+<a class="viewcode-back" href="../../../../source/app.database.models.html#app.database.models.auth.TokenData.get_uuid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert user_id to UUID if present.</span>
+
+<span class="sd">        :return: UUID object if user_id is set, None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">UUID</span><span class="p">(</span><span class="nb">int</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

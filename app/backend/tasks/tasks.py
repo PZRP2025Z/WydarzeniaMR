@@ -1,6 +1,8 @@
 """
-@file email_service.py
-@brief Handles sending emails asynchronously using Dramatiq and Redis.
+email_service.py
+================
+
+Handles sending emails asynchronously using Dramatiq and Redis.
 
 Provides functionality to send welcome emails to newly registered users.
 Uses environment variables for email credentials and Redis broker configuration.
@@ -37,10 +39,11 @@ dramatiq.set_broker(redis_broker)
 @dramatiq.actor
 def send_welcome_email(to_email: EmailStr, user_name: str):
     """
-    @brief Send a welcome email to a newly registered user.
+    Send a welcome email to a newly registered user asynchronously.
 
-    @param to_email Email address of the recipient.
-    @param user_name Name of the recipient user.
+    :param to_email: Email address of the recipient.
+    :param user_name: Name of the recipient user.
+    :return: None
 
     This function constructs a simple welcome email and sends it using
     Gmail SMTP. The task is executed asynchronously via Dramatiq and Redis.
@@ -51,7 +54,7 @@ def send_welcome_email(to_email: EmailStr, user_name: str):
     msg["Subject"] = "Welcome to WydarzeniaMR!"
     body = f"Hello {user_name},\n\nThanks for joining!"
     msg.set_content(body)
-    logging.info(f"Sending welcome email to {to_email}.")
+    logger.info(f"Sending welcome email to {to_email}.")
 
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()

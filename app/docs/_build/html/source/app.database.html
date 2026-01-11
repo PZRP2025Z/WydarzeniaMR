@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.database package &mdash; WydarzeniaMR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="app.database.models package" href="app.database.models.html" />
+    <link rel="prev" title="app.backend.tasks package" href="app.backend.tasks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            WydarzeniaMR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="app.html">app package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="app.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="app.backend.html">app.backend package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">app.database package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.frontend.html">app.frontend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html">app.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.conf">app.conf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.dramatiq_worker">app.dramatiq_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.logger">app.logger module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.html#logger-setup-py">logger_setup.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#app.logger.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.main">app.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WydarzeniaMR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">app</a></li>
+          <li class="breadcrumb-item"><a href="app.html">app package</a></li>
+      <li class="breadcrumb-item active">app.database package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/app.database.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="app-database-package">
+<h1>app.database package<a class="headerlink" href="#app-database-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="app.database.models.html">app.database.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.auth">app.database.models.auth module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#auth-models-py">auth_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenData"><code class="docutils literal notranslate"><span class="pre">TokenData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenData.get_uuid"><code class="docutils literal notranslate"><span class="pre">TokenData.get_uuid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenData.model_config"><code class="docutils literal notranslate"><span class="pre">TokenData.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenData.user_id"><code class="docutils literal notranslate"><span class="pre">TokenData.user_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenResponse"><code class="docutils literal notranslate"><span class="pre">TokenResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenResponse.access_token"><code class="docutils literal notranslate"><span class="pre">TokenResponse.access_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenResponse.model_config"><code class="docutils literal notranslate"><span class="pre">TokenResponse.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenResponse.token_type"><code class="docutils literal notranslate"><span class="pre">TokenResponse.token_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserLogin"><code class="docutils literal notranslate"><span class="pre">UserLogin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserLogin.email"><code class="docutils literal notranslate"><span class="pre">UserLogin.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserLogin.model_config"><code class="docutils literal notranslate"><span class="pre">UserLogin.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserLogin.password"><code class="docutils literal notranslate"><span class="pre">UserLogin.password</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister"><code class="docutils literal notranslate"><span class="pre">UserRegister</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister.email"><code class="docutils literal notranslate"><span class="pre">UserRegister.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister.login"><code class="docutils literal notranslate"><span class="pre">UserRegister.login</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister.model_config"><code class="docutils literal notranslate"><span class="pre">UserRegister.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister.password"><code class="docutils literal notranslate"><span class="pre">UserRegister.password</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.comment">app.database.models.comment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#comment-models-py">comment_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment"><code class="docutils literal notranslate"><span class="pre">Comment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.content"><code class="docutils literal notranslate"><span class="pre">Comment.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.created_at"><code class="docutils literal notranslate"><span class="pre">Comment.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.event_id"><code class="docutils literal notranslate"><span class="pre">Comment.event_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.id"><code class="docutils literal notranslate"><span class="pre">Comment.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.model_config"><code class="docutils literal notranslate"><span class="pre">Comment.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.Comment.user_id"><code class="docutils literal notranslate"><span class="pre">Comment.user_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentCreate"><code class="docutils literal notranslate"><span class="pre">CommentCreate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentCreate.content"><code class="docutils literal notranslate"><span class="pre">CommentCreate.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentCreate.model_config"><code class="docutils literal notranslate"><span class="pre">CommentCreate.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead"><code class="docutils literal notranslate"><span class="pre">CommentRead</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.Config"><code class="docutils literal notranslate"><span class="pre">CommentRead.Config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.content"><code class="docutils literal notranslate"><span class="pre">CommentRead.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.created_at"><code class="docutils literal notranslate"><span class="pre">CommentRead.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.id"><code class="docutils literal notranslate"><span class="pre">CommentRead.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.model_config"><code class="docutils literal notranslate"><span class="pre">CommentRead.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead.user_login"><code class="docutils literal notranslate"><span class="pre">CommentRead.user_login</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.event">app.database.models.event module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#event-models-py">event_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.description"><code class="docutils literal notranslate"><span class="pre">Event.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.id"><code class="docutils literal notranslate"><span class="pre">Event.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.location"><code class="docutils literal notranslate"><span class="pre">Event.location</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.model_config"><code class="docutils literal notranslate"><span class="pre">Event.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.name"><code class="docutils literal notranslate"><span class="pre">Event.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.owner_id"><code class="docutils literal notranslate"><span class="pre">Event.owner_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.photo"><code class="docutils literal notranslate"><span class="pre">Event.photo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event.time"><code class="docutils literal notranslate"><span class="pre">Event.time</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate"><code class="docutils literal notranslate"><span class="pre">EventCreate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.description"><code class="docutils literal notranslate"><span class="pre">EventCreate.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.location"><code class="docutils literal notranslate"><span class="pre">EventCreate.location</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.model_config"><code class="docutils literal notranslate"><span class="pre">EventCreate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.name"><code class="docutils literal notranslate"><span class="pre">EventCreate.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.photo"><code class="docutils literal notranslate"><span class="pre">EventCreate.photo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate.time"><code class="docutils literal notranslate"><span class="pre">EventCreate.time</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate"><code class="docutils literal notranslate"><span class="pre">EventUpdate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.description"><code class="docutils literal notranslate"><span class="pre">EventUpdate.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.location"><code class="docutils literal notranslate"><span class="pre">EventUpdate.location</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.model_config"><code class="docutils literal notranslate"><span class="pre">EventUpdate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.name"><code class="docutils literal notranslate"><span class="pre">EventUpdate.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.photo"><code class="docutils literal notranslate"><span class="pre">EventUpdate.photo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate.time"><code class="docutils literal notranslate"><span class="pre">EventUpdate.time</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.event_invitation">app.database.models.event_invitation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#event-invitation-py">event_invitation.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation"><code class="docutils literal notranslate"><span class="pre">EventInvitation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation.created_at"><code class="docutils literal notranslate"><span class="pre">EventInvitation.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation.event_id"><code class="docutils literal notranslate"><span class="pre">EventInvitation.event_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation.id"><code class="docutils literal notranslate"><span class="pre">EventInvitation.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation.model_config"><code class="docutils literal notranslate"><span class="pre">EventInvitation.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation.token_hash"><code class="docutils literal notranslate"><span class="pre">EventInvitation.token_hash</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.event_pass">app.database.models.event_pass module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#event-pass-models-py">event_pass_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass"><code class="docutils literal notranslate"><span class="pre">EventPass</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.created_at"><code class="docutils literal notranslate"><span class="pre">EventPass.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.display_name"><code class="docutils literal notranslate"><span class="pre">EventPass.display_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.event_id"><code class="docutils literal notranslate"><span class="pre">EventPass.event_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.id"><code class="docutils literal notranslate"><span class="pre">EventPass.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.model_config"><code class="docutils literal notranslate"><span class="pre">EventPass.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.token_hash"><code class="docutils literal notranslate"><span class="pre">EventPass.token_hash</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass.user_id"><code class="docutils literal notranslate"><span class="pre">EventPass.user_id</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.participations">app.database.models.participations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#participation-models-py">participation_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation"><code class="docutils literal notranslate"><span class="pre">EventParticipation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.created_at"><code class="docutils literal notranslate"><span class="pre">EventParticipation.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.event_id"><code class="docutils literal notranslate"><span class="pre">EventParticipation.event_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.id"><code class="docutils literal notranslate"><span class="pre">EventParticipation.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.model_config"><code class="docutils literal notranslate"><span class="pre">EventParticipation.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.status"><code class="docutils literal notranslate"><span class="pre">EventParticipation.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.updated_at"><code class="docutils literal notranslate"><span class="pre">EventParticipation.updated_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation.user_id"><code class="docutils literal notranslate"><span class="pre">EventParticipation.user_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationCreate"><code class="docutils literal notranslate"><span class="pre">ParticipationCreate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationCreate.model_config"><code class="docutils literal notranslate"><span class="pre">ParticipationCreate.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationCreate.status"><code class="docutils literal notranslate"><span class="pre">ParticipationCreate.status</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus"><code class="docutils literal notranslate"><span class="pre">ParticipationStatus</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus.going"><code class="docutils literal notranslate"><span class="pre">ParticipationStatus.going</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus.invited"><code class="docutils literal notranslate"><span class="pre">ParticipationStatus.invited</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus.maybe"><code class="docutils literal notranslate"><span class="pre">ParticipationStatus.maybe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus.not_going"><code class="docutils literal notranslate"><span class="pre">ParticipationStatus.not_going</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models.user">app.database.models.user module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#user-models-py">user_models.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange"><code class="docutils literal notranslate"><span class="pre">PasswordChange</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange.current_password"><code class="docutils literal notranslate"><span class="pre">PasswordChange.current_password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange.model_config"><code class="docutils literal notranslate"><span class="pre">PasswordChange.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange.new_password"><code class="docutils literal notranslate"><span class="pre">PasswordChange.new_password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange.new_password_confirm"><code class="docutils literal notranslate"><span class="pre">PasswordChange.new_password_confirm</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.user.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.created_at"><code class="docutils literal notranslate"><span class="pre">User.created_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.email"><code class="docutils literal notranslate"><span class="pre">User.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.hashed_password"><code class="docutils literal notranslate"><span class="pre">User.hashed_password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.id"><code class="docutils literal notranslate"><span class="pre">User.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.is_guest"><code class="docutils literal notranslate"><span class="pre">User.is_guest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.login"><code class="docutils literal notranslate"><span class="pre">User.login</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.User.model_config"><code class="docutils literal notranslate"><span class="pre">User.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html#app.database.models.user.UserResponse"><code class="docutils literal notranslate"><span class="pre">UserResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.UserResponse.email"><code class="docutils literal notranslate"><span class="pre">UserResponse.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.UserResponse.id"><code class="docutils literal notranslate"><span class="pre">UserResponse.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.UserResponse.login"><code class="docutils literal notranslate"><span class="pre">UserResponse.login</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#app.database.models.user.UserResponse.model_config"><code class="docutils literal notranslate"><span class="pre">UserResponse.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.models.html#module-app.database.models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-app.database.session">
+<span id="app-database-session-module"></span><h2>app.database.session module<a class="headerlink" href="#module-app.database.session" title="Link to this heading"></a></h2>
+<section id="session-py">
+<h3>session.py<a class="headerlink" href="#session-py" title="Link to this heading"></a></h3>
+<p>Database engine and session setup.</p>
+<p>Sets up the SQLModel/SQLAlchemy engine and provides a session generator
+for dependency injection in FastAPI routes and backend services.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.database.session.get_session">
+<span class="sig-prename descclassname"><span class="pre">app.database.session.</span></span><span class="sig-name descname"><span class="pre">get_session</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/database/session.html#get_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.database.session.get_session" title="Link to this definition"></a></dt>
+<dd><p>SQLModel session generator.</p>
+<p>Yields a database session for use in FastAPI dependencies or
+backend services. Ensures that the session is properly closed
+after usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Yields a SQLModel Session object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.database">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app.database" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="app.backend.tasks.html" class="btn btn-neutral float-left" title="app.backend.tasks package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="app.database.models.html" class="btn btn-neutral float-right" title="app.database.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

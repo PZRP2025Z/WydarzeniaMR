@@ -140,8 +140,8 @@ def main():
         install_requirements()
 
         # Opcjonalne testy
-        # if not run_tests():
-        #     raise Exception("Tests failed")
+        if not run_tests():
+            raise Exception("Tests failed")
 
         # Start wszystkich kontenerów
         start_docker()

@@ -1,6 +1,8 @@
 """
-@file users_routes.py
-@brief API endpoints for User CRUD operations.
+users_routes.py
+=================
+
+API endpoints for User CRUD operations.
 
 Provides routes to:
 - List all users
@@ -27,11 +29,9 @@ router = APIRouter(prefix="/users", tags=["users"])
 @router.get("/", response_model=list[UserResponse])
 def read_users(db: Session = Depends(get_session)):
     """
-    @brief Retrieve a list of all users.
+    Retrieve all users.
 
-    @param db Database session dependency.
-
-    @return List of UserResponse objects representing all users.
+    Fetches a list of all users in the database.
     """
     users = get_users(db)
     logger.info(f"Retrieved {len(users)} users from database")
@@ -41,14 +41,12 @@ def read_users(db: Session = Depends(get_session)):
 @router.get("/{user_id}", response_model=UserResponse)
 def read_user(user_id: int, db: Session = Depends(get_session)):
     """
-    @brief Retrieve a single user by ID.
+    Retrieve a single user by ID.
 
-    @param user_id ID of the user to retrieve.
-    @param db Database session dependency.
-
-    @return UserResponse object for the specified user.
-
-    @throws HTTPException 404 if the user does not exist.
+    :param user_id: ID of the user to retrieve.
+    :param db: Database session dependency.
+    :return: UserResponse object for the specified user.
+    :raises HTTPException 404: If the user does not exist.
     """
     user = get_user(db, user_id)
     if not user:
@@ -66,19 +64,17 @@ def update_password(
     current_user=Depends(get_current_user),
 ):
     """
-    @brief Change the password for a user.
+    Change the password for a user.
 
     Only the currently authenticated user can change their own password.
 
-    @param user_id ID of the user whose password is to be changed.
-    @param data PasswordChange object containing current and new password.
-    @param db Database session dependency.
-    @param current_user Currently authenticated user.
-
-    @return JSON object indicating success: {"ok": True}.
-
-    @throws HTTPException 403 if the user attempts to change another user's password.
-    @throws HTTPException 400 if the password change fails (current password incorrect or new passwords mismatch).
+    :param user_id: ID of the user whose password is to be changed.
+    :param data: PasswordChange object containing current and new password.
+    :param db: Database session dependency.
+    :param current_user: Currently authenticated user.
+    :return: JSON object indicating success: {"ok": True}.
+    :raises HTTPException 403: If the user attempts to change another user's password.
+    :raises HTTPException 400: If the password change fails (current password incorrect or new passwords mismatch).
     """
     if current_user.id != user_id:
         raise HTTPException(
@@ -105,18 +101,16 @@ def remove_user(
     current_user=Depends(get_current_user),
 ):
     """
-    @brief Delete a user account.
+    Delete a user account.
 
     Only the currently authenticated user can delete their own account.
 
-    @param user_id ID of the user to delete.
-    @param db Database session dependency.
-    @param current_user Currently authenticated user.
-
-    @return JSON object indicating success: {"ok": True}.
-
-    @throws HTTPException 403 if a user attempts to delete another user's account.
-    @throws HTTPException 404 if the user does not exist.
+    :param user_id: ID of the user to delete.
+    :param db: Database session dependency.
+    :param current_user: Currently authenticated user.
+    :return: JSON object indicating success: {"ok": True}.
+    :raises HTTPException 403: If a user attempts to delete another user's account.
+    :raises HTTPException 404: If the user does not exist.
     """
     if current_user.id != user_id:
         raise HTTPException(
