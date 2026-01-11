@@ -1,15 +1,15 @@
 """
-@file comment_service.py
-@brief Backend commenting functionality.
+comment_service.py
+==================
+
+Backend commenting functionality.
 
 This module provides functions for creating comments and retrieving comments
 associated with events, including user information.
 """
 
 import logging
-
 from sqlmodel import Session, select
-
 from app.database.models.comment import Comment, CommentRead
 from app.database.models.user import User
 
@@ -18,14 +18,13 @@ logger = logging.getLogger(__name__)
 
 def create_comment(db: Session, event_id: int, user_id: int, content: str) -> CommentRead:
     """
-    @brief Create a new comment for a given event.
+    Create a new comment for a given event.
 
-    @param db Database session dependency.
-    @param event_id ID of the event to which the comment belongs.
-    @param user_id ID of the user creating the comment.
-    @param content Text content of the comment.
-
-    @return CommentRead object containing comment ID, user login, content, and creation timestamp.
+    :param db: Database session dependency.
+    :param event_id: ID of the event to which the comment belongs.
+    :param user_id: ID of the user creating the comment.
+    :param content: Text content of the comment.
+    :return: CommentRead object containing comment ID, user login, content, and creation timestamp.
     """
     comment = Comment(event_id=event_id, user_id=user_id, content=content)
     db.add(comment)
@@ -46,14 +45,13 @@ def get_comments_for_event(
     db: Session, event_id: int, limit: int = 20, offset: int = 0
 ) -> list[CommentRead]:
     """
-    @brief Retrieve comments for a specific event, ordered by creation time descending.
+    Retrieve comments for a specific event, ordered by creation time descending.
 
-    @param db Database session dependency.
-    @param event_id ID of the event for which to retrieve comments.
-    @param limit Maximum number of comments to return (default 20).
-    @param offset Number of comments to skip for pagination (default 0).
-
-    @return List of CommentRead objects including comment ID, user login, content, and creation timestamp.
+    :param db: Database session dependency.
+    :param event_id: ID of the event for which to retrieve comments.
+    :param limit: Maximum number of comments to return (default 20).
+    :param offset: Number of comments to skip for pagination (default 0).
+    :return: List of CommentRead objects including comment ID, user login, content, and creation timestamp.
     """
     stmt = (
         select(Comment)

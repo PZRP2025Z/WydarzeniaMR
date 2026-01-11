@@ -1,0 +1,21 @@
+app.backend.tasks package
+=========================
+
+Submodules
+----------
+
+app.backend.tasks.tasks module
+------------------------------
+
+.. automodule:: app.backend.tasks.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.backend.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:

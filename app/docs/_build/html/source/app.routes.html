@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.routes package &mdash; WydarzeniaMR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="app.frontend package" href="app.frontend.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            WydarzeniaMR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="app.html">app package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="app.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="app.backend.html">app.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.html">app.database package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.frontend.html">app.frontend package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">app.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.conf">app.conf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.dramatiq_worker">app.dramatiq_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.logger">app.logger module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.html#logger-setup-py">logger_setup.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#app.logger.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.main">app.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WydarzeniaMR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">app</a></li>
+          <li class="breadcrumb-item"><a href="app.html">app package</a></li>
+      <li class="breadcrumb-item active">app.routes package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/app.routes.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="app-routes-package">
+<h1>app.routes package<a class="headerlink" href="#app-routes-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-app.routes.auth_routes">
+<span id="app-routes-auth-routes-module"></span><h2>app.routes.auth_routes module<a class="headerlink" href="#module-app.routes.auth_routes" title="Link to this heading"></a></h2>
+<section id="auth-routes-py">
+<h3>auth_routes.py<a class="headerlink" href="#auth-routes-py" title="Link to this heading"></a></h3>
+<p>API routes for authentication and JWT management.</p>
+<p>Provides endpoints for:
+- User registration
+- Login and token issuance
+- Refreshing access tokens
+- Retrieving current authenticated user
+- Logging out</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.auth_routes.login_route">
+<span class="sig-prename descclassname"><span class="pre">app.routes.auth_routes.</span></span><span class="sig-name descname"><span class="pre">login_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mail:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">Form(PydanticUndefined)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">Form(PydanticUndefined)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/auth_routes.html#login_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.auth_routes.login_route" title="Link to this definition"></a></dt>
+<dd><p>Log in a user and issue access token.</p>
+<p>Authenticates the user by email and password, sets JWT cookies,
+and returns access token data.</p>
+<p>Parameters:
+- mail: User email (form data)
+- password: User password (form data)
+- response: FastAPI Response object to set cookies
+- db: Database session</p>
+<p>Returns:
+- TokenResponse object with access_token and token_type</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.auth_routes.logout_route">
+<span class="sig-prename descclassname"><span class="pre">app.routes.auth_routes.</span></span><span class="sig-name descname"><span class="pre">logout_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/auth_routes.html#logout_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.auth_routes.logout_route" title="Link to this definition"></a></dt>
+<dd><p>Logout the current user.</p>
+<p>Deletes access and refresh token cookies.</p>
+<p>Parameters:
+- response: FastAPI Response object to delete cookies</p>
+<p>Returns:
+- JSON message confirming successful logout</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.auth_routes.read_me">
+<span class="sig-prename descclassname"><span class="pre">app.routes.auth_routes.</span></span><span class="sig-name descname"><span class="pre">read_me</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user:</span> <span class="pre">~app.database.models.user.User</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/auth_routes.html#read_me"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.auth_routes.read_me" title="Link to this definition"></a></dt>
+<dd><p>Retrieve currently authenticated user.</p>
+<p>Uses the access token from cookies to identify the user.</p>
+<p>Parameters:
+- user: Currently authenticated User object (injected via dependency)</p>
+<p>Returns:
+- Dictionary containing user_id, login, and email</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.auth_routes.refresh_token_route">
+<span class="sig-prename descclassname"><span class="pre">app.routes.auth_routes.</span></span><span class="sig-name descname"><span class="pre">refresh_token_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Cookie(None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/auth_routes.html#refresh_token_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.auth_routes.refresh_token_route" title="Link to this definition"></a></dt>
+<dd><p>Refresh the access token using the refresh token.</p>
+<p>Validates the refresh token, issues a new access token,
+and sets it in the cookies.</p>
+<p>Parameters:
+- refresh_token: Refresh token from cookies
+- response: FastAPI Response object to set new access token</p>
+<p>Returns:
+- JSON message indicating the token has been refreshed</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.auth_routes.register_user_route">
+<span class="sig-prename descclassname"><span class="pre">app.routes.auth_routes.</span></span><span class="sig-name descname"><span class="pre">register_user_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request:</span> <span class="pre">~app.database.models.auth.UserRegister</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/auth_routes.html#register_user_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.auth_routes.register_user_route" title="Link to this definition"></a></dt>
+<dd><p>Register a new user.</p>
+<p>Creates a new user in the database, hashes the password,
+issues access and refresh tokens, and sets cookies.</p>
+<p>Parameters:
+- request: UserRegister object with login, email, password
+- response: FastAPI Response object to set cookies
+- db: Database session</p>
+<p>Returns:
+- Newly created User object</p>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.comment_routes">
+<span id="app-routes-comment-routes-module"></span><h2>app.routes.comment_routes module<a class="headerlink" href="#module-app.routes.comment_routes" title="Link to this heading"></a></h2>
+<section id="comment-routes-py">
+<h3>comment_routes.py<a class="headerlink" href="#comment-routes-py" title="Link to this heading"></a></h3>
+<p>API routes for commenting functionality.</p>
+<p>Provides endpoints to:
+- Add a new comment to an event
+- Retrieve paginated comments for an event</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.comment_routes.add_comment">
+<span class="sig-prename descclassname"><span class="pre">app.routes.comment_routes.</span></span><span class="sig-name descname"><span class="pre">add_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment_data:</span> <span class="pre">~app.database.models.comment.CommentCreate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/comment_routes.html#add_comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.comment_routes.add_comment" title="Link to this definition"></a></dt>
+<dd><p>Add a new comment to a specific event.</p>
+<p>Creates a new comment in the database associated with the given event
+and the currently authenticated user. Logs the creation.</p>
+<p>Parameters:
+- event_id: ID of the event to which the comment is added
+- comment_data: CommentCreate object containing comment content
+- db: Database session
+- user: Authenticated user creating the comment</p>
+<p>Returns:
+- CommentRead object representing the newly created comment</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.comment_routes.read_comments">
+<span class="sig-prename descclassname"><span class="pre">app.routes.comment_routes.</span></span><span class="sig-name descname"><span class="pre">read_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">Query(20)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">Query(0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/comment_routes.html#read_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.comment_routes.read_comments" title="Link to this definition"></a></dt>
+<dd><p>Retrieve paginated comments for a specific event.</p>
+<p>Fetches a list of comments for the given event, ordered by creation time descending,
+and supports pagination via limit and offset. Logs the retrieval.</p>
+<p>Parameters:
+- event_id: ID of the event whose comments are retrieved
+- limit: Maximum number of comments to return (default 20)
+- offset: Number of comments to skip (default 0)
+- db: Database session</p>
+<p>Returns:
+- List of CommentRead objects for the event</p>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.event_routes">
+<span id="app-routes-event-routes-module"></span><h2>app.routes.event_routes module<a class="headerlink" href="#module-app.routes.event_routes" title="Link to this heading"></a></h2>
+<section id="event-routes-py">
+<h3>event_routes.py<a class="headerlink" href="#event-routes-py" title="Link to this heading"></a></h3>
+<p>API routes for Event CRUD operations.</p>
+<p>Provides endpoints to:
+- Create a new event
+- Retrieve all events or a single event by ID
+- Update an existing event
+- Delete an event</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.event_routes.add_event">
+<span class="sig-prename descclassname"><span class="pre">app.routes.event_routes.</span></span><span class="sig-name descname"><span class="pre">add_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_data:</span> <span class="pre">~app.database.models.event.EventCreate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/event_routes.html#add_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.event_routes.add_event" title="Link to this definition"></a></dt>
+<dd><p>Create a new event.</p>
+<p>Adds a new event to the database with the currently authenticated user
+set as the owner. Logs the creation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.event_routes.edit_event">
+<span class="sig-prename descclassname"><span class="pre">app.routes.event_routes.</span></span><span class="sig-name descname"><span class="pre">edit_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_data:</span> <span class="pre">~app.database.models.event.EventUpdate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/event_routes.html#edit_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.event_routes.edit_event" title="Link to this definition"></a></dt>
+<dd><p>Update an existing event.</p>
+<p>Allows the owner of the event to update its details. Raises 403 if
+the user is not the owner, 404 if the event does not exist.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.event_routes.read_event">
+<span class="sig-prename descclassname"><span class="pre">app.routes.event_routes.</span></span><span class="sig-name descname"><span class="pre">read_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/event_routes.html#read_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.event_routes.read_event" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single event by its ID.</p>
+<p>Fetches the event details from the database. Raises 404 if not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.event_routes.read_events">
+<span class="sig-prename descclassname"><span class="pre">app.routes.event_routes.</span></span><span class="sig-name descname"><span class="pre">read_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/event_routes.html#read_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.event_routes.read_events" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all events.</p>
+<p>Fetches a list of all events from the database and logs the retrieval.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.event_routes.remove_event">
+<span class="sig-prename descclassname"><span class="pre">app.routes.event_routes.</span></span><span class="sig-name descname"><span class="pre">remove_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/event_routes.html#remove_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.event_routes.remove_event" title="Link to this definition"></a></dt>
+<dd><p>Delete an existing event.</p>
+<p>Allows the owner of the event to delete it. Raises 403 if the user
+is not the owner, 404 if the event does not exist.</p>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.invites_routes">
+<span id="app-routes-invites-routes-module"></span><h2>app.routes.invites_routes module<a class="headerlink" href="#module-app.routes.invites_routes" title="Link to this heading"></a></h2>
+<section id="invite-routes-py">
+<h3>invite_routes.py<a class="headerlink" href="#invite-routes-py" title="Link to this heading"></a></h3>
+<p>Event Invitation (reusable, account-only) API endpoints.</p>
+<p>Provides endpoints for creating and using reusable event invitations
+that require users to have an account. Multiple users can use the same invitation.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.routes.invites_routes.CreateInviteRequest">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.routes.invites_routes.</span></span><span class="sig-name descname"><span class="pre">CreateInviteRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/invites_routes.html#CreateInviteRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.invites_routes.CreateInviteRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.routes.invites_routes.CreateInviteRequest.event_id">
+<span class="sig-name descname"><span class="pre">event_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#app.routes.invites_routes.CreateInviteRequest.event_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.routes.invites_routes.CreateInviteRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.routes.invites_routes.CreateInviteRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.invites_routes.accept_invitation">
+<span class="sig-prename descclassname"><span class="pre">app.routes.invites_routes.</span></span><span class="sig-name descname"><span class="pre">accept_invitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user:</span> <span class="pre">~app.database.models.user.User</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/invites_routes.html#accept_invitation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.invites_routes.accept_invitation" title="Link to this definition"></a></dt>
+<dd><p>Accept an event invitation with an authenticated account.</p>
+<p>Adds the authenticated user to the event. The invitation remains valid
+for other users to use. Logs the acceptance.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.invites_routes.create_invite">
+<span class="sig-prename descclassname"><span class="pre">app.routes.invites_routes.</span></span><span class="sig-name descname"><span class="pre">create_invite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request:</span> <span class="pre">~app.routes.invites_routes.CreateInviteRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user:</span> <span class="pre">~app.database.models.user.User</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/invites_routes.html#create_invite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.invites_routes.create_invite" title="Link to this definition"></a></dt>
+<dd><p>Create a reusable event invitation link.</p>
+<p>Generates an invitation link for the specified event. Multiple users
+can use the invitation, but they must have an account.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.invites_routes.open_invite">
+<span class="sig-prename descclassname"><span class="pre">app.routes.invites_routes.</span></span><span class="sig-name descname"><span class="pre">open_invite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/invites_routes.html#open_invite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.invites_routes.open_invite" title="Link to this definition"></a></dt>
+<dd><p>Resolve an event invitation token and return event details.</p>
+<p>This endpoint is public and doesn’t require authentication. Returns
+basic event information so users can see what they are invited to.</p>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.participations_routes">
+<span id="app-routes-participations-routes-module"></span><h2>app.routes.participations_routes module<a class="headerlink" href="#module-app.routes.participations_routes" title="Link to this heading"></a></h2>
+<section id="participation-routes-py">
+<h3>participation_routes.py<a class="headerlink" href="#participation-routes-py" title="Link to this heading"></a></h3>
+<p>API routes for participation survey functionality.</p>
+<p>This module provides endpoints for:
+- Setting a user’s participation status for an event
+- Retrieving participation statistics for an event
+- Listing events where the user is participating or is the owner</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.participations_routes.participate_in_event">
+<span class="sig-prename descclassname"><span class="pre">app.routes.participations_routes.</span></span><span class="sig-name descname"><span class="pre">participate_in_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">participation:</span> <span class="pre">~app.database.models.participations.ParticipationCreate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/participations_routes.html#participate_in_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.participations_routes.participate_in_event" title="Link to this definition"></a></dt>
+<dd><p>Set participation status for a user in an event.</p>
+<p>Updates or creates the participation record for the authenticated user
+for the specified event.</p>
+<p>Parameters:
+- event_id: ID of the event
+- participation: ParticipationCreate object with status (going/maybe/not_going)
+- db: Database session
+- user: Currently authenticated user</p>
+<p>Returns:
+- EventParticipation object reflecting the user’s participation status</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.participations_routes.read_event_participation_stats">
+<span class="sig-prename descclassname"><span class="pre">app.routes.participations_routes.</span></span><span class="sig-name descname"><span class="pre">read_event_participation_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/participations_routes.html#read_event_participation_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.participations_routes.read_event_participation_stats" title="Link to this definition"></a></dt>
+<dd><p>Retrieve participation statistics for a specific event.</p>
+<p>Counts how many users are going, maybe, or not going to the event.</p>
+<p>Parameters:
+- event_id: ID of the event
+- db: Database session</p>
+<p>Returns:
+- Dictionary with participation counts, e.g. {“going”: int, “maybe”: int, “not_going”: int}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.participations_routes.read_my_active_events">
+<span class="sig-prename descclassname"><span class="pre">app.routes.participations_routes.</span></span><span class="sig-name descname"><span class="pre">read_my_active_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/participations_routes.html#read_my_active_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.participations_routes.read_my_active_events" title="Link to this definition"></a></dt>
+<dd><p>Get a list of events the current user is participating in or owns.</p>
+<p>Includes events where the user has a participation record or is the event owner.</p>
+<p>Parameters:
+- db: Database session
+- user: Currently authenticated user</p>
+<p>Returns:
+- List of events with participation status, e.g.:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>[{“id”: int, “name”: str, “location”: str, “time”: str,</dt><dd><p>“owner_id”: int, “participation_status”: str | None}, …]</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.passes_routes">
+<span id="app-routes-passes-routes-module"></span><h2>app.routes.passes_routes module<a class="headerlink" href="#module-app.routes.passes_routes" title="Link to this heading"></a></h2>
+<section id="passes-routes-py">
+<h3>passes_routes.py<a class="headerlink" href="#passes-routes-py" title="Link to this heading"></a></h3>
+<p>Event Pass (magic link) API endpoints.</p>
+<p>Provides endpoints for creating and consuming event-specific pass links
+that allow passwordless access for guest users and controlled linking
+to registered user accounts.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.routes.passes_routes.CreatePassRequest">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.routes.passes_routes.</span></span><span class="sig-name descname"><span class="pre">CreatePassRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/passes_routes.html#CreatePassRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.passes_routes.CreatePassRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.routes.passes_routes.CreatePassRequest.display_name">
+<span class="sig-name descname"><span class="pre">display_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.routes.passes_routes.CreatePassRequest.display_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.routes.passes_routes.CreatePassRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.routes.passes_routes.CreatePassRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.passes_routes.accept_as_guest">
+<span class="sig-prename descclassname"><span class="pre">app.routes.passes_routes.</span></span><span class="sig-name descname"><span class="pre">accept_as_guest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/passes_routes.html#accept_as_guest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.passes_routes.accept_as_guest" title="Link to this definition"></a></dt>
+<dd><p>Accept an event pass as a guest user.</p>
+<p>Creates a new guest user, binds the pass to that user, and logs the user in.
+If the pass is already bound, the existing user is logged in instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.passes_routes.accept_with_existing_login">
+<span class="sig-prename descclassname"><span class="pre">app.routes.passes_routes.</span></span><span class="sig-name descname"><span class="pre">accept_with_existing_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/passes_routes.html#accept_with_existing_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.passes_routes.accept_with_existing_login" title="Link to this definition"></a></dt>
+<dd><p>Bind an event pass to an authenticated user.</p>
+<p>Links the event pass to the currently authenticated user, enabling controlled access.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.passes_routes.create_pass">
+<span class="sig-prename descclassname"><span class="pre">app.routes.passes_routes.</span></span><span class="sig-name descname"><span class="pre">create_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request:</span> <span class="pre">~app.routes.passes_routes.CreatePassRequest</span> <span class="pre">=</span> <span class="pre">Body(PydanticUndefined)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/passes_routes.html#create_pass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.passes_routes.create_pass" title="Link to this definition"></a></dt>
+<dd><p>Create a personal event pass.</p>
+<p>Generates an event pass link for the specified event. The pass is initially
+unbound and can later be claimed by a guest or linked to an existing user account.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.passes_routes.open_pass">
+<span class="sig-prename descclassname"><span class="pre">app.routes.passes_routes.</span></span><span class="sig-name descname"><span class="pre">open_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/passes_routes.html#open_pass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.passes_routes.open_pass" title="Link to this definition"></a></dt>
+<dd><p>Resolve an event pass token.</p>
+<p>Determines the state of the pass and the required next action.
+- If the pass is bound to a guest user, the user is automatically logged in.
+- If bound to a registered user, explicit login is required.
+- If unbound, returns display name and event info.</p>
+</dd></dl>
+
+</section>
+<section id="module-app.routes.user_routes">
+<span id="app-routes-user-routes-module"></span><h2>app.routes.user_routes module<a class="headerlink" href="#module-app.routes.user_routes" title="Link to this heading"></a></h2>
+<section id="users-routes-py">
+<h3>users_routes.py<a class="headerlink" href="#users-routes-py" title="Link to this heading"></a></h3>
+<p>API endpoints for User CRUD operations.</p>
+<p>Provides routes to:
+- List all users
+- Retrieve a single user
+- Change user password
+- Delete user account</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.user_routes.read_user">
+<span class="sig-prename descclassname"><span class="pre">app.routes.user_routes.</span></span><span class="sig-name descname"><span class="pre">read_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/user_routes.html#read_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.user_routes.read_user" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single user by ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> – ID of the user to retrieve.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>UserResponse object for the specified user.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException 404</strong> – If the user does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.user_routes.read_users">
+<span class="sig-prename descclassname"><span class="pre">app.routes.user_routes.</span></span><span class="sig-name descname"><span class="pre">read_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/user_routes.html#read_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.user_routes.read_users" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all users.</p>
+<p>Fetches a list of all users in the database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.user_routes.remove_user">
+<span class="sig-prename descclassname"><span class="pre">app.routes.user_routes.</span></span><span class="sig-name descname"><span class="pre">remove_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/user_routes.html#remove_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.user_routes.remove_user" title="Link to this definition"></a></dt>
+<dd><p>Delete a user account.</p>
+<p>Only the currently authenticated user can delete their own account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> – ID of the user to delete.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>current_user</strong> – Currently authenticated user.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON object indicating success: {“ok”: True}.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>HTTPException 403</strong> – If a user attempts to delete another user’s account.</p></li>
+<li><p><strong>HTTPException 404</strong> – If the user does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.routes.user_routes.update_password">
+<span class="sig-prename descclassname"><span class="pre">app.routes.user_routes.</span></span><span class="sig-name descname"><span class="pre">update_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data:</span> <span class="pre">~app.database.models.user.PasswordChange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_user=Depends(dependency=&lt;function</span> <span class="pre">get_current_user&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/routes/user_routes.html#update_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.user_routes.update_password" title="Link to this definition"></a></dt>
+<dd><p>Change the password for a user.</p>
+<p>Only the currently authenticated user can change their own password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> – ID of the user whose password is to be changed.</p></li>
+<li><p><strong>data</strong> – PasswordChange object containing current and new password.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>current_user</strong> – Currently authenticated user.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON object indicating success: {“ok”: True}.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>HTTPException 403</strong> – If the user attempts to change another user’s password.</p></li>
+<li><p><strong>HTTPException 400</strong> – If the password change fails (current password incorrect or new passwords mismatch).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.routes">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app.routes" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="app.frontend.html" class="btn btn-neutral float-left" title="app.frontend package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

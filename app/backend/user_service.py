@@ -1,49 +1,47 @@
 """
-@file user_service.py
-@brief Basic functionality for the User model.
+user_service.py
+================
+
+Basic functionality for the User model.
 
 Provides functions to retrieve users, change passwords, and delete users.
 """
 
 from sqlmodel import Session, select
-
 from app.backend.auth_service import get_password_hash, verify_password
 from app.database.models.user import PasswordChange, User
 
 
 def get_users(db: Session) -> list[User]:
     """
-    @brief Retrieve all users from the database.
+    Retrieve all users from the database.
 
-    @param db Database session dependency.
-
-    @return List of User objects.
+    :param db: Database session dependency.
+    :return: List of User objects.
     """
     return db.exec(select(User)).all()
 
 
 def get_user(db: Session, user_id: int) -> User | None:
     """
-    @brief Retrieve a single user by their ID.
+    Retrieve a single user by their ID.
 
-    @param db Database session dependency.
-    @param user_id ID of the user to retrieve.
-
-    @return User object if found, None otherwise.
+    :param db: Database session dependency.
+    :param user_id: ID of the user to retrieve.
+    :return: User object if found, None otherwise.
     """
     return db.get(User, user_id)
 
 
 def change_password(db: Session, user_id: int, data: PasswordChange) -> bool:
     """
-    @brief Change the password of a user after verifying current password.
+    Change the password of a user after verifying the current password.
 
-    @param db Database session dependency.
-    @param user_id ID of the user whose password is being changed.
-    @param data PasswordChange object containing current and new passwords.
-
-    @return True if password was changed successfully, False otherwise
-            (invalid current password, mismatch in new password confirmation, or user not found).
+    :param db: Database session dependency.
+    :param user_id: ID of the user whose password is being changed.
+    :param data: PasswordChange object containing current and new passwords.
+    :return: True if password was changed successfully, False otherwise
+             (invalid current password, mismatch in new password confirmation, or user not found).
     """
     user = db.get(User, user_id)
     if not user:
@@ -64,12 +62,11 @@ def change_password(db: Session, user_id: int, data: PasswordChange) -> bool:
 
 def delete_user(db: Session, user_id: int) -> bool:
     """
-    @brief Delete a user from the database.
+    Delete a user from the database.
 
-    @param db Database session dependency.
-    @param user_id ID of the user to delete.
-
-    @return True if deleted successfully, False if user does not exist.
+    :param db: Database session dependency.
+    :param user_id: ID of the user to delete.
+    :return: True if deleted successfully, False if user does not exist.
     """
     user = db.get(User, user_id)
     if not user:

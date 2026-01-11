@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.backend package &mdash; WydarzeniaMR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="app.database package" href="app.database.html" />
+    <link rel="prev" title="app package" href="app.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            WydarzeniaMR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="app.html">app package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="app.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">app.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.html">app.database package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html">app.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.dramatiq_worker">app.dramatiq_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.logger">app.logger module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.html#logger-setup-py">logger_setup.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.html#app.logger.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app.main">app.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.html#module-app">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WydarzeniaMR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">app</a></li>
+          <li class="breadcrumb-item"><a href="app.html">app package</a></li>
+      <li class="breadcrumb-item active">app.backend package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/app.backend.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="app-backend-package">
+<h1>app.backend package<a class="headerlink" href="#app-backend-package" title="Link to this heading"></a></h1>
+<section id="module-app.backend.auth_service">
+<span id="app-backend-auth-service-module"></span><h2>app.backend.auth_service module<a class="headerlink" href="#module-app.backend.auth_service" title="Link to this heading"></a></h2>
+<section id="auth-service-py">
+<h3>auth_service.py<a class="headerlink" href="#auth-service-py" title="Link to this heading"></a></h3>
+<p>Backend authentication functionality and JWT token management.</p>
+<p>This module provides functions for password hashing, JWT token creation and
+verification, user authentication, login, registration, and logout operations.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.authenticate_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">authenticate_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#authenticate_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.authenticate_user" title="Link to this definition"></a></dt>
+<dd><p>Authenticate a user with email and password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – User’s email.</p></li>
+<li><p><strong>password</strong> – User’s password.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>User object if authentication is successful, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.create_access_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">create_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#create_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.create_access_token" title="Link to this definition"></a></dt>
+<dd><p>Create a short-living access token for authentication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – User’s email.</p></li>
+<li><p><strong>user_id</strong> – User’s ID.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JWT access token as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.create_refresh_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">create_refresh_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#create_refresh_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.create_refresh_token" title="Link to this definition"></a></dt>
+<dd><p>Create a long-living refresh token used to generate new access tokens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – User’s email.</p></li>
+<li><p><strong>user_id</strong> – User’s ID.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JWT refresh token as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.get_current_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">get_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">Cookie(None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">Cookie(None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db:</span> <span class="pre">~sqlmodel.orm.session.Session</span> <span class="pre">=</span> <span class="pre">Depends(dependency=&lt;function</span> <span class="pre">get_session&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">~starlette.responses.Response</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#get_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.get_current_user" title="Link to this definition"></a></dt>
+<dd><p>Retrieve the currently authenticated user based on access token.</p>
+<p>If the access token is expired but a valid refresh token exists,
+it issues a new access token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>access_token</strong> – JWT access token from cookies.</p></li>
+<li><p><strong>refresh_token</strong> – JWT refresh token from cookies.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to refresh access token if needed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>User object representing the currently authenticated user.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 401 if no valid tokens are present or user not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.get_password_hash">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">get_password_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#get_password_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.get_password_hash" title="Link to this definition"></a></dt>
+<dd><p>Hash a plain password using Argon2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>password</strong> – Password to hash.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hashed password as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.issue_tokens_and_set_cookies">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">issue_tokens_and_set_cookies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#issue_tokens_and_set_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.issue_tokens_and_set_cookies" title="Link to this definition"></a></dt>
+<dd><p>Issue both access and refresh tokens and set them as HTTP-only cookies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> – Authenticated user for whom the tokens are issued.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to set cookies.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.login_for_access_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">login_for_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenResponse" title="app.database.models.auth.TokenResponse"><span class="pre">TokenResponse</span></a></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#login_for_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.login_for_access_token" title="Link to this definition"></a></dt>
+<dd><p>Log in a user and issue JWT tokens as cookies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – User’s email.</p></li>
+<li><p><strong>password</strong> – User’s password.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to set authentication cookies.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>TokenResponse object containing access token and token type.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 401 if authentication fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.logout_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">logout_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#logout_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.logout_user" title="Link to this definition"></a></dt>
+<dd><p>Log out a user by deleting authentication cookies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> – FastAPI Response object used to delete cookies.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.refresh_access_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">refresh_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#refresh_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.refresh_access_token" title="Link to this definition"></a></dt>
+<dd><p>Refresh the access token using a valid refresh token.</p>
+<p>If the access token has expired, verifies the refresh token and issues a new
+access token, setting it in the response cookies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refresh_token</strong> – JWT refresh token.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to set the new access token cookie.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New JWT access token as a string.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 401 if refresh token is missing, invalid, or expired.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.register_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">register_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.auth.UserRegister" title="app.database.models.auth.UserRegister"><span class="pre">UserRegister</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#register_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.register_user" title="Link to this definition"></a></dt>
+<dd><p>Register a new user and issue JWT tokens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – UserRegister Pydantic model containing registration info.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to set authentication cookies.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Newly created User object.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 400 if the email is already registered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.verify_password">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">verify_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plain_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hashed_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#verify_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.verify_password" title="Link to this definition"></a></dt>
+<dd><p>Verify a plain password against a hashed password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plain_password</strong> – Password provided by the user.</p></li>
+<li><p><strong>hashed_password</strong> – Stored hashed password.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the password matches, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.auth_service.verify_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.auth_service.</span></span><span class="sig-name descname"><span class="pre">verify_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.auth.TokenData" title="app.database.models.auth.TokenData"><span class="pre">TokenData</span></a></span></span><a class="reference internal" href="../_modules/app/backend/auth_service.html#verify_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.auth_service.verify_token" title="Link to this definition"></a></dt>
+<dd><p>Verify a JWT token and extract user data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – JWT token string to verify.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>TokenData object containing user_id.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 401 if token is invalid or expired.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.comment_service">
+<span id="app-backend-comment-service-module"></span><h2>app.backend.comment_service module<a class="headerlink" href="#module-app.backend.comment_service" title="Link to this heading"></a></h2>
+<section id="comment-service-py">
+<h3>comment_service.py<a class="headerlink" href="#comment-service-py" title="Link to this heading"></a></h3>
+<p>Backend commenting functionality.</p>
+<p>This module provides functions for creating comments and retrieving comments
+associated with events, including user information.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.comment_service.create_comment">
+<span class="sig-prename descclassname"><span class="pre">app.backend.comment_service.</span></span><span class="sig-name descname"><span class="pre">create_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead" title="app.database.models.comment.CommentRead"><span class="pre">CommentRead</span></a></span></span><a class="reference internal" href="../_modules/app/backend/comment_service.html#create_comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.comment_service.create_comment" title="Link to this definition"></a></dt>
+<dd><p>Create a new comment for a given event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event to which the comment belongs.</p></li>
+<li><p><strong>user_id</strong> – ID of the user creating the comment.</p></li>
+<li><p><strong>content</strong> – Text content of the comment.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentRead object containing comment ID, user login, content, and creation timestamp.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.comment_service.get_comments_for_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.comment_service.</span></span><span class="sig-name descname"><span class="pre">get_comments_for_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="app.database.models.html#app.database.models.comment.CommentRead" title="app.database.models.comment.CommentRead"><span class="pre">CommentRead</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/backend/comment_service.html#get_comments_for_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.comment_service.get_comments_for_event" title="Link to this definition"></a></dt>
+<dd><p>Retrieve comments for a specific event, ordered by creation time descending.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event for which to retrieve comments.</p></li>
+<li><p><strong>limit</strong> – Maximum number of comments to return (default 20).</p></li>
+<li><p><strong>offset</strong> – Number of comments to skip for pagination (default 0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of CommentRead objects including comment ID, user login, content, and creation timestamp.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.event_invitation_service">
+<span id="app-backend-event-invitation-service-module"></span><h2>app.backend.event_invitation_service module<a class="headerlink" href="#module-app.backend.event_invitation_service" title="Link to this heading"></a></h2>
+<section id="event-pass-service-py">
+<h3>event_pass_service.py<a class="headerlink" href="#event-pass-service-py" title="Link to this heading"></a></h3>
+<p>Logic for event pass creation and consumption.</p>
+<p>Handles:
+- Secure token generation and hashing
+- Pass resolution and validation
+- Guest user creation
+- Pass-to-user binding
+- Authentication via existing auth service</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_invitation_service.create_event_invite">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_invitation_service.</span></span><span class="sig-name descname"><span class="pre">create_event_invite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_invitation_service.html#create_event_invite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_invitation_service.create_event_invite" title="Link to this definition"></a></dt>
+<dd><p>Create a new event invite for a specific event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_id</strong> – ID of the event for which the pass is created.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Raw token string that can be shared with the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_invitation_service.generate_invite_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_invitation_service.</span></span><span class="sig-name descname"><span class="pre">generate_invite_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_invitation_service.html#generate_invite_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_invitation_service.generate_invite_token" title="Link to this definition"></a></dt>
+<dd><p>Generate a secure random token for an event invite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>URL-safe token string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_invitation_service.hash_invite_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_invitation_service.</span></span><span class="sig-name descname"><span class="pre">hash_invite_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_invitation_service.html#hash_invite_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_invitation_service.hash_invite_token" title="Link to this definition"></a></dt>
+<dd><p>Hash an event pass token using SHA256.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – Raw event pass token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hashed token string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_invitation_service.resolve_event_invitation">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_invitation_service.</span></span><span class="sig-name descname"><span class="pre">resolve_event_invitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.event_invitation.EventInvitation" title="app.database.models.event_invitation.EventInvitation"><span class="pre">EventInvitation</span></a></span></span><a class="reference internal" href="../_modules/app/backend/event_invitation_service.html#resolve_event_invitation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_invitation_service.resolve_event_invitation" title="Link to this definition"></a></dt>
+<dd><p>Resolve and validate an event invitation token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – Raw token string to resolve.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>EventInvitation object corresponding to the token.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 404 if the token is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.event_pass_service">
+<span id="app-backend-event-pass-service-module"></span><h2>app.backend.event_pass_service module<a class="headerlink" href="#module-app.backend.event_pass_service" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>event_pass_service.py<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Logic for event pass creation and consumption.</p>
+<p>Handles:
+- Secure token generation and hashing
+- Pass resolution and validation
+- Guest user creation
+- Pass-to-user binding
+- Authentication via existing auth service</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.bind_pass_to_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">bind_pass_to_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_pass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass" title="app.database.models.event_pass.EventPass"><span class="pre">EventPass</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#bind_pass_to_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.bind_pass_to_user" title="Link to this definition"></a></dt>
+<dd><p>Bind an event pass to a specific user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_pass</strong> – EventPass object to bind.</p></li>
+<li><p><strong>user</strong> – User object to bind the pass to.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – 409 if the pass is already bound to another user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.create_event_pass">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">create_event_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#create_event_pass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.create_event_pass" title="Link to this definition"></a></dt>
+<dd><p>Create a new event pass for a specific event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_id</strong> – ID of the event for which the pass is created.</p></li>
+<li><p><strong>display_name</strong> – Display name for the guest user associated with the pass.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>expires_at</strong> – Optional expiration datetime for the pass.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Raw token string that can be shared with the user.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.create_guest_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">create_guest_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#create_guest_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.create_guest_user" title="Link to this definition"></a></dt>
+<dd><p>Create a new guest user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>display_name</strong> – Display name for the guest user.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Newly created User object with is_guest=True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.generate_pass_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">generate_pass_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#generate_pass_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.generate_pass_token" title="Link to this definition"></a></dt>
+<dd><p>Generate a secure random token for an event pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>URL-safe token string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.hash_pass_token">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">hash_pass_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#hash_pass_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.hash_pass_token" title="Link to this definition"></a></dt>
+<dd><p>Hash an event pass token using SHA256.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – Raw event pass token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hashed token string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.login_via_pass">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">login_via_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_pass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass" title="app.database.models.event_pass.EventPass"><span class="pre">EventPass</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#login_via_pass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.login_via_pass" title="Link to this definition"></a></dt>
+<dd><p>Log in a user via an existing event pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_pass</strong> – EventPass object representing the pass.</p></li>
+<li><p><strong>response</strong> – FastAPI Response object used to set authentication cookies.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>HTTPException</strong> – 400 if the pass is not bound to a user.</p></li>
+<li><p><strong>HTTPException</strong> – 401 if the user associated with the pass does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_pass_service.resolve_event_pass">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_pass_service.</span></span><span class="sig-name descname"><span class="pre">resolve_event_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.event_pass.EventPass" title="app.database.models.event_pass.EventPass"><span class="pre">EventPass</span></a></span></span><a class="reference internal" href="../_modules/app/backend/event_pass_service.html#resolve_event_pass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_pass_service.resolve_event_pass" title="Link to this definition"></a></dt>
+<dd><p>Resolve and validate an event pass token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> – Raw token string to resolve.</p></li>
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>EventPass object corresponding to the token.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>HTTPException</strong> – 404 if the token is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.event_service">
+<span id="app-backend-event-service-module"></span><h2>app.backend.event_service module<a class="headerlink" href="#module-app.backend.event_service" title="Link to this heading"></a></h2>
+<section id="event-service-py">
+<h3>event_service.py<a class="headerlink" href="#event-service-py" title="Link to this heading"></a></h3>
+<p>Backend event CRUD operations.</p>
+<p>Provides functions to create, read, update, and delete events in the database.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_service.create_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_service.</span></span><span class="sig-name descname"><span class="pre">create_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventCreate" title="app.database.models.event.EventCreate"><span class="pre">EventCreate</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event" title="app.database.models.event.Event"><span class="pre">Event</span></a></span></span><a class="reference internal" href="../_modules/app/backend/event_service.html#create_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_service.create_event" title="Link to this definition"></a></dt>
+<dd><p>Create a new event in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>data</strong> – EventCreate object containing event details.</p></li>
+<li><p><strong>owner_id</strong> – ID of the user creating the event.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Newly created Event object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_service.delete_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_service.</span></span><span class="sig-name descname"><span class="pre">delete_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/app/backend/event_service.html#delete_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_service.delete_event" title="Link to this definition"></a></dt>
+<dd><p>Delete an event from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event to delete.</p></li>
+<li><p><strong>user_id</strong> – ID of the user attempting the deletion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully,
+“forbidden” if user is not the owner,
+False if the event does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_service.get_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_service.</span></span><span class="sig-name descname"><span class="pre">get_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event" title="app.database.models.event.Event"><span class="pre">Event</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/event_service.html#get_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_service.get_event" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single event by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event to retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Event object if found, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_service.get_events">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_service.</span></span><span class="sig-name descname"><span class="pre">get_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="app.database.models.html#app.database.models.event.Event" title="app.database.models.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/backend/event_service.html#get_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_service.get_events" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all events from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db</strong> – Database session dependency.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of Event objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.event_service.update_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.event_service.</span></span><span class="sig-name descname"><span class="pre">update_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.event.EventUpdate" title="app.database.models.event.EventUpdate"><span class="pre">EventUpdate</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.event.Event" title="app.database.models.event.Event"><span class="pre">Event</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/event_service.html#update_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.event_service.update_event" title="Link to this definition"></a></dt>
+<dd><p>Update an existing event’s details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event to update.</p></li>
+<li><p><strong>user_id</strong> – ID of the user attempting the update.</p></li>
+<li><p><strong>data</strong> – EventUpdate object containing new values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated Event object if successful,
+“forbidden” if the user is not the owner,
+or None if the event does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.participations_service">
+<span id="app-backend-participations-service-module"></span><h2>app.backend.participations_service module<a class="headerlink" href="#module-app.backend.participations_service" title="Link to this heading"></a></h2>
+<section id="participation-service-py">
+<h3>participation_service.py<a class="headerlink" href="#participation-service-py" title="Link to this heading"></a></h3>
+<p>Backend participation survey functionality.</p>
+<p>Provides functions for setting user participation, retrieving event participation statistics,
+and listing events a user is involved with.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.participations_service.get_event_participation_stats">
+<span class="sig-prename descclassname"><span class="pre">app.backend.participations_service.</span></span><span class="sig-name descname"><span class="pre">get_event_participation_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus" title="app.database.models.participations.ParticipationStatus"><span class="pre">ParticipationStatus</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/backend/participations_service.html#get_event_participation_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.participations_service.get_event_participation_stats" title="Link to this definition"></a></dt>
+<dd><p>Retrieve statistics for an event’s participation survey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>event_id</strong> – ID of the event.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Dictionary mapping ParticipationStatus to counts:
+{</p>
+<blockquote>
+<div><p>ParticipationStatus.going: int,
+ParticipationStatus.maybe: int,
+ParticipationStatus.not_going: int,
+ParticipationStatus.invited: int</p>
+</div></blockquote>
+<p>}</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.participations_service.get_user_active_events">
+<span class="sig-prename descclassname"><span class="pre">app.backend.participations_service.</span></span><span class="sig-name descname"><span class="pre">get_user_active_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/backend/participations_service.html#get_user_active_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.participations_service.get_user_active_events" title="Link to this definition"></a></dt>
+<dd><p>Get a list of events where the user is an owner or has a participation status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>List of dictionaries containing event details and the user’s participation status:
+[</p>
+<blockquote>
+<div><dl class="simple">
+<dt>{</dt><dd><p>“id”: int,
+“name”: str,
+“location”: str,
+“time”: str (ISO format),
+“owner_id”: int,
+“participation_status”: str | None</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>]</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.participations_service.join_event">
+<span class="sig-prename descclassname"><span class="pre">app.backend.participations_service.</span></span><span class="sig-name descname"><span class="pre">join_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation" title="app.database.models.participations.EventParticipation"><span class="pre">EventParticipation</span></a></span></span><a class="reference internal" href="../_modules/app/backend/participations_service.html#join_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.participations_service.join_event" title="Link to this definition"></a></dt>
+<dd><p>Set participation status of a user as invited for a specific event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user.</p></li>
+<li><p><strong>event_id</strong> – ID of the event.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>EventParticipation object representing the newly created participation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.participations_service.set_participation">
+<span class="sig-prename descclassname"><span class="pre">app.backend.participations_service.</span></span><span class="sig-name descname"><span class="pre">set_participation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.participations.ParticipationStatus" title="app.database.models.participations.ParticipationStatus"><span class="pre">ParticipationStatus</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.participations.EventParticipation" title="app.database.models.participations.EventParticipation"><span class="pre">EventParticipation</span></a></span></span><a class="reference internal" href="../_modules/app/backend/participations_service.html#set_participation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.participations_service.set_participation" title="Link to this definition"></a></dt>
+<dd><p>Set or update a user’s participation status for an event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user participating in the event.</p></li>
+<li><p><strong>event_id</strong> – ID of the event.</p></li>
+<li><p><strong>status</strong> – ParticipationStatus enum value (going, maybe, not_going, invited).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>EventParticipation object representing the updated or newly created participation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend.user_service">
+<span id="app-backend-user-service-module"></span><h2>app.backend.user_service module<a class="headerlink" href="#module-app.backend.user_service" title="Link to this heading"></a></h2>
+<section id="user-service-py">
+<h3>user_service.py<a class="headerlink" href="#user-service-py" title="Link to this heading"></a></h3>
+<p>Basic functionality for the User model.</p>
+<p>Provides functions to retrieve users, change passwords, and delete users.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.user_service.change_password">
+<span class="sig-prename descclassname"><span class="pre">app.backend.user_service.</span></span><span class="sig-name descname"><span class="pre">change_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="app.database.models.html#app.database.models.user.PasswordChange" title="app.database.models.user.PasswordChange"><span class="pre">PasswordChange</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/app/backend/user_service.html#change_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.user_service.change_password" title="Link to this definition"></a></dt>
+<dd><p>Change the password of a user after verifying the current password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user whose password is being changed.</p></li>
+<li><p><strong>data</strong> – PasswordChange object containing current and new passwords.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if password was changed successfully, False otherwise
+(invalid current password, mismatch in new password confirmation, or user not found).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.user_service.delete_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.user_service.</span></span><span class="sig-name descname"><span class="pre">delete_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/app/backend/user_service.html#delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.user_service.delete_user" title="Link to this definition"></a></dt>
+<dd><p>Delete a user from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user to delete.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if deleted successfully, False if user does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.user_service.get_user">
+<span class="sig-prename descclassname"><span class="pre">app.backend.user_service.</span></span><span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/app/backend/user_service.html#get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.user_service.get_user" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single user by their ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db</strong> – Database session dependency.</p></li>
+<li><p><strong>user_id</strong> – ID of the user to retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>User object if found, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.backend.user_service.get_users">
+<span class="sig-prename descclassname"><span class="pre">app.backend.user_service.</span></span><span class="sig-name descname"><span class="pre">get_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="app.database.models.html#app.database.models.user.User" title="app.database.models.user.User"><span class="pre">User</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/app/backend/user_service.html#get_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.backend.user_service.get_users" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all users from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db</strong> – Database session dependency.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of User objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.backend">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app.backend" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="app.html" class="btn btn-neutral float-left" title="app package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="app.database.html" class="btn btn-neutral float-right" title="app.database package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

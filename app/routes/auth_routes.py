@@ -1,6 +1,8 @@
 """
-@file auth_routes.py
-@brief API routes for authentication and JWT management.
+auth_routes.py
+==============
+
+API routes for authentication and JWT management.
 
 Provides endpoints for:
 - User registration
@@ -34,16 +36,18 @@ def register_user_route(
     db: Session = Depends(get_session),
 ):
     """
-    @brief Register a new user.
+    Register a new user.
 
     Creates a new user in the database, hashes the password,
     issues access and refresh tokens, and sets cookies.
 
-    @param request User registration data (login, email, password).
-    @param response FastAPI Response object for setting cookies.
-    @param db Database session dependency.
+    Parameters:
+    - request: UserRegister object with login, email, password
+    - response: FastAPI Response object to set cookies
+    - db: Database session
 
-    @return The newly created User object.
+    Returns:
+    - Newly created User object
     """
     return register_user(request, db, response)
 
@@ -56,17 +60,19 @@ def login_route(
     db: Session = Depends(get_session),
 ):
     """
-    @brief Login user and issue access token.
+    Log in a user and issue access token.
 
     Authenticates the user by email and password, sets JWT cookies,
     and returns access token data.
 
-    @param mail User email (form data).
-    @param password User password (form data).
-    @param response FastAPI Response object for setting cookies.
-    @param db Database session dependency.
+    Parameters:
+    - mail: User email (form data)
+    - password: User password (form data)
+    - response: FastAPI Response object to set cookies
+    - db: Database session
 
-    @return TokenResponse object with access_token and token_type.
+    Returns:
+    - TokenResponse object with access_token and token_type
     """
     return login_for_access_token(mail, password, db, response)
 
@@ -74,13 +80,15 @@ def login_route(
 @router.get("/me")
 def read_me(user: User = Depends(get_current_user)):
     """
-    @brief Retrieve currently authenticated user.
+    Retrieve currently authenticated user.
 
     Uses the access token from cookies to identify the user.
 
-    @param user Current authenticated User model (injected via dependency).
+    Parameters:
+    - user: Currently authenticated User object (injected via dependency)
 
-    @return Dictionary containing user_id, login, and email.
+    Returns:
+    - Dictionary containing user_id, login, and email
     """
     return {"user_id": user.id, "login": user.login, "email": user.email}
 
@@ -88,15 +96,17 @@ def read_me(user: User = Depends(get_current_user)):
 @router.post("/refresh")
 def refresh_token_route(response: Response, refresh_token: str = Cookie(None)):
     """
-    @brief Refresh the access token using the refresh token.
+    Refresh the access token using the refresh token.
 
     Validates the refresh token, issues a new access token,
     and sets it in the cookies.
 
-    @param refresh_token Refresh token from cookies.
-    @param response FastAPI Response object for setting cookies.
+    Parameters:
+    - refresh_token: Refresh token from cookies
+    - response: FastAPI Response object to set new access token
 
-    @return JSON message indicating the token has been refreshed.
+    Returns:
+    - JSON message indicating the token has been refreshed
     """
     refresh_access_token(refresh_token, response)
     return {"message": "Access token refreshed"}
@@ -105,13 +115,15 @@ def refresh_token_route(response: Response, refresh_token: str = Cookie(None)):
 @router.post("/logout")
 def logout_route(response: Response):
     """
-    @brief Logout the current user.
+    Logout the current user.
 
-    Deletes access and refresh token cookies to log out the user.
+    Deletes access and refresh token cookies.
 
-    @param response FastAPI Response object used to delete cookies.
+    Parameters:
+    - response: FastAPI Response object to delete cookies
 
-    @return JSON message confirming successful logout.
+    Returns:
+    - JSON message confirming successful logout
     """
     logout_user(response)
     return {"message": "Logged out successfully"}

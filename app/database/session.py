@@ -1,6 +1,8 @@
 """
-@file session.py
-@brief Database engine and session setup.
+session.py
+==========
+
+Database engine and session setup.
 
 Sets up the SQLModel/SQLAlchemy engine and provides a session generator
 for dependency injection in FastAPI routes and backend services.
@@ -8,7 +10,6 @@ for dependency injection in FastAPI routes and backend services.
 
 import logging
 import os
-
 from dotenv import load_dotenv
 from sqlalchemy.engine import URL
 from sqlmodel import Session, create_engine
@@ -37,13 +38,13 @@ engine = create_engine(DATABASE_URL)
 
 def get_session():
     """
-    @brief SQLModel session generator.
+    SQLModel session generator.
 
     Yields a database session for use in FastAPI dependencies or
     backend services. Ensures that the session is properly closed
     after usage.
 
-    @return Yields a SQLModel Session object.
+    :return: Yields a SQLModel Session object.
     """
     with Session(engine) as session:
         yield session

@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app package &mdash; WydarzeniaMR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="app.backend package" href="app.backend.html" />
+    <link rel="prev" title="app" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            WydarzeniaMR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">app</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">app package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.backend.html">app.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.html">app.database package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html">app.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.dramatiq_worker">app.dramatiq_worker module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.logger">app.logger module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#logger-setup-py">logger_setup.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#app.logger.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app.main">app.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">WydarzeniaMR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">app</a></li>
+      <li class="breadcrumb-item active">app package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/app.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="app-package">
+<h1>app package<a class="headerlink" href="#app-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="app.backend.html">app.backend package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.auth_service">app.backend.auth_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#auth-service-py">auth_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.authenticate_user"><code class="docutils literal notranslate"><span class="pre">authenticate_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.create_access_token"><code class="docutils literal notranslate"><span class="pre">create_access_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.create_refresh_token"><code class="docutils literal notranslate"><span class="pre">create_refresh_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.get_current_user"><code class="docutils literal notranslate"><span class="pre">get_current_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.get_password_hash"><code class="docutils literal notranslate"><span class="pre">get_password_hash()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.issue_tokens_and_set_cookies"><code class="docutils literal notranslate"><span class="pre">issue_tokens_and_set_cookies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.login_for_access_token"><code class="docutils literal notranslate"><span class="pre">login_for_access_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.logout_user"><code class="docutils literal notranslate"><span class="pre">logout_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.refresh_access_token"><code class="docutils literal notranslate"><span class="pre">refresh_access_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.register_user"><code class="docutils literal notranslate"><span class="pre">register_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.verify_password"><code class="docutils literal notranslate"><span class="pre">verify_password()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.auth_service.verify_token"><code class="docutils literal notranslate"><span class="pre">verify_token()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.comment_service">app.backend.comment_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#comment-service-py">comment_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.comment_service.create_comment"><code class="docutils literal notranslate"><span class="pre">create_comment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.comment_service.get_comments_for_event"><code class="docutils literal notranslate"><span class="pre">get_comments_for_event()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.event_invitation_service">app.backend.event_invitation_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#event-pass-service-py">event_pass_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_invitation_service.create_event_invite"><code class="docutils literal notranslate"><span class="pre">create_event_invite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_invitation_service.generate_invite_token"><code class="docutils literal notranslate"><span class="pre">generate_invite_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_invitation_service.hash_invite_token"><code class="docutils literal notranslate"><span class="pre">hash_invite_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_invitation_service.resolve_event_invitation"><code class="docutils literal notranslate"><span class="pre">resolve_event_invitation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.event_pass_service">app.backend.event_pass_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#id1">event_pass_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.bind_pass_to_user"><code class="docutils literal notranslate"><span class="pre">bind_pass_to_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.create_event_pass"><code class="docutils literal notranslate"><span class="pre">create_event_pass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.create_guest_user"><code class="docutils literal notranslate"><span class="pre">create_guest_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.generate_pass_token"><code class="docutils literal notranslate"><span class="pre">generate_pass_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.hash_pass_token"><code class="docutils literal notranslate"><span class="pre">hash_pass_token()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.login_via_pass"><code class="docutils literal notranslate"><span class="pre">login_via_pass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_pass_service.resolve_event_pass"><code class="docutils literal notranslate"><span class="pre">resolve_event_pass()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.event_service">app.backend.event_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#event-service-py">event_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_service.create_event"><code class="docutils literal notranslate"><span class="pre">create_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_service.delete_event"><code class="docutils literal notranslate"><span class="pre">delete_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_service.get_event"><code class="docutils literal notranslate"><span class="pre">get_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_service.get_events"><code class="docutils literal notranslate"><span class="pre">get_events()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.event_service.update_event"><code class="docutils literal notranslate"><span class="pre">update_event()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.participations_service">app.backend.participations_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#participation-service-py">participation_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.participations_service.get_event_participation_stats"><code class="docutils literal notranslate"><span class="pre">get_event_participation_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.participations_service.get_user_active_events"><code class="docutils literal notranslate"><span class="pre">get_user_active_events()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.participations_service.join_event"><code class="docutils literal notranslate"><span class="pre">join_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.participations_service.set_participation"><code class="docutils literal notranslate"><span class="pre">set_participation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend.user_service">app.backend.user_service module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#user-service-py">user_service.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.user_service.change_password"><code class="docutils literal notranslate"><span class="pre">change_password()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.user_service.delete_user"><code class="docutils literal notranslate"><span class="pre">delete_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.user_service.get_user"><code class="docutils literal notranslate"><span class="pre">get_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.backend.html#app.backend.user_service.get_users"><code class="docutils literal notranslate"><span class="pre">get_users()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.backend.html#module-app.backend">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app.database.html">app.database package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="app.database.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.models.html">app.database.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.auth">app.database.models.auth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.comment">app.database.models.comment module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.event">app.database.models.event module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.event_invitation">app.database.models.event_invitation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.event_pass">app.database.models.event_pass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.participations">app.database.models.participations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models.user">app.database.models.user module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.database.models.html#module-app.database.models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.html#module-app.database.session">app.database.session module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.database.html#session-py">session.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.database.html#app.database.session.get_session"><code class="docutils literal notranslate"><span class="pre">get_session()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.database.html#module-app.database">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app.routes.html">app.routes package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.auth_routes">app.routes.auth_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#auth-routes-py">auth_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.auth_routes.login_route"><code class="docutils literal notranslate"><span class="pre">login_route()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.auth_routes.logout_route"><code class="docutils literal notranslate"><span class="pre">logout_route()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.auth_routes.read_me"><code class="docutils literal notranslate"><span class="pre">read_me()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.auth_routes.refresh_token_route"><code class="docutils literal notranslate"><span class="pre">refresh_token_route()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.auth_routes.register_user_route"><code class="docutils literal notranslate"><span class="pre">register_user_route()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.comment_routes">app.routes.comment_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#comment-routes-py">comment_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.comment_routes.add_comment"><code class="docutils literal notranslate"><span class="pre">add_comment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.comment_routes.read_comments"><code class="docutils literal notranslate"><span class="pre">read_comments()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.event_routes">app.routes.event_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#event-routes-py">event_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.event_routes.add_event"><code class="docutils literal notranslate"><span class="pre">add_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.event_routes.edit_event"><code class="docutils literal notranslate"><span class="pre">edit_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.event_routes.read_event"><code class="docutils literal notranslate"><span class="pre">read_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.event_routes.read_events"><code class="docutils literal notranslate"><span class="pre">read_events()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.event_routes.remove_event"><code class="docutils literal notranslate"><span class="pre">remove_event()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.invites_routes">app.routes.invites_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#invite-routes-py">invite_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.CreateInviteRequest"><code class="docutils literal notranslate"><span class="pre">CreateInviteRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.CreateInviteRequest.event_id"><code class="docutils literal notranslate"><span class="pre">CreateInviteRequest.event_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.CreateInviteRequest.model_config"><code class="docutils literal notranslate"><span class="pre">CreateInviteRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.accept_invitation"><code class="docutils literal notranslate"><span class="pre">accept_invitation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.create_invite"><code class="docutils literal notranslate"><span class="pre">create_invite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.invites_routes.open_invite"><code class="docutils literal notranslate"><span class="pre">open_invite()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.participations_routes">app.routes.participations_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#participation-routes-py">participation_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.participations_routes.participate_in_event"><code class="docutils literal notranslate"><span class="pre">participate_in_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.participations_routes.read_event_participation_stats"><code class="docutils literal notranslate"><span class="pre">read_event_participation_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.participations_routes.read_my_active_events"><code class="docutils literal notranslate"><span class="pre">read_my_active_events()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.passes_routes">app.routes.passes_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#passes-routes-py">passes_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.CreatePassRequest"><code class="docutils literal notranslate"><span class="pre">CreatePassRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.CreatePassRequest.display_name"><code class="docutils literal notranslate"><span class="pre">CreatePassRequest.display_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.CreatePassRequest.model_config"><code class="docutils literal notranslate"><span class="pre">CreatePassRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.accept_as_guest"><code class="docutils literal notranslate"><span class="pre">accept_as_guest()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.accept_with_existing_login"><code class="docutils literal notranslate"><span class="pre">accept_with_existing_login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.create_pass"><code class="docutils literal notranslate"><span class="pre">create_pass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.passes_routes.open_pass"><code class="docutils literal notranslate"><span class="pre">open_pass()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes.user_routes">app.routes.user_routes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#users-routes-py">users_routes.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.user_routes.read_user"><code class="docutils literal notranslate"><span class="pre">read_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.user_routes.read_users"><code class="docutils literal notranslate"><span class="pre">read_users()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.user_routes.remove_user"><code class="docutils literal notranslate"><span class="pre">remove_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="app.routes.html#app.routes.user_routes.update_password"><code class="docutils literal notranslate"><span class="pre">update_password()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="app.routes.html#module-app.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-app.dramatiq_worker">
+<span id="app-dramatiq-worker-module"></span><h2>app.dramatiq_worker module<a class="headerlink" href="#module-app.dramatiq_worker" title="Link to this heading"></a></h2>
+</section>
+<section id="module-app.logger">
+<span id="app-logger-module"></span><h2>app.logger module<a class="headerlink" href="#module-app.logger" title="Link to this heading"></a></h2>
+<section id="logger-setup-py">
+<h3>logger_setup.py<a class="headerlink" href="#logger-setup-py" title="Link to this heading"></a></h3>
+<p>Logger setup utility.</p>
+<p>Sets up application logging to both file and stdout using the
+configuration in config/logger_config.json.</p>
+<p>Features:
+- Daily rotated log files named by date.
+- Automatic deletion of log files older than 7 days.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="app.logger.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">app.logger.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/logger.html#setup_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.logger.setup_logging" title="Link to this definition"></a></dt>
+<dd><p>Configure logging for the application.</p>
+<p>Reads the JSON configuration, ensures the logs directory exists,
+sets up the log file name based on the current date, and applies
+the logging configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-app.main">
+<span id="app-main-module"></span><h2>app.main module<a class="headerlink" href="#module-app.main" title="Link to this heading"></a></h2>
+</section>
+<section id="module-app">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="app" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="app.backend.html" class="btn btn-neutral float-right" title="app.backend package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Błażej Michalak, Wojciech Sarwiński, Maciej Scheffer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

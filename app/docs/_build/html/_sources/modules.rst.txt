@@ -1,0 +1,14 @@
+WydarzeniaMR API
+================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+.. automodule:: backend.auth_service
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: database.session
+   :members:
