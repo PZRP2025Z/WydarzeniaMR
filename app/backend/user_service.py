@@ -5,10 +5,14 @@
 Provides functions to retrieve users, change passwords, and delete users.
 """
 
+import logging
+
 from sqlmodel import Session, select
 
 from app.backend.auth_service import get_password_hash, verify_password
-from app.database.models.user import PasswordChange, User
+from app.database.models.user import PasswordChange, User, UserEmailInfo
+
+logger = logging.getLogger(__name__)
 
 
 def get_users(db: Session) -> list[User]:
@@ -77,3 +81,42 @@ def delete_user(db: Session, user_id: int) -> bool:
     db.delete(user)
     db.commit()
     return True
+
+
+def get_user_emails_by_ids(
+    db: Session, user_ids: list[int], include_guests: bool = False
+) -> dict[int, UserEmailInfo]:
+    """
+    @brief Fetch email addresses and usernames for multiple users by their IDs.
+
+    @param db Database session dependency.
+    @param user_ids List of user IDs to fetch emails for.
+    @param include_guests Whether to include guest users in the results (default: False).
+
+    @return Dictionary mapping user_id to UserEmailInfo (containing email and login).
+            Users without valid emails are excluded from the result.
+            Guest users are excluded unless include_guests is True.
+    """
+    if not user_ids:
+        return {}
+
+    query = select(User.id, User.email, User.login).where(User.id.in_(user_ids))
+
+    if not include_guests:
+        query = query.where(User.is_guest == False)
+
+    users = db.exec(query).all()
+
+    email_map = {
+        user_id: UserEmailInfo(email=email, login=login) for user_id, email, login in users if email
+    }
+
+    logger.info(
+        f"Fetched {len(email_map)} email addresses for {len(user_ids)} user IDs (include_guests={include_guests})"
+    )
+
+    missing = set(user_ids) - set(email_map.keys())
+    if missing:
+        logger.warning(f"Could not find emails for user IDs: {missing}")
+
+    return email_map
