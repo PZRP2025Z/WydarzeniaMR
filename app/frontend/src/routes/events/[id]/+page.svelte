@@ -17,6 +17,7 @@
     time?: string;
     description?: string;
     attendees?: number;
+    owner_id?: number;
   }
 
   interface Comment {
@@ -38,6 +39,22 @@
 
   let eventDate = "";
   let eventTime = "";
+
+  let currentUserId: number | null = null;
+
+  async function loadCurrentUser() {
+    try {
+      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      if (!res.ok) {
+        currentUserId = null;
+        return;
+      }
+      const data = await res.json();
+      currentUserId = data?.user_id ?? null;
+    } catch {
+      currentUserId = null;
+    }
+  }
 
   // -------------------------------
   // PARTICIPATION (RSVP)
@@ -197,6 +214,7 @@
       event.attendees ??= 0;
       eventDescriptionHtml = marked(event.description);
 
+      await loadCurrentUser();
       await loadComments(true);
       await loadMyParticipation();
       await loadParticipationStats();
@@ -578,9 +596,10 @@
   <!-- Kolumna boczna -->
   <div class="space-y-6">
     <div class="card p-4 space-y-3">
-      <button on:click={editEvent} class="btn btn-primary w-full">{t('edit_event', $lang)}</button>
-
-      <hr />
+      {#if event && currentUserId !== null && event.owner_id === currentUserId}
+        <button on:click={editEvent} class="btn btn-primary w-full">{t('edit_event', $lang)}</button>
+        <hr />
+      {/if}
 
       <button
         on:click={() => showNotificationModal = true}
