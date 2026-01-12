@@ -181,7 +181,7 @@
     <h1>{event.name}</h1>
     <p style="color:#555;">📍 {event.location}</p>
 
-    <div style="background:#f9f9f9; padding:1rem; border-radius:8px;">
+    <div class="markdown-content" style="background:#f9f9f9; padding:1rem; border-radius:8px;">
       {@html eventDescriptionHtml}
     </div>
 

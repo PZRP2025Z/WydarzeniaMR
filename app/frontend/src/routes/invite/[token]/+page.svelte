@@ -114,7 +114,7 @@
     <p style="color:#555;">📍 {event.location}</p>
 
     {#if event.description}
-      <div style="background:#f9f9f9; padding:1rem; border-radius:8px; margin:1rem 0;">
+      <div class="markdown-content" style="background:#f9f9f9; padding:1rem; border-radius:8px; margin:1rem 0;">
         {event.description}
       </div>
     {/if}

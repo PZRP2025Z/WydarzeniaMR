@@ -468,7 +468,7 @@
       <p style="margin:0; color:#555;">Liczba uczestników: {event.attendees}</p>
     </div>
 
-    <div style="background:#f9f9f9; padding:1rem; border-radius:8px; min-height:150px;">
+    <div class="markdown-content" style="background:#f9f9f9; padding:1rem; border-radius:8px; min-height:150px;">
       {@html eventDescriptionHtml}
     </div>
 
