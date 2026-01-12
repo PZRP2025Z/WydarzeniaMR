@@ -7,7 +7,7 @@
   import { lang } from '$lib/stores/stores';
 
   // -------------------------------
-  // TYPY
+  // TYPES
   // -------------------------------
   interface Event {
     id: number;
@@ -92,7 +92,7 @@
       if (!res.ok) return;
       participationStats = await res.json();
     } catch {
-      // ignorujemy błędy statystyk
+      // ignore
     }
   }
 
@@ -127,7 +127,7 @@
   }
 
   // -------------------------------
-  // KOMENTARZE
+  // COMMENTS
   // -------------------------------
   let comments: Comment[] = [];
   let newComment = "";
@@ -191,7 +191,7 @@
   }
 
   // -------------------------------
-  // ŁADOWANIE WYDARZENIA
+  // EVENT LOADING
   // -------------------------------
   onMount(async () => {
     const id = Number($page.params.id);
@@ -226,7 +226,7 @@
   });
 
   // -------------------------------
-  // POWIADOMIENIA
+  // NOTIFICATIONS
   // -------------------------------
   let showNotificationModal = false;
   let notificationPreferences: NotificationPreference[] = [];
@@ -234,7 +234,7 @@
   let savingPreferences = false;
   let preferencesError = "";
 
-  // Struktura do zarządzania preferencjami w UI
+  // Structure for managing preferences in the UI
   const notificationTypes: { type: NotificationType; label: string }[] = [
     { type: "event_updated", label: t('notification_event_updated', $lang) },
     { type: "participant_joined", label: t('notification_participant_joined', $lang) }
@@ -244,7 +244,7 @@
     { channel: "email", label: t('channel_email', $lang), icon: "📧" }
   ];
 
-  // Mapa preferencji
+  // Preference map
   let preferencesMap: Record<string, boolean> = {};
 
   function getPreferenceKey(type: NotificationType, channel: NotificationChannel): string {
@@ -337,7 +337,7 @@
   }
 
   // -------------------------------
-  // PRZEPUSTKI
+  // PASS
   // -------------------------------
   let showPassModal = false;
   let passDisplayName = "";
@@ -383,7 +383,7 @@
   }
 
   // -------------------------------
-  // ZAPROSZENIA
+  // INVITES
   // -------------------------------
   let showInviteModal = false;
   let creatingInvite = false;
@@ -428,7 +428,7 @@
 
 
   // -------------------------------
-  // INNE FUNKCJE
+  // OTHER FUNCTIONS
   // -------------------------------
   function editEvent() {
     if (!event) return;
@@ -516,7 +516,7 @@
 {:else if event}
 <div class="max-w-6xl mx-auto mt-8 px-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-  <!-- Główna kolumna -->
+  <!-- Main Column -->
   <div class="lg:col-span-3 space-y-6">
 
     <img 
@@ -544,7 +544,7 @@
       </div>
     </div>
 
-    <!-- KOMENTARZE -->
+    <!-- Comments -->
     <div class="card p-6">
       <h2 class="text-lg font-semibold mb-3">{t('comments', $lang)}</h2>
 
@@ -593,7 +593,7 @@
     </div>
   </div>
 
-  <!-- Kolumna boczna -->
+  <!-- Side Column -->
   <div class="space-y-6">
     <div class="card p-4 space-y-3">
       {#if event && currentUserId !== null && event.owner_id === currentUserId}
@@ -688,7 +688,7 @@
 </div>
 {/if}
 
-<!-- Modal powiadomień -->
+<!-- Notifications Modal -->
 {#if showNotificationModal}
   <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
     <div class="bg-surface-50 dark:bg-surface-900 border-surface-200 dark:border-surface-800 card p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto space-y-4 mx-4">

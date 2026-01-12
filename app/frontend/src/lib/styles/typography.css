@@ -1,7 +1,3 @@
-/* Minimal typography overrides for .prose to restore markdown semantics/styles
-   Non-invasive and small: headings, lists, blockquotes, code blocks and images
-*/
-
 .prose h1 {
   font-size: 1.875rem; /* 30px */
   line-height: 1.2;
@@ -88,7 +84,6 @@
   color: var(--surface-700, #444);
 }
 
-/* Ensure list markers are visible even if a global reset removed them */
 .prose ul {
   list-style-type: disc;
   padding-left: 1.25rem;
@@ -103,8 +98,7 @@
 .prose ol li::marker {
   color: var(--surface-700, #444);
 }
-
-/* Dark mode adaptations: system preference, explicit .dark class, and Skeleton dark theme variants */
+/* Dark mode styles */
 
 @media (prefers-color-scheme: dark) {
   .prose {
@@ -156,7 +150,6 @@
   }
 }
 
-/* Also support when a 'dark' class is added to <html> (Tailwind 'class' strategy) */
 html.dark .prose {
   color: var(--surface-200, #ddd);
 }
@@ -173,7 +166,7 @@ html.dark .prose pre { background: var(--surface-800, #021022); color: var(--sur
 html.dark .prose pre code { background: transparent; color: inherit; }
 html.dark .prose code { background: rgba(255,255,255,0.03); color: #ffd2c2; }
 
-/* Support Skeleton dark theme versions if it sets data-theme to a dark variant name */
+/* Skeleton dark theme */
 html[data-theme$='-dark'] .prose,
 html[data-theme='dark'] .prose {
   color: var(--surface-200, #ddd);
