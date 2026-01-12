@@ -492,7 +492,7 @@
     a.click();
 
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);s
+    URL.revokeObjectURL(url);
   }
 
 </script>
