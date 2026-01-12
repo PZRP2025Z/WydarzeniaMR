@@ -437,6 +437,46 @@
     });
     window.open(`https://www.google.com/calendar/render?${params.toString()}`, "_blank");
   }
+
+  function downloadICS() {
+    if (!event || !event.time) return;
+
+    const start = new Date(event.time);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+
+    const formatICSDate = (d: Date) =>
+      d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+    const icsContent = `
+  BEGIN:VCALENDAR
+  VERSION:2.0
+  PRODID:-//YourApp//Event Calendar//EN
+  CALSCALE:GREGORIAN
+  BEGIN:VEVENT
+  UID:event-${event.id}@yourapp
+  DTSTAMP:${formatICSDate(new Date())}
+  DTSTART:${formatICSDate(start)}
+  DTEND:${formatICSDate(end)}
+  SUMMARY:${event.name}
+  DESCRIPTION:${(event.description ?? "").replace(/\n/g, "\\n")}
+  LOCATION:${event.location ?? ""}
+  END:VEVENT
+  END:VCALENDAR
+  `.trim();
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${event.name}.ics`;
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);s
+  }
+
 </script>
 
 {#if loading}
@@ -556,6 +596,16 @@
       >
         <img src="/images/Google_Calendar_icon_(2020).svg.png" alt="Google Calendar" class="w-5 h-5 shrink-0" />
         <span class="text-center whitespace-normal">{t('add_to_google_calendar', $lang)}</span>
+      </button>
+
+      <button
+        on:click={downloadICS}
+        class="btn w-full flex items-center justify-center gap-2 px-3 bg-indigo-600 text-white"
+      >
+        <span class="text-lg">📅</span>
+        <span class="text-center whitespace-normal">
+          {t('download_ics', $lang)}
+        </span>
       </button>
 
       <hr />

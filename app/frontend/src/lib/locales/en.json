@@ -120,5 +120,6 @@
   "error_update_event": "Failed to update event",
   "loading_more": "Loading...",
   "load_more": "Load more",
-  "your_attendance": "Your attendance"
+  "your_attendance": "Your attendance",
+  "download_ics": "Download ICS file"
 } 

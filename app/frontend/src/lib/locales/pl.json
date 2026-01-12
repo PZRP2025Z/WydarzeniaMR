@@ -120,5 +120,6 @@
   "error_update_event": "Nie udało się zaktualizować wydarzenia",
   "loading_more": "Ładowanie...",
   "load_more": "Załaduj więcej",
-  "your_attendance": "Twoja obecność"
+  "your_attendance": "Twoja obecność",
+  "download_ics": "Pobierz plik ICS"
 } 
