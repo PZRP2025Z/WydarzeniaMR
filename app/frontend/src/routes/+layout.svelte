@@ -39,9 +39,8 @@
   }
 }
 
-// wywołanie onMount poza funkcją logout
 onMount(() => {
-  // ustawienie motywu Skeletona
+  // Skeleton theme
   document.documentElement.setAttribute('data-theme', 'cerberus');
   fetchCurrentUser();
 });
