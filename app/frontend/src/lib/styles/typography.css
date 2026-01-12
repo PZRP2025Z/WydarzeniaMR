@@ -1,0 +1,185 @@
+/* Minimal typography overrides for .prose to restore markdown semantics/styles
+   Non-invasive and small: headings, lists, blockquotes, code blocks and images
+*/
+
+.prose h1 {
+  font-size: 1.875rem; /* 30px */
+  line-height: 1.2;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--surface-900, #111);
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--surface-900, #111);
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--surface-800, #222);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose li {
+  margin-top: 0.25rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid rgba(0,0,0,0.08);
+  padding: 0.5rem 1rem;
+  color: var(--surface-700, #444);
+  font-style: italic;
+  background: rgba(0,0,0,0.01);
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+.prose pre {
+  background: #0f1724; /* dark slate */
+  color: #e6eef8;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+  margin: 0.5rem 0;
+}
+
+.prose code {
+  background: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+  color: #dc2626;
+}
+
+.prose hr {
+  border-top: 1px solid rgba(0,0,0,0.08);
+  margin: 1rem 0;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.prose .lead {
+  font-size: 1.125rem;
+  color: var(--surface-700, #444);
+}
+
+/* Ensure list markers are visible even if a global reset removed them */
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+}
+
+.prose ul li::marker,
+.prose ol li::marker {
+  color: var(--surface-700, #444);
+}
+
+/* Dark mode adaptations: system preference, explicit .dark class, and Skeleton dark theme variants */
+
+@media (prefers-color-scheme: dark) {
+  .prose {
+    color: var(--surface-200, #ddd);
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    color: var(--surface-50, #fff);
+  }
+
+  .prose p {
+    color: var(--surface-200, #ddd);
+  }
+
+  .prose blockquote {
+    border-left-color: rgba(255,255,255,0.16);
+    border-left-width: 6px;
+    background: rgba(255,255,255,0.03);
+    color: var(--surface-300, #cbd5e1);
+  }
+
+  .prose hr {
+    border-top-color: rgba(255,255,255,0.12);
+  }
+
+  .prose ul li::marker,
+  .prose ol li::marker {
+    color: var(--surface-200, #ddd);
+  }
+
+  .prose pre {
+    background: var(--surface-800, #021022);
+    color: var(--surface-50, #fff);
+    border: 1px solid rgba(255,255,255,0.04);
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .prose pre code {
+    background: transparent;
+    color: inherit;
+  }
+
+  .prose code {
+    background: rgba(255,255,255,0.03);
+    color: #ffd2c2;
+  }
+}
+
+/* Also support when a 'dark' class is added to <html> (Tailwind 'class' strategy) */
+html.dark .prose {
+  color: var(--surface-200, #ddd);
+}
+html.dark .prose h1,
+html.dark .prose h2,
+html.dark .prose h3 {
+  color: var(--surface-50, #fff);
+}
+html.dark .prose p { color: var(--surface-200, #ddd); }
+html.dark .prose blockquote { border-left-color: rgba(255,255,255,0.16); border-left-width: 6px; background: rgba(255,255,255,0.03); color: var(--surface-300, #cbd5e1); }
+html.dark .prose hr { border-top-color: rgba(255,255,255,0.12); }
+html.dark .prose ul li::marker, html.dark .prose ol li::marker { color: var(--surface-200, #ddd); }
+html.dark .prose pre { background: var(--surface-800, #021022); color: var(--surface-50, #fff); border: 1px solid rgba(255,255,255,0.04); padding: 1rem; font-size: 0.875rem; }
+html.dark .prose pre code { background: transparent; color: inherit; }
+html.dark .prose code { background: rgba(255,255,255,0.03); color: #ffd2c2; }
+
+/* Support Skeleton dark theme versions if it sets data-theme to a dark variant name */
+html[data-theme$='-dark'] .prose,
+html[data-theme='dark'] .prose {
+  color: var(--surface-200, #ddd);
+}
+html[data-theme$='-dark'] .prose h1, html[data-theme='dark'] .prose h1,
+html[data-theme$='-dark'] .prose h2, html[data-theme='dark'] .prose h2,
+html[data-theme$='-dark'] .prose h3, html[data-theme='dark'] .prose h3 {
+  color: var(--surface-50, #fff);
+}

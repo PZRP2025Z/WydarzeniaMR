@@ -4,3 +4,4 @@
 @import "@skeletonlabs/skeleton/themes/cerberus";
 
 @import '$lib/styles/buttons.css';
+@import '$lib/styles/typography.css';
