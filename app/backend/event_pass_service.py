@@ -83,7 +83,7 @@ def resolve_event_pass(token: str, db: Session) -> EventPass:
     event_pass = db.exec(select(EventPass).where(EventPass.token_hash == token_hash)).first()
     if not event_pass:
         raise HTTPException(status_code=404, detail="Invalid pass")
-    logger.info("Invitation link for an event resolved")
+    logger.info(f"Invitation link for an event {event_pass.event_id} resolved")
     return event_pass
 
 
@@ -122,10 +122,9 @@ def bind_pass_to_user(event_pass: EventPass, user: User, db: Session) -> None:
     if event_pass.user_id:
         return
     event_pass.user_id = user.id
-    db.add(event_pass)
     db.commit()
     db.refresh(event_pass)
-    join_event(db=db, user_id=user.id, event_id=event_pass.id)
+    join_event(db=db, user_id=user.id, event_id=event_pass.event_id)
     logger.info("Invitation link bound to a user")
 
 
