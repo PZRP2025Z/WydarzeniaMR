@@ -124,12 +124,23 @@ def get_user_active_events(db: Session, *, user_id: int) -> list[dict]:
     """
     rows = db.exec(
         select(Event, EventParticipation)
-        .join(EventParticipation, Event.id == EventParticipation.event_id, isouter=True)
+        .join(
+            EventParticipation,
+            (Event.id == EventParticipation.event_id) & (EventParticipation.user_id == user_id),
+            isouter=True,
+        )
         .where((Event.owner_id == user_id) | (EventParticipation.user_id == user_id))
         .order_by(Event.time)
     ).all()
+
     events = []
+    unique_event_ids = set()
+
     for event, participation in rows:
+        if event.id in unique_event_ids:
+            continue
+        unique_event_ids.add(event.id)
+
         status = participation.status if participation else None
         events.append(
             {

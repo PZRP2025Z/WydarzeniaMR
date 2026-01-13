@@ -11,7 +11,7 @@ statuses in events, including going/maybe/not going options.
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, UniqueConstraint
 
 
 class ParticipationStatus(str, Enum):
@@ -54,6 +54,8 @@ class EventParticipation(SQLModel, table=True):
     """
 
     __tablename__ = "event_participations"
+    __table_args__ = (UniqueConstraint("user_id", "event_id", name="uq_user_event"),)
+
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="users.id", index=True)
     event_id: int = Field(foreign_key="events.id", index=True)
