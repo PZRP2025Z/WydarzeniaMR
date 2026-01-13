@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, Body, Depends, HTTPException, Response
 from pydantic import BaseModel
 from sqlmodel import Session
+import logging
 
 from app.backend.auth_service import get_current_user
 from app.backend.event_pass_service import (
@@ -28,6 +29,8 @@ from app.database.models.user import User
 from app.database.session import get_session
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/passes", tags=["passes"])
 FRONTEND_BASE_URL = os.environ["FRONTEND_BASE_URL"]
